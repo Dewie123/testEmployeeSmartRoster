@@ -31,7 +31,6 @@ import BOUpdateCompanyProfile from "./BO_pages/CompanyProfile/UpdateProfile";
 import BOLeaveManagement from "./BO_pages/LeaveManagement/LeaveManagement";
 
 
-import CreateEmployeeOld from "./BO_components/rolesNskillset/CreateEmployee/old/CreateEmployeeOLD"
 import ViewRating from "./SA_pages/RegisRequest/ViewRating";
 
 // Pages for Busines Owner
