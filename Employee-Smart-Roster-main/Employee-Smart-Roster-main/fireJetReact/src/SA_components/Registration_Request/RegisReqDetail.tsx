@@ -1,5 +1,4 @@
 import {  useEffect, useState } from 'react';
-import { ExternalLink } from 'react-external-link';
 import { useAlert } from '../../components/PromptAlert/AlertContext';
 import { formatDateTime } from '../../controller/Variables.js';
 import RegisReqController from '../../controller/RegisReqController.js';
@@ -19,10 +18,38 @@ const { setRegistrationRequest, } = RegisReqController
 const RegisReqDetail = ({regisRequest = [], onClose, onUpdate }: RegisReqProps) => {
     // console.log(regisRequest);
     const { showAlert } = useAlert();
+    const [ bizFileURL, setBizFileURL ] = useState<string>("");
     const [ isReject, setIsReject ] = useState(false);
     const [ reasonReject, setReasonReject ] = useState("");
 
     if (!regisRequest) return null;
+
+    const fetchBizFilePDF = async () => {
+        try {
+            const fileData = await getBizFile (regisRequest.registrationID)
+            // Decode base64 to binary string
+            const byteCharacters = atob(fileData.fileData);
+            const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) =>
+                byteCharacters.charCodeAt(i)
+            );
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+            const pdfUrl = URL.createObjectURL(blob);
+            // console.log(pdfUrl)
+            setBizFileURL(pdfUrl)
+        } catch (error) {
+            showAlert(
+                'fetchBizFilePDF',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+    useEffect(() => {
+        fetchBizFilePDF()
+    }, [regisRequest])
 
     const triggerRejectionOrApproval = async (statusChanged:string) => {
         try {
@@ -134,9 +161,15 @@ const RegisReqDetail = ({regisRequest = [], onClose, onUpdate }: RegisReqProps) 
                 <div className="uen data-content">
                     <h2>{regisRequest.UEN}</h2>
                     <button className='icons'>
-                        <ExternalLink href={sampleBizFile}>
-                            <FaFilePdf />
-                        </ExternalLink>
+                    <a href={bizFileURL}
+                        target="_blank"
+                        onClick={bizFileURL ? undefined : (e) => {
+                            e.preventDefault();
+                        }}
+                        className="icons"
+                    >
+                        <FaFilePdf />
+                    </a>
                     </button>
                 </div>
 

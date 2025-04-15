@@ -11,6 +11,7 @@ export const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', '
 export const YEAR_CHANGE = ['prevYear', 'nextYear'];
 
 // ENUM in DB
+export const USER_ROLE = ['System Admin', 'Business Owner', 'Employee']
 export const TASK_STATUS = ['Not Started', 'In Progress', 'Completed'];
 
 export function formatDateTime (isoString){

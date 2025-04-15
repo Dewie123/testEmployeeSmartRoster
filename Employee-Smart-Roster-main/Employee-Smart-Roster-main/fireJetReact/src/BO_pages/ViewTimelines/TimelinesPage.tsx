@@ -46,8 +46,7 @@ const BOTimelinesPage = () => {
                 task.taskID !== taskID
         ));
     }
-
-
+    
     return (
         <div className="App-content">
             <BOSide />

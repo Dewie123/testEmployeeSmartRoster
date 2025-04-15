@@ -97,26 +97,23 @@ const Register = () => {
           formData.append('bizFile', bizFile);
     
           try {
-            // const result = await fetch('https://httpbin.org/post', {
-            //   method: 'POST',
-            //   body: formData,
-            // });
-    
-            // const data = await result.json();
-            
-            // console.log(data);
             console.log(formData);
 
-            setFileStatus('success');
-          } catch (error) {
-            setFileStatus('fail');
-            showAlert(
-                'BizFile failed upload: ',
-                '',
-                {error}.toString(),
-                { type: 'error' }
-            )
-          }
+                showAlert(
+                    `${response.message}`,
+                    'We had received your registration request',
+                    'The account is Pending Approval', 
+                    { type: 'success'}
+                )
+                navigate('/home')
+            } catch (error) {
+                showAlert(
+                    'triggerRegistration',
+                    'Failed to Submit Registration Request',
+                    error instanceof Error ? error.message : String(error),
+                    { type: 'error' }
+                )
+            }
         }
     };
 

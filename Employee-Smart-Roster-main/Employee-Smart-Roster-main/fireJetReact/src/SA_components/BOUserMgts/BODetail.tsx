@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
 import { formatDateTime } from '../../controller/Variables.js'
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton.js'
 import SecondaryButton from '../../components/SecondaryButton/SecondaryButton'
 import UserController from '../../controller/User/UserController.js'
+import CompanyController from '../../controller/CompanyController.js'
 import '../../components/UserMgt/UserDetail.css'
 import './BODetail.css'
 import '../../../public/styles/common.css'
@@ -18,6 +19,8 @@ import { IoClose,
 const { handleSuspendUser,
         handleUsuspendUser, } = UserController
 
+const { getCompanyBizFile } = CompanyController
+
 interface BODetailProps {
     company?: any;
     onClose?: () => void;
@@ -26,9 +29,37 @@ interface BODetailProps {
 
 const BODetail = ({company = [], onClose, onUpdate }: BODetailProps) => {
     // console.log(company)
-    const { showAlert } = useAlert()
+    const { showAlert } = useAlert();
+    const [ bizFileURL, setBizFileURL ] = useState<string>('');
     const [ suspend, setSuspend ] = useState(false);
-    const [ reasonSuspend, setReasonSuspend ] = useState("");
+    const [ reasonSuspend, setReasonSuspend ] = useState<string>('');
+
+    const fetchBizFilePDF = async () => {
+        try {
+            const fileData = await getCompanyBizFile (company.owner.email);
+            // Decode base64 to binary string
+            const byteCharacters = atob(fileData.fileData);
+            const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) =>
+                byteCharacters.charCodeAt(i)
+            );
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+            const pdfUrl = URL.createObjectURL(blob);
+            // console.log(pdfUrl)
+            setBizFileURL(pdfUrl)
+        } catch (error) {
+            showAlert(
+                'fetchBizFilePDF',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+    useEffect(() => {
+        fetchBizFilePDF()
+    }, [company])
 
     const triggerSuspendUser = async () => {
         try {
@@ -144,7 +175,7 @@ const BODetail = ({company = [], onClose, onUpdate }: BODetailProps) => {
     )
 
     return (
-        <div className='App-popup-content'>
+        <div className='App-popup-content' onClick={(e) => e.stopPropagation()}>
             <div className="App-header">
                 <h1>{company.owner.fullName}</h1>
                 <button className="icons" onClick={onClose}>
@@ -155,10 +186,15 @@ const BODetail = ({company = [], onClose, onUpdate }: BODetailProps) => {
                 <div className="company-info">
                     <div className="bo-detail-company-info-header">
                         <h3>{company.bizName}</h3>
-                        <FaFilePdf 
-                            className='icons'
-                            // onClick={() => }
-                        />
+                        <a href={bizFileURL}
+                            target="_blank"
+                            onClick={bizFileURL ? undefined : (e) => {
+                                e.preventDefault();
+                            }}
+                            className="icons"
+                        >
+                            <FaFilePdf />
+                        </a>
                     </div>
                     
                     <p className="Bo-detail-title">{company.UEN}</p>

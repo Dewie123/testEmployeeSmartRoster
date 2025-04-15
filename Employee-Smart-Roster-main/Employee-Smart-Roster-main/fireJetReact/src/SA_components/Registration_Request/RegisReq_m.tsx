@@ -19,7 +19,7 @@ const RegisReq_m = ({data=[], onUpdate}: RegisReqProps) => {
 
     function triggerCloseDetail(){
         setShowDetail(false)
-        setSelectedRequest(null)
+        setSelectedRequest([])
     }
 
     if(data.length === 0) return (
@@ -29,6 +29,7 @@ const RegisReq_m = ({data=[], onUpdate}: RegisReqProps) => {
     )
 
     return(
+        <>
         <div className={`${isOnAdminDash ? 'set-visible' : 'App-mobile-responsive-table'}`}>
             {data.map((request:any) => (
             <div key={request.registrationID}>
@@ -69,16 +70,19 @@ const RegisReq_m = ({data=[], onUpdate}: RegisReqProps) => {
                 </div>
             </div>
             ))} 
-            {showDetail && selectedRequest && (
-                <div className="App-popup">
-                <RegisReqDetail 
-                    regisRequest= {selectedRequest}
-                    onClose={() => { triggerCloseDetail() }}
-                    onUpdate={onUpdate}
-                />
-            </div>
-            )}
         </div>
+        
+        {showDetail && selectedRequest && (
+            <div className="App-popup">
+            <RegisReqDetail 
+                regisRequest= {selectedRequest}
+                onClose={() => { triggerCloseDetail() }}
+                onUpdate={onUpdate}
+            />
+        </div>
+        )}
+        </>
+        
     )
 
 }

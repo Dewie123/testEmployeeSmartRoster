@@ -36,7 +36,6 @@ div{
     justify-content: end;
     gap: 5px;
     justify-self: end;
-
   }
 
   .navbar-brand {
@@ -44,12 +43,22 @@ div{
     font-weight: bold;
   }
   
-  .logout-button {
+  .nav-button {
     padding: 5px;
+    font-size: 30px;
+    cursor: pointer;
+    border-radius: 5px;
   }
   
-  .logout-button:hover {
+  .nav-button:hover {
     background-color: var(--main-page-background);
     color: black;
-    border-radius: 5px;
+  }
+
+  .hamburger-menu-icon {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    height: fit-content;
+    margin-right: 5px;
   }

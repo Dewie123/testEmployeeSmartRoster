@@ -32,14 +32,13 @@ export default function Login() {
     event.preventDefault();
     const validationErrors = ValidateLoginValues(values);
     setErrors(validationErrors);
-    console.log("Login values: ", values);
+    // console.log("Login values: ", values);
     
     //if(Object.values(validationErrors).every(error => error === "")) {
     if(true) {
       try{
-        
           const data = await SubmitLogin(values);
-          console.log("Response: \n", data);
+          // console.log("Response: \n", data);
           if (data.responseCode === 200) {
             console.log('Login successful:', data);
             login(data);

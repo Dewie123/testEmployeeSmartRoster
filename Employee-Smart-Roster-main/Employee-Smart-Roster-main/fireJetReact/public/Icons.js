@@ -22,9 +22,12 @@ import { TiTick, TiTime } from "react-icons/ti";
 import { TbTarget, TbTargetArrow } from "react-icons/tb";
 import { VscDebugBreakpointData } from "react-icons/vsc";
 import { HiMiniViewfinderCircle } from "react-icons/hi2";
+import { IoIosWarning } from "react-icons/io";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 export {
     LuLogOut,   // Logout icon
+    RxHamburgerMenu, // Hamburger Menu icon
     CgProfile,  // Profile icon
     BiSolidUserDetail, // User details icon
     IoClose, // Close popup icons

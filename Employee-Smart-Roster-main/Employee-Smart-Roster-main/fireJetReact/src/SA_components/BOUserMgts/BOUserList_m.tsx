@@ -10,6 +10,11 @@ import '../../../public/styles/common.css'
 
 const { handleSelectedDetail } = CompanyController;
 
+interface BOListMobileProps {
+    companies?: any;
+    onUpdate?: (updatedData: any) => void;
+}
+
 const BOUserList_m = ({ companies = [], onUpdate }: BOListMobileProps) => {
     const { showAlert } = useAlert();
     const [ selectedCompany, setSelectedCompany ] = useState<any>([]);
@@ -85,7 +90,7 @@ const BOUserList_m = ({ companies = [], onUpdate }: BOListMobileProps) => {
         ))}
         </div>
         {showDetail && selectedCompany && (
-            <div className='App-popup'>
+            <div className='App-popup' onClick={triggerCloseDetail}>
                 <BODetail
                     company={selectedCompany}
                     onClose={() => triggerCloseDetail()}
@@ -95,11 +100,6 @@ const BOUserList_m = ({ companies = [], onUpdate }: BOListMobileProps) => {
         )}
         </>
     )
-}
-
-interface BOListMobileProps {
-    companies?: any;
-    onUpdate?: (updatedData: any) => void;
 }
 
 export default BOUserList_m;

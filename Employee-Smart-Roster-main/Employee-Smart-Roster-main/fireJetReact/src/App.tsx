@@ -171,7 +171,7 @@ function App() {
               />
 
               <Route
-                path="/issues-management"
+                path="/issues-reported"
                 element={
                   <ProtectedRoute>
                     <div className="App-content">

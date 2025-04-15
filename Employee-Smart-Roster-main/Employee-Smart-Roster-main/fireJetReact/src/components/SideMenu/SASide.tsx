@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import SideMenu_m from "./SideMenu_m";
 import "./menu.css";
 import "../../../public/styles/common.css"
 
@@ -70,40 +71,40 @@ const SASide = () => {
     }, [location]);
 
     return (
-        <div className="App-side-menu">
-            <div className="main">
-                <Link to="" className="sub-link-hover">
-                  BUSINESS OWNER MANAGEMENT
-                </Link>
-            </div>
-            <div className="sub-menu user">
-                <Link to="/registration-req-management" className="sub-link-hover">
-                  Registration Request Management
-                </Link>
-            </div>
-
-            <div className="main">
-                <Link to="/issues-management" className="sub-link-hover" >
-                    REPORT ISSUES MANAGEMENT
-                </Link>
-            </div>
-
-            <div className="main">LANDING PAGE MANAGEMENT</div>
-            <div className="sub-menu landing">
-                <Link to="/video-management" className="sub-link-hover">
-                  Demo Video Management
-                </Link>
-                <Link to="/review-rating" className="sub-link-hover">
-                  Reviews & Ratings
-                </Link>
-                <Link to="/faqs-management" className="sub-link-hover">
-                  FAQs Management
-                </Link>
-                <Link to="/preview-landing-page" className="sub-link-hover">
-                    Preview Landing Page
-                </Link>
-            </div>
+      <div className="App-side-menu">
+        <div className="main">
+            <Link to="/users-menagement" className="sub-link-hover">
+              BUSINESS OWNER MANAGEMENT
+            </Link>
         </div>
+        <div className="sub-menu user">
+            <Link to="/registration-req-management" className="sub-link-hover">
+              Registration Request Management
+            </Link>
+        </div>
+        
+        <div className="main">
+            <Link to="/issues-reported" className="sub-link-hover" >
+                ISSUES REPORTED
+            </Link>
+        </div>
+
+        <div className="main">LANDING PAGE MANAGEMENT</div>
+        <div className="sub-menu landing">
+            <Link to="/video-management" className="sub-link-hover">
+              Demo Video Management
+            </Link>
+            <Link to="/review-rating" className="sub-link-hover">
+              Reviews & Ratings
+            </Link>
+            <Link to="/faqs-management" className="sub-link-hover">
+              FAQs Management
+            </Link>
+            <Link to="/preview-landing-page" className="sub-link-hover">
+                Preview Landing Page
+            </Link>
+        </div>
+      </div>
     );
 }
 
