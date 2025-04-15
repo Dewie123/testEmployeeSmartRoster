@@ -221,34 +221,6 @@ option:checked {
   color: var(--side-menu-background);
 }
 
-/* Display pdf */
-.App-pdf-frame {
-  position: 'relative';
-  width: '100vh';
-  height: '100vh';
-  border: '1px solid #ccc';
-  margin-top: '1rem';
-  background-color: var(--hover-background);
-  padding: 5px;
-  border-radius: 5px;
-
-  .App-close-pdf{
-    font-size: 20px;
-    cursor: pointer;
-    justify-self: end;
-  }
-
-  .App-close-pdf:hover{
-    color: var(--error);
-  }
-
-  .iframe {
-    width: 100lvh;
-    height: 100vh;
-    border: none;
-  }
-}
-
 /* Desktop Table Setup */
 .App-desktop-responsive-table {
   display: flex;

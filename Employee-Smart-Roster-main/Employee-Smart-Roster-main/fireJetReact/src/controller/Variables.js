@@ -12,25 +12,9 @@ export const YEAR_CHANGE = ['prevYear', 'nextYear'];
 
 // ENUM in DB
 export const TASK_STATUS = ['Not Started', 'In Progress', 'Completed'];
-export const REG_STATUS = ["Pending", "Approved", "Rejected"]
 
 export function formatDateTime (isoString){
     return new Intl.DateTimeFormat('en-US', {
         dateStyle: 'long'
     }).format(new Date(isoString), 'dd/MM/yyyy hh:mm tt')
-}
-
-export async function encodeFileContent(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            // reader.result looks like: "data:application/pdf;base64,..."
-            const base64String = reader.result.split(',')[1]; // remove prefix
-            resolve(base64String);
-        };
-
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
 }

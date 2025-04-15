@@ -53,7 +53,7 @@ export default function SADash() {
             showAlert(
                 "triggerFilterRegReq", 
                 "Failed to apply filter", 
-                error instanceof Error ? error.message : String(error), 
+                {error}.toString(), 
                 { type: 'error' }
             );
         }

@@ -42,14 +42,11 @@ const BOSide = () => {
         <div className="App-side-menu">
             <div className="main">COMPANY</div>
             <div className="sub-menu company">
-                <Link to="/company-detail" className="sub-link-hover">
-                    My Company
-                </Link>
                 <Link to="/view-bo-detail" className="sub-link-hover">
                     View Profile
                 </Link>
-                <Link to="/roles-skills-menagement" className="sub-link-hover">
-                    Roles & Skillsets Management
+                <Link to="/company-detail" className="sub-link-hover">
+                    My Company
                 </Link>
                 <Link to="/subscription-menagement" className="sub-link-hover">
                     Subscription Management
@@ -63,7 +60,7 @@ const BOSide = () => {
             </div>
 
             <div className="main">
-              <Link to="/users-menagement" className="sub-link-hover">
+              <Link to="" className="sub-link-hover">
                 MY EMPLOYEE
               </Link>
             </div>
@@ -72,10 +69,10 @@ const BOSide = () => {
                     Attendance Records
                 </Link>
                 <Link to="/mc-management" className="sub-link-hover">
-                    MC Management
-                </Link>
-                <Link to="/leave-management" className="sub-link-hover">
                     Leave Management
+                </Link>
+                <Link to="/users-menagement" className="sub-link-hover">
+                    Employee Management
                 </Link>
             </div>
 

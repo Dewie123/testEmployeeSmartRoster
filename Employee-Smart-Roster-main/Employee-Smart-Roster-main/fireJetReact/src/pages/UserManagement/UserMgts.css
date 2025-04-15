@@ -1,4 +1,4 @@
-.user-management {
+.UserMgts {
     display: flex;
     flex-direction: row;
 }
@@ -11,3 +11,4 @@
     justify-items: start;
     justify-content: start;
 }
+

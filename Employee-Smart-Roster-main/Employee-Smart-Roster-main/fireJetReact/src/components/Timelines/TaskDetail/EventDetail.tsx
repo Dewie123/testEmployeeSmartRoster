@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAlert  } from '../../../components/PromptAlert/AlertContext';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
 import SecondaryButton from '../../../components/SecondaryButton/SecondaryButton';
+import MoreDetail from './MoreDetail';
+import { TASK_STATUS } from '../../../controller/Variables.js';
+import AllocatedStaffDetail from './AlloctedStaffDetail';
 import TimelineController from '../../../controller/TimelineController.js';
-import { IoClose, CgProfile, TbTarget,
+import UserController from '../../../controller/User/UserController.js';
+import { IoClose, CgProfile, FaCircle, TbTarget, FaClipboardList,
          TbTargetArrow, FaRegListAlt, VscDebugBreakpointData,
          HiMiniViewfinderCircle, TiTime } from '../../../../public/Icons.js';
 
@@ -11,18 +15,24 @@ import './EventDetail.css'
 import '../../../../public/styles/common.css'
 
 interface EventDetailProps {
-    task?: any;
+    task: any;
     onUpdate?: (updatedData: any) => void;
     onDelete?: (deletedTaskId: number) => void;
     onClose?: () => void;
 }
 
 const { boGetTaskDetail, deleteTaskDetail } = TimelineController;
+const { getCurrentUserProfile } = UserController
 
-const EventDetail = ({task = [], onUpdate, onDelete, onClose}: EventDetailProps) => {
+const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
     const { showAlert } = useAlert()
     const [ taskDetail, setTaskDetail ] = useState<any>([])
     const [ showDeleteTask, setShowDeleteTask ] = useState(false)
+    const [ showSeeMoreDetail, setShowSeeMoreDetail ] = useState(false)
+    const triggerCloseSeeMoreDetailOutsite = useRef<HTMLDivElement>(null);
+    const [ showAllocatedDetail, setShowAllocatedDetail ] = useState(false)
+    const triggerCloseAllocatedDetailOutsite = useRef<HTMLDivElement>(null);
+    const [ allocatedStaff, setAllocatedStaff ] = useState<any>([])
 
     const fetchTaskDetail = async () => {
         try {
@@ -48,7 +58,7 @@ const EventDetail = ({task = [], onUpdate, onDelete, onClose}: EventDetailProps)
             setTaskDetail(taskDetail[0]);
         } catch (error) {
             showAlert(
-                "fetchRegisReqsData",
+                "fetchTaskDetail",
                 "Fetch data error",
                 error instanceof Error ? error.message : String(error),
                 { type: 'error' }
@@ -59,6 +69,54 @@ const EventDetail = ({task = [], onUpdate, onDelete, onClose}: EventDetailProps)
     useEffect(() => { fetchTaskDetail() }, [task])
     // useEffect(() => { console.log(taskDetail) }, [task])
 
+    const fetchAllocatedStaffDetail = async () => {// Get allocated staff detail
+        let staff = await getCurrentUserProfile(taskDetail.user_id);
+        staff = staff.employeeProfile
+        // console.log(staff[0])
+        setAllocatedStaff(staff[0])
+    }
+    useEffect(() => {fetchAllocatedStaffDetail()}, [taskDetail])
+
+    // Close allocated staff detail when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+        if (triggerCloseAllocatedDetailOutsite.current && !triggerCloseAllocatedDetailOutsite.current.contains(event.target as Node)) {
+            setShowAllocatedDetail(false);
+        }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+    
+    function toggleShowAllocationDetail () {
+        setShowAllocatedDetail(!showAllocatedDetail)
+    }
+    // useEffect(() => {console.log(showAllocatedDetail)}, [showAllocatedDetail])
+
+
+    // Close see more task detail when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+        if (triggerCloseSeeMoreDetailOutsite.current && !triggerCloseSeeMoreDetailOutsite.current.contains(event.target as Node)) {
+            setShowSeeMoreDetail(false);
+        }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    function toggleShowMoreTaskDetail() {
+        setShowSeeMoreDetail(!showSeeMoreDetail);
+    }
+    // useEffect(() => {console.log(showSeeMoreDetail)}, [showSeeMoreDetail])
+
+    // Delete Task
     function toggleShowDelete () {
         if (showDeleteTask === false)
             setShowDeleteTask(true)
@@ -120,6 +178,105 @@ const EventDetail = ({task = [], onUpdate, onDelete, onClose}: EventDetailProps)
             <div className="App-header">
                 <h1>{taskDetail.title}</h1>
                 <IoClose className='icons' onClick={onClose}/>
+            </div>
+
+            <div className="task-allocation-detail">
+                <div className="task-allocation-detail-title">
+                    <h3>Task Allocation's Detail</h3>
+                    <FaCircle 
+                        className={`task-allocated-status
+                                    ${taskDetail.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                    ${taskDetail.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                    />
+                </div>
+                <div className={`allocated-staff-info ${showAllocatedDetail ? 'active' : ''}`}
+                    ref={triggerCloseAllocatedDetailOutsite}
+                >
+                    <div 
+                        className="allocated-staff-detail-title"
+                        onClick={toggleShowAllocationDetail}
+                    >
+                        <CgProfile className='App-popup-content-icon'/>
+                        <p>{task.fullName}</p>
+                    </div>
+                    <div className="allocated-staff-detail-content">
+                        <AllocatedStaffDetail
+                            allocatedStaff = {allocatedStaff}
+                        />
+                    </div>
+                </div>
+                
+                {taskDetail?.createdOn?.length === 2 && (
+                <div className="allocated-date-detail">
+                    <p className="title">Allocated Date:</p>
+                    <div className="event-detail-date-display">
+                        <HiMiniViewfinderCircle className='App-popup-content-icon'/>
+                        <p className="main-data">{taskDetail.createdOn[0]}</p>
+                    </div>
+                    <div className="event-detail-time-display">
+                        <TiTime className='App-popup-content-icon'/>
+                        <p className="main-data">{taskDetail.createdOn[1].split('.')[0]}</p>
+                    </div>
+                </div>
+                )}
+            </div>
+
+            <div className="task-detail-information">
+                <div className="task-detail-info-title">
+                    <h3>Task's Detail</h3>
+                    {/* See More Detail */}
+                    <div className={`see-more-task-detail ${showSeeMoreDetail ? 'active' : ''}`}
+                            ref={triggerCloseSeeMoreDetailOutsite}
+                    >
+                        <SecondaryButton 
+                            text='See More'
+                            onClick={() => toggleShowMoreTaskDetail()}
+                        />
+                        <div className="see-more-task-detail-content">
+                            <MoreDetail
+                                roleID = {taskDetail.rolesNeeded}
+                                skillID = {taskDetail.skillSetNeeded}
+                            />
+                        </div>
+                    </div>
+                </div>
+                {/* Task description */}
+                <div className="task-detail-description">
+                    <FaClipboardList className='App-popup-content-icon'/>
+                    <p className="main-data">
+                        {taskDetail.description}
+                    </p>
+                </div>
+                {taskDetail?.startDate?.length === 2 && (
+                <div className="start-date-detail">
+                    <p className="title">Start Date:</p>
+                    <div className="start-date-detail-data">
+                        <div className="event-detail-date-display">
+                            <TbTarget className='App-popup-content-icon'/>
+                            <p className="main-data">{taskDetail.startDate[0]}</p>
+                        </div>
+                        <div className="event-detail-time-display">
+                            <TiTime className='App-popup-content-icon'/>
+                            <p className="main-data">{taskDetail.startDate[1].split('.')[0]}</p>
+                        </div>
+                    </div>
+                </div>
+                )}
+                {taskDetail?.endDate?.length === 2 && (
+                <div className="end-date-detail">
+                    <p className="title">End Date:</p>
+                    <div className="end-date-detail-data">
+                        <div className="event-detail-date-display">
+                            <TbTargetArrow className='App-popup-content-icon'/>
+                            <p className="main-data">{taskDetail.endDate[0]}</p>
+                        </div>
+                        <div className="event-detail-time-display">
+                            <TiTime className='App-popup-content-icon'/>
+                            <p className="main-data">{taskDetail.endDate[1].split('.')[0]}</p>
+                        </div>
+                    </div>
+                </div>
+                )}
             </div>
             
             <div className="event-button-group">

@@ -263,62 +263,6 @@ function handleUserAccStatusFilter(companies, accStatus) {
     return filteredData;
 }
 
-// Check if user registered an account before
-async function checkIfEmailRegistered(email) {
-    const body = {
-        email: email,
-    };
-
-    try{
-        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/account/change-password/send-email-address', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' }
-        });
-        if(!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-
-        return await data;
-    } catch(error) {
-        console.error(`Network error for UID ${uid}: \n`, error);
-        throw new Error(`Failed to suspend the user: ${error.message}`);
-    }
-}
-
-async function getEmployeeList(boID) {
-    const body = {
-        business_owner_id: boID
-    };
-
-    try {
-        console.log("Sending request to fetch employee list with body:", body);
-        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/employee/view', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("API returned an error response:", errorData);
-            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log("Employee data returned:", data);
-        return data;
-    } catch (error) {
-        console.error(`Network error for business owner ID ${boID}:`, error);
-        throw new Error(`Failed to fetch employee data: ${error.message}`);
-    }
-}
-
-
-
 export default {
     getUsers,
     validateEmail,
@@ -329,6 +273,4 @@ export default {
     getBOUsers,
     handleSuspendUser,
     handleUsuspendUser,
-    checkIfEmailRegistered,
-    getEmployeeList,
 }

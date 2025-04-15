@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../../components/PromptAlert/AlertContext';
+import { GoAlertFill, TiTick } from '../../../public/Icons.js'
 import Header from './Header';
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import SecondaryButton from '../../components/SecondaryButton/SecondaryButton';
+import PasswordController from '../../controller/User/PasswordController.js';
 import UserController from '../../controller/User/UserController';
 
-import { GoAlertFill, TiTick } from '../../../public/Icons.js';
 import './style.css'
 
-const { validateEmail, checkIfEmailRegistered, } = UserController;
+const { checkIfEmailRegistered, } = PasswordController;
+const { validateEmail, } = UserController;
+
 
 export default function ReqResetEmail() {
     const navigate = useNavigate();
@@ -22,7 +25,6 @@ export default function ReqResetEmail() {
         setError(validateEmail(value));
     }
 
-    // This function is prepared for AWS send email
     const triggerRecoverPw = async() => {
         if(!email) return; // If email is empty, break the function
         if(error) return; // If error found, break the function
@@ -69,13 +71,9 @@ export default function ReqResetEmail() {
     const triggerRecoverPwWithoutURL = async() => {
         try{
             const isRegistered = await checkIfEmailRegistered(email);
-            // console.log(isRegistered)
 
-            if(isRegistered.message !== 'Email does not exist in DB'){
-                // navigate(`/reset-pw/${encodeURIComponent(email)}/${encryptedData}`);
-                navigate(`/reset-pw/${encodeURIComponent(email)}`);
-            }
-                
+            if(isRegistered)
+                navigate('/reset-pw');
             else
                 showAlert(
                     'Invalid Email Input',
@@ -87,7 +85,7 @@ export default function ReqResetEmail() {
             showAlert(
                 'triggerRecoverPwWithoutURL',
                 `${email}`,
-                error instanceof Error ? error.message : String(error),
+                'Failed to validate email',
                 {type:'error'}
             )
         }
@@ -100,10 +98,7 @@ export default function ReqResetEmail() {
     return(
         <div className="App-form-content">
             <Header />
-            <form action='' onSubmit={(e) => {
-                e.preventDefault();
-                triggerRecoverPwWithoutURL();
-            }}>
+            <form action='' onSubmit={triggerRecoverPwWithoutURL}>
                 <div className='forms-input'>
                     <strong>
                         Email <span style={{ color: 'red' }}>*</span>

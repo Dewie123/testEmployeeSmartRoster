@@ -70,7 +70,7 @@ const RegisReq_m = ({data=[], onUpdate}: RegisReqProps) => {
             </div>
             ))} 
             {showDetail && selectedRequest && (
-                <div className="App-popup" onClick={triggerCloseDetail}>
+                <div className="App-popup">
                 <RegisReqDetail 
                     regisRequest= {selectedRequest}
                     onClose={() => { triggerCloseDetail() }}
