@@ -33,6 +33,15 @@
 }
 
 .ratingTable th {
+<<<<<<< HEAD
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.ratingTable td {
+  font-size: 1rem;
+  color: #555;
+=======
   /* background-color: #f4f4f4; */
   background-color: rgba(43, 15, 87, 0.3);
 
@@ -44,6 +53,7 @@
   font-size: 1rem;
   background-color: white;
   color: black;
+>>>>>>> 137fa90da682af594a11dfe3b5eefdfba6eb6c51
 }
 
 /* Filter input */

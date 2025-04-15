@@ -12,6 +12,11 @@ import '../../../public/styles/common.css'
 
 const { handleSelectedDetail } = CompanyController;
 
+interface BOListTableProps {
+    companies?: any;
+    onUpdate?: (updatedData: any) => void;
+}
+
 const BOUserList_t = ({ companies = [], onUpdate }: BOListTableProps) => {
     // console.log(companies)
     const { showAlert } = useAlert();
@@ -78,7 +83,7 @@ const BOUserList_t = ({ companies = [], onUpdate }: BOListTableProps) => {
         </div>
         
         {showDetail && selectedCompany && (
-            <div className='App-popup'>
+            <div className='App-popup' onClick={triggerCloseDetail}>
                 <BODetail
                     company={selectedCompany}
                     onClose={() => triggerCloseDetail()}
@@ -88,11 +93,6 @@ const BOUserList_t = ({ companies = [], onUpdate }: BOListTableProps) => {
         )}
         </>
     )
-}
-
-interface BOListTableProps {
-    companies?: any;
-    onUpdate?: (updatedData: any) => void;
 }
 
 export default BOUserList_t;

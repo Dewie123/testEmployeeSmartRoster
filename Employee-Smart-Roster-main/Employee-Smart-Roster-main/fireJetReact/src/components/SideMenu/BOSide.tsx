@@ -1,91 +1,172 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { FaRegBuilding } from "react-icons/fa";
+import { GrSchedules } from "react-icons/gr";
+import { FaUsersViewfinder } from "react-icons/fa6";
+import { MdOutlineBugReport } from "react-icons/md";
+import { CiStar } from "react-icons/ci";
+
+import { FaChevronCircleDown,
+         FaChevronCircleUp, } from '../../../public/Icons.js'
 import "./menu.css";
 import "../../../public/styles/common.css"
 
 const BOSide = () => {
-    useEffect(() => {
-        // Add event listeners to all .main elements
-        const mainElements = document.querySelectorAll(".main");
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const location = useLocation();
     
-        mainElements.forEach((main) => {
-          main.addEventListener("click", () => {
-            // Remove active class and hide all sub-menus
-            mainElements.forEach((el) => {
-              el.classList.remove("active");
-              const subMenu = el.nextElementSibling as HTMLElement;
-              if (subMenu && subMenu.classList.contains("sub-menu")) {
-                subMenu.style.display = "none";
+  const menuItems = [
+      {
+          name: 'user',
+          label: 'COMPANY',
+          src: <FaRegBuilding className="menu-icon"/>,
+          items: [
+              {
+                  name: 'companyProfile',
+                  label: 'My Company',
+                  navHref: '/company-detail',
+              },
+              {
+                name: 'subscriptionManagement',
+                label: 'Subscription Management',
+                navHref: '/subscription-management',
               }
-            });
+          ]
+      },
+      {
+          name: 'timelineManagement',
+          label: 'TIMELINE MANAGEMENT',
+          navHref: '/timeline-management',
+          src: <GrSchedules className="menu-icon"/>,
+      },
+      {
+          name: 'employee',
+          label: 'MY EMPLOYEE',
+          src: <FaUsersViewfinder className="menu-icon"/>,
+          items: [
+              {
+                  name: 'employeeManagement',
+                  label: 'Employee Management',
+                  navHref: '/users-management'
+              },
+              {
+                  name: 'attendanceRecords',
+                  label: 'Attendance Records',
+                  navHref: '/attendance-records-management'
+              },
+              {
+                  name: 'leaveManagement',
+                  label: 'Leave Management',
+                  navHref: '/mc-management'
+              },
+          ]
+      },
+      {
+          name: 'reportIssues',
+          label: 'REPORT ISSUES',
+          navHref: '/report-issues',
+          src: <MdOutlineBugReport className="menu-icon"/>,
+      },
+      {
+          name: 'reviwRating',
+          label: 'REVIEW & RATING MANAGEMENT',
+          navHref: '/review-n-rating-management',
+          src: <CiStar className="menu-icon"/>,
+      },
+  ]
+
+  // Initialize expanded state based on current location
+  useEffect(() => {
+      const newExpandedItems: Record<string, boolean> = {};
+      
+      menuItems.forEach(item => {
+      if (item.items) {
+          // Check if any sub-item matches current path
+          const isActive = item.items.some(subItem => 
+          subItem.navHref === location.pathname
+          );
+          
+          if (isActive) {
+          newExpandedItems[item.name] = true;
+          }
+      }
+      });
+      
+      setExpandedItems(newExpandedItems);
+  }, [location.pathname]);
+
+  const toggleExpand = (name: string) => {
+      setExpandedItems(prev => ({
+      ...prev,
+      [name]: !prev[name]
+      }));
+  };
     
-            // Add active class to the clicked .main
-            main.classList.add("active");
-    
-            // Display the corresponding sub-menu
-            const subMenu = main.nextElementSibling as HTMLElement;
-            if (subMenu && subMenu.classList.contains("sub-menu")) {
-              subMenu.style.display = "flex";
-            }
-          });
-        });
-    
-        // Cleanup event listeners on component unmount
-        return () => {
-          mainElements.forEach((main) => {
-            main.removeEventListener("click", () => {});
-          });
-        };
-      }, []);
-
-    return (
-        <div className="App-side-menu">
-            <div className="main">COMPANY</div>
-            <div className="sub-menu company">
-                <Link to="/company-detail" className="sub-link-hover">
-                    My Company
-                </Link>
-                <Link to="/view-bo-detail" className="sub-link-hover">
-                    View Profile
-                </Link>
-                <Link to="/roles-skills-menagement" className="sub-link-hover">
-                    Roles & Skillsets Management
-                </Link>
-                <Link to="/subscription-menagement" className="sub-link-hover">
-                    Subscription Management
-                </Link>
-            </div>
-
-            <div className="main">
-                <Link to="/timeline-management" className="sub-link-hover" >
-                    TIMELINE MANAGEMENT
-                </Link>
-            </div>
-
-            <div className="main">
-              <Link to="/users-menagement" className="sub-link-hover">
-                MY EMPLOYEE
-              </Link>
-            </div>
-            <div className="sub-menu employee">
-                <Link to="/attendance-records-management" className="sub-link-hover">
-                    Attendance Records
-                </Link>
-                <Link to="/mc-management" className="sub-link-hover">
-                    MC Management
-                </Link>
-                <Link to="/leave-management" className="sub-link-hover">
-                    Leave Management
-                </Link>
-            </div>
-
-            <div className="main">
-                <Link to="/report-issues" className="sub-link-3" >
-                    REPORT ISSUES
-                </Link>
-            </div>
-        </div>
-    );
+  return(
+    <div className="App-side-menu">
+      {menuItems.map(({label, name, navHref, src, items: subItems}) => (
+      <div key={name}>
+        <ul className="menu-item-container">
+          {subItems ? (
+          // Main tab: if current item with subItems
+          <li 
+              className={`side-menu-btn ${expandedItems[name] ? 'expanded' : ''}`} 
+              onClick={() => toggleExpand(name)}
+          >
+              <a href={navHref} className="menu-tab">
+                  <div className="menu-tab-label">
+                    {src}
+                    {label}
+                  </div>
+                  {subItems && (
+                      <>{expandedItems[name] 
+                          ? <FaChevronCircleUp className="expand-icon"/> 
+                          : <FaChevronCircleDown className="expand-icon"/>
+                      }</>
+                  )}
+              </a>
+          </li>
+          ) : (
+          // Main tab: if current item without subItems
+          <li 
+              className={`side-menu-btn sub-navHref-hover 
+                  ${location.pathname === navHref 
+                      ? 'active' 
+                      : ''}`
+                  } 
+              onClick={() => toggleExpand(name)}
+          >
+              <a href={navHref} className="menu-tab">
+                <div className="menu-tab-label">
+                  {src}
+                  {label}
+                </div>
+              </a>
+          </li>
+          )}
+      
+          {/* Sub tab */}
+          {Array.isArray(subItems) && expandedItems[name] && (
+          <ul className="sub-menu">
+              {subItems.map((subItem) => (
+              <li 
+                  className={`sub-navHref-hover 
+                      ${location.pathname === subItem.navHref 
+                          ? 'active' 
+                          : ''}`
+                      }
+                  key={subItem.name}
+              >
+                  <a href={subItem.navHref}>{subItem.label}</a>
+              </li>
+              ))}
+          </ul>
+          )}
+        </ul>
+      </div>
+      ))}
+    </div>
+  )
 }
 
 export default BOSide;

@@ -1,4 +1,3 @@
-import SASide from '../../components/SideMenu/SASide';
 import './SA_FAQ.css';
 import '../../../public/styles/common.css';
 import React, { useState } from 'react';
@@ -114,103 +113,100 @@ const FAQManagement = () => {
   );
 
   return (
-    <div className="App-content">
-      <SASide />
-      <div className="content">
-        <h1 className="faq-logo">FAQ Management</h1>
-        
-        {/* Inline Add FAQ Section */}
-        <div className="faq-add-section">
-          <h2>Add New FAQ</h2>
-          <div className="faq-add-form">
-            <div className="faq-add-field">
-              <label className="title-add-faq">Question:</label>
+    <div className="content">
+      <h1 className="faq-logo">FAQ Management</h1>
+      
+      {/* Inline Add FAQ Section */}
+      <div className="faq-add-section">
+        <h2>Add New FAQ</h2>
+        <div className="faq-add-form">
+          <div className="faq-add-field">
+            <label className="title-add-faq">Question:</label>
+            <input
+              type="text"
+              className="faq-add-input"
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
+              placeholder="Enter your question here..."
+            />
+          </div>
+          <div className="faq-add-field">
+            <label className="title-add-faq">Answer:</label>
+            <div className="faq-add-input-container">
               <input
-                type="text"
                 className="faq-add-input"
-                value={newQuestion}
-                onChange={(e) => setNewQuestion(e.target.value)}
-                placeholder="Enter your question here..."
+                value={newAnswer}
+                onChange={(e) => setNewAnswer(e.target.value)}
+                placeholder="Enter the answer here..."
               />
             </div>
-            <div className="faq-add-field">
-              <label className="title-add-faq">Answer:</label>
-              <div className="faq-add-input-container">
-                <input
-                  className="faq-add-input"
-                  value={newAnswer}
-                  onChange={(e) => setNewAnswer(e.target.value)}
-                  placeholder="Enter the answer here..."
-                />
-              </div>
-            </div>
-            <div className="btns-grp">
-              <PrimaryButton text="Add FAQ" onClick={handleAddFAQ} />
-            </div>
           </div>
-        </div>
-
-        <div className="faq-search-section">
-            <input
-                type="text"
-                className="faq-search-input"
-                value={faqSearch}
-                onChange={(e) => setFaqSearch(e.target.value)}
-                placeholder="Search FAQs..."
-            />
-            {faqSearch && (
-                <button 
-                    className="faq-search-clear" 
-                    onClick={() => setFaqSearch("")}
-                    aria-label="Clear search"
-                >
-                <IoClose />
-                </button>
-            )}
-        </div>
-        
-        {/* FAQ Listing Section */}
-        <div className="main-contents">
-          <div className="App-desktop-responsive-table">
-            {loading ? (
-              <div>Loading FAQs...</div>
-            ) : error ? (
-              <div>Error loading FAQs: {(error as Error)?.message || 'Unknown error'}</div>
-            ) : (
-              <>
-                <div className="App-desktop-table-row desktop-table-header">
-                  <Header className="header-faq-question" text="Question" />
-                  <Header className="header-faq-answer" text="Answer" />
-                  <Header className="App-header-icon-gap" text="" />
-                </div>
-                  {displayedFaqs.map((faq: any) => (
-                <div key={faq.faqID} className="App-desktop-table-row faq-table-body">
-                    <Cell className="body-faq-question" text={faq.question_desc} />
-                    <Cell className="body-faq-answer" text={faq.answer} />
-                    <Cell
-                    className="body-faq-action"
-                    text={
-                        <div className="faq-action-buttons">
-                        <button className="primary-button" onClick={() => openViewModal(faq)}>
-                            View Details
-                        </button>
-                        </div>
-                    }
-                    />
-                </div>
-                  ))}
-              </>
-            )}
+          <div className="btns-grp">
+            <PrimaryButton text="Add FAQ" onClick={handleAddFAQ} />
           </div>
-        </div>
-        {/* FAQ Listing Section for Mobile */}
-        <div className="mobile-faq-container">
-            <SA_FAQ_m data={displayedFaqs} onUpdate={refetch} />
         </div>
       </div>
 
+      <div className="faq-search-section">
+          <input
+              type="text"
+              className="faq-search-input"
+              value={faqSearch}
+              onChange={(e) => setFaqSearch(e.target.value)}
+              placeholder="Search FAQs..."
+          />
+          {faqSearch && (
+              <button 
+                  className="faq-search-clear" 
+                  onClick={() => setFaqSearch("")}
+                  aria-label="Clear search"
+              >
+              <IoClose />
+              </button>
+          )}
+      </div>
+      
+      {/* FAQ Listing Section */}
+      <div className="main-contents">
+        <div className="App-desktop-responsive-table">
+          {loading ? (
+            <div>Loading FAQs...</div>
+          ) : error ? (
+            <div>Error loading FAQs: {(error as Error)?.message || 'Unknown error'}</div>
+          ) : (
+            <>
+              <div className="App-desktop-table-row desktop-table-header">
+                <Header className="header-faq-question" text="Question" />
+                <Header className="header-faq-answer" text="Answer" />
+                <Header className="App-header-icon-gap" text="" />
+              </div>
+                {displayedFaqs.map((faq: any) => (
+              <div key={faq.faqID} className="App-desktop-table-row faq-table-body">
+                  <Cell className="body-faq-question" text={faq.question_desc} />
+                  <Cell className="body-faq-answer" text={faq.answer} />
+                  <Cell
+                  className="body-faq-action"
+                  text={
+                      <div className="faq-action-buttons">
+                      <button className="primary-button" onClick={() => openViewModal(faq)}>
+                          View Details
+                      </button>
+                      </div>
+                  }
+                  />
+              </div>
+                ))}
+            </>
+          )}
+        </div>
+      </div>
+      {/* FAQ Listing Section for Mobile */}
+      <div className="mobile-faq-container">
+        <SA_FAQ_m data={displayedFaqs} onUpdate={refetch} />
+      </div>
+
       {/* View Details Popup Modal */}
-      {isViewModalOpen && currentFAQ && (
+        {isViewModalOpen && currentFAQ && (
         <div className="App-popup">
           <div className="App-popup-content">
             <div className="App-header">
@@ -270,29 +266,29 @@ const FAQManagement = () => {
       )}
 
       {/* Delete Confirmation Prompt Modal */}
-      {isDeletePromptOpen && currentFAQ && (
-        <div className="App-popup">
-        <div className="App-popup-content faq-delete-prompt">
-            <div className="App-header">
-                <label className="faq-popup-warning-icon">
-                    <IoIosWarning />
-                </label>
-                <h2>Delete FAQ?</h2>
-                <button className="icons" onClick={cancelDeleteFAQ}>
-                <IoClose />
-                </button>
-            </div>
-            <div className="faq-popup-delete-content">
-                <p>Are you sure to delete this FAQ?</p>
-            </div>
-            <div className="faq-modal-actions">
-                <div className="btns-grp">
-                <PrimaryButton text="Delete" onClick={confirmDeleteFAQ} />
-                <SecondaryButton text="Cancel" onClick={cancelDeleteFAQ} />
-                </div>
-            </div>
-        </div>
-        </div>
+        {isDeletePromptOpen && currentFAQ && (
+      <div className="App-popup">
+      <div className="App-popup-content faq-delete-prompt">
+          <div className="App-header">
+              <label className="faq-popup-warning-icon">
+                  <IoIosWarning />
+              </label>
+              <h2>Delete FAQ?</h2>
+              <button className="icons" onClick={cancelDeleteFAQ}>
+              <IoClose />
+              </button>
+          </div>
+          <div className="faq-popup-delete-content">
+              <p>Are you sure to delete this FAQ?</p>
+          </div>
+          <div className="faq-modal-actions">
+              <div className="btns-grp">
+              <PrimaryButton text="Delete" onClick={confirmDeleteFAQ} />
+              <SecondaryButton text="Cancel" onClick={cancelDeleteFAQ} />
+              </div>
+          </div>
+      </div>
+      </div>
       )}
     </div>
   );

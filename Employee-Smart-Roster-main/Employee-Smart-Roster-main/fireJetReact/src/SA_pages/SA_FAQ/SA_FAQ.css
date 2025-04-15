@@ -124,6 +124,7 @@
 }
 
 
+/* By default, show desktop and hide mobile */
 .desktop-faq-container {
     display: block;
   }
@@ -131,6 +132,7 @@
     display: none;
   }
   
+  /* For mobile devices, hide the desktop view and show the mobile view */
   @media only screen and (max-width: 768px) {
     .desktop-faq-container {
       display: none;
@@ -140,6 +142,7 @@
     }
   }
   
+  /* Optionally, if you need a separate adjustment for tablets */
   @media only screen and (min-width: 769px) and (max-width: 1023px) {
     .mobile-faq-container {
         display: block;

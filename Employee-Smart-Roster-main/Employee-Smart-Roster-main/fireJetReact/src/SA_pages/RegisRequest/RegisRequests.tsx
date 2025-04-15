@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useAlert } from "../../components/PromptAlert/AlertContext";
 import RegisReqController from "../../controller/RegisReqController";
 import RegisReq_m from '../../SA_components/Registration_Request/RegisReq_m';
-import SASide from "../../components/SideMenu/SASide";
 import RegisReqTitle from '../../SA_components/Registration_Request/Title';
 
 import "./RegisRequests.css"
@@ -81,49 +80,46 @@ const RegisRequests = () => {
     };
 
     return (
-        <div className="App-content">
-            <SASide />
-            <div className="content">
-                <RegisReqTitle />
-                
-                <div className="App-filter-search-component">
-                    <div className="App-filter-container">
-                        <p className='App-filter-title'>Reg.Request Status</p>
-                        <select 
-                            value={filterStatus}
-                            onChange={(e) => {
-                                // console.log("Target value: ", e.target.value)
-                                setFilterStatus(e.target.value);
-                            }}
-                        >
-                            {RegStatus.map(status => (
-                                <option key={status} value={status}>
-                                    {status}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="App-filter-container">
-                        <p className='App-filter-title'>UEN/Company Name</p>
-                        <input type='text' 
-                            placeholder='Search UEN / Company Name' 
-                            onChange={(e) => {
-                                setFilterUENOBizName(e.target.value);
-                            }}
-                        />
-                    </div>
+        <div className="content">
+            <RegisReqTitle />
+            
+            <div className="App-filter-search-component">
+                <div className="App-filter-container">
+                    <p className='App-filter-title'>Reg.Request Status</p>
+                    <select 
+                        value={filterStatus}
+                        onChange={(e) => {
+                            // console.log("Target value: ", e.target.value)
+                            setFilterStatus(e.target.value);
+                        }}
+                    >
+                        {RegStatus.map(status => (
+                            <option key={status} value={status}>
+                                {status}
+                            </option>
+                        ))}
+                    </select>
                 </div>
-
-                {/* Desktop View */}
-                <RegisReq 
-                    data={filteredRegisRequest}
-                    onUpdate={handleDataUpdate}/>
-
-                {/* Mobile View */}
-                <RegisReq_m 
-                    data={filteredRegisRequest}
-                    onUpdate={handleDataUpdate}/>
+                <div className="App-filter-container">
+                    <p className='App-filter-title'>UEN/Company Name</p>
+                    <input type='text' 
+                        placeholder='Search UEN / Company Name' 
+                        onChange={(e) => {
+                            setFilterUENOBizName(e.target.value);
+                        }}
+                    />
+                </div>
             </div>
+
+            {/* Desktop View */}
+            <RegisReq 
+                data={filteredRegisRequest}
+                onUpdate={handleDataUpdate}/>
+
+            {/* Mobile View */}
+            <RegisReq_m 
+                data={filteredRegisRequest}
+                onUpdate={handleDataUpdate}/>
         </div>
     )
 }

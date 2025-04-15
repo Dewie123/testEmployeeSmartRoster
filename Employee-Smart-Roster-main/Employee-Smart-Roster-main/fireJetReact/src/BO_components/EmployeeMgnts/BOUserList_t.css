@@ -1,0 +1,73 @@
+.desktop-table-header {
+    display: flex;
+    flex-direction: row;
+
+    .header-nric {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .header-fullname {
+        width: 1fr; /* takes remaining space */
+    }
+
+    .header-email {
+        min-width: 300px;
+        max-width: 300px;
+    }
+
+    .header-role {
+        min-width: 250px;
+        max-width: 250px;
+    }
+
+    .header-phone {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .header-status {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .header-icon {
+        min-width: 40px;
+        max-width: 40px;
+    }
+}
+
+.table-body {
+    display: flex;
+    flex-direction: row;
+    
+    .body-nric {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .body-fullname {
+        width: 1fr; /* takes remaining space */
+    }
+
+    .body-email {
+        min-width: 300px;
+        max-width: 300px;
+    }
+
+    .body-role {
+        min-width: 250px;
+        max-width: 250px;
+    }
+
+    .body-phone {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .body-status {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+}

@@ -113,7 +113,6 @@ const LeaveManagement: React.FC = () => {
 
   return (
     <div className="App-content">
-      <BOSide />
       <div className="content leave-management">
         <h1>Leave Management</h1>
         <div className="App-desktop-responsive-table">

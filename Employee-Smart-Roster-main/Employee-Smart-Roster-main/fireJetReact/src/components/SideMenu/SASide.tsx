@@ -1,110 +1,162 @@
-import React, { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { BsShopWindow } from "react-icons/bs";
+import { MdOutlineBugReport } from "react-icons/md";
+import { LuUserCog } from "react-icons/lu";
+
+import { FaChevronCircleDown,
+         FaChevronCircleUp, } from '../../../public/Icons.js'
 import "./menu.css";
-import "../../../public/styles/common.css"
+import "../../../public/styles/common.css";
 
 const SASide = () => {
-  const location = useLocation();
+    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+    const location = useLocation();
 
-  useEffect(() => {
-      // Add event listeners to all .main elements
-      const mainElements = document.querySelectorAll(".main");
-  
-      mainElements.forEach((main) => {
-        main.addEventListener("click", () => {
-          // Remove active class and hide all sub-menus
-          mainElements.forEach((el) => {
-            el.classList.remove("active");
-            const subMenu = el.nextElementSibling as HTMLElement;
-            if (subMenu && subMenu.classList.contains("sub-menu")) {
-              subMenu.style.display = "none";
+    const menuItems = [
+        {
+            name: 'user',
+            label: 'USER MANAGEMENT',
+            src: <LuUserCog className="menu-icon"/>,
+            items: [
+                {
+                    name: 'userManagement',
+                    label: 'BUSINESS OWNER MANAGEMENT',
+                    navHref: '/users-management',
+                },
+                {
+                    name: 'userRegReq',
+                    label: 'Registration Request Management',
+                    navHref: '/registration-req-management',
+                }
+            ]
+        },
+        {
+            name: 'issue',
+            label: 'ISSUES REPORTED',
+            navHref: '/issues-reported',
+            src: <MdOutlineBugReport className="menu-icon"/>,
+        },
+        {
+            name: 'landing',
+            label: 'LANDING PAGE MANAGEMENT',
+            src: <BsShopWindow className="menu-icon"/>,
+            items: [
+                {
+                    name: 'landingDemoVideo',
+                    label: 'Demo Video Management',
+                    navHref: '/video-management'
+                },
+                {
+                    name: 'landingReview',
+                    label: 'Reviews & Ratings',
+                    navHref: '/review-rating'
+                },
+                {
+                    name: 'landingFAQ',
+                    label: 'FAQs Management',
+                    navHref: '/faqs-management'
+                },
+                {
+                    name: 'landingPreview',
+                    label: 'Preview Landing Page',
+                    navHref: '/preview-landing-page'
+                },
+            ]
+        },
+    ]
+
+    // Initialize expanded state based on current location
+    useEffect(() => {
+        const newExpandedItems: Record<string, boolean> = {};
+        
+        menuItems.forEach(item => {
+        if (item.items) {
+            // Check if any sub-item matches current path
+            const isActive = item.items.some(subItem => 
+            subItem.navHref === location.pathname
+            );
+            
+            if (isActive) {
+            newExpandedItems[item.name] = true;
             }
-          });
-  
-          // Add active class to the clicked .main
-          main.classList.add("active");
-          // Display the corresponding sub-menu
-          const subMenu = main.nextElementSibling as HTMLElement;
-            if (subMenu && subMenu.classList.contains("sub-menu")) {
-              subMenu.style.display = "flex";
-            }
-          });
+        }
         });
+        
+        setExpandedItems(newExpandedItems);
+    }, [location.pathname]);
 
-        // Pre-expand submenu based on location
-        const path = location.pathname;
-        const menuMap = [
-          { pathList: [
-              "/registration-req-management", 
-              "/users-menagement"
-            ], 
-            className: "user" 
-          },
-          { pathList: [
-              "/video-management", 
-              "/review-rating", 
-              "/faqs-management", 
-              "/preview-landing-page"
-            ], 
-            className: "landing" 
-          }
-        ];
-    
-        menuMap.forEach((group) => {
-          if (group.pathList.some(p => path.startsWith(p))) {
-            const targetSub = document.querySelector(`.sub-menu.${group.className}`) as HTMLElement;
-            const targetMain = targetSub?.previousElementSibling;
-            if (targetSub && targetMain) {
-              targetSub.style.display = "flex";
-              targetMain.classList.add("active");
-            }
-          }
-        });
+    const toggleExpand = (name: string) => {
+        setExpandedItems(prev => ({
+        ...prev,
+        [name]: !prev[name]
+        }));
+    };
 
-      // Cleanup event listeners on component unmount
-      return () => {
-        mainElements.forEach((main) => {
-          main.replaceWith(main.cloneNode(true)); // remove all listeners
-        });
-      };
-    }, [location]);
-
-    return (
+    return(
         <div className="App-side-menu">
-            <div className="main">
-                <Link to="/users-menagement" className="sub-link-hover">
-                  BUSINESS OWNER MANAGEMENT
-                </Link>
+            {menuItems.map(({label, name, navHref, src, items: subItems}) => (
+            <div key={name}>
+            <ul className="menu-item-container">
+                {subItems ? (
+                // Main tab: if current item with subItems
+                <li 
+                    className={`side-menu-btn ${expandedItems[name] ? 'expanded' : ''}`} 
+                    onClick={() => toggleExpand(name)}
+                >
+                    <a href={navHref} className="menu-tab">
+                        <div className="menu-tab-label">
+                        {src}
+                        {label}
+                        </div>
+                        {subItems && (
+                            <>{expandedItems[name] 
+                                ? <FaChevronCircleUp className="expand-icon"/> 
+                                : <FaChevronCircleDown className="expand-icon"/>
+                            }</>
+                        )}
+                    </a>
+                </li>
+                ) : (
+                // Main tab: if current item without subItems
+                <li 
+                    className={`side-menu-btn sub-navHref-hover 
+                        ${location.pathname === navHref 
+                            ? 'active' 
+                            : ''}`
+                        } 
+                    onClick={() => toggleExpand(name)}
+                >
+                    <a href={navHref} className="menu-tab">
+                    <div className="menu-tab-label">
+                        {src}
+                        {label}
+                    </div>
+                    </a>
+                </li>
+                )}
+            
+                {/* Sub tab */}
+                {Array.isArray(subItems) && expandedItems[name] && (
+                <ul className="sub-menu">
+                    {subItems.map((subItem) => (
+                    <li 
+                        className={`sub-navHref-hover 
+                            ${location.pathname === subItem.navHref 
+                                ? 'active' 
+                                : ''}`
+                            }
+                        key={subItem.name}
+                    >
+                        <a href={subItem.navHref}>{subItem.label}</a>
+                    </li>
+                    ))}
+                </ul>
+                )}
+            </ul>
             </div>
-            <div className="sub-menu user">
-                <Link to="/registration-req-management" className="sub-link-hover">
-                  Registration Request Management
-                </Link>
-            </div>
-
-            <div className="main">
-                <Link to="/issues-management" className="sub-link-hover" >
-                    REPORT ISSUES MANAGEMENT
-                </Link>
-            </div>
-
-            <div className="main">LANDING PAGE MANAGEMENT</div>
-            <div className="sub-menu landing">
-                <Link to="/video-management" className="sub-link-hover">
-                  Demo Video Management
-                </Link>
-                <Link to="/review-rating" className="sub-link-hover">
-                  Reviews & Ratings
-                </Link>
-                <Link to="/faqs-management" className="sub-link-hover">
-                  FAQs Management
-                </Link>
-                <Link to="/preview-landing-page" className="sub-link-hover">
-                    Preview Landing Page
-                </Link>
-            </div>
+            ))}
         </div>
-    );
+    )
 }
-
 export default SASide;

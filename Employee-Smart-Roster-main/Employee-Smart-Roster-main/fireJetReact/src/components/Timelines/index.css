@@ -191,15 +191,15 @@
     }
 
     .task-entry.in-progress {
-        color: var(--success);
-        border-left-color: var(--success);
-        background-color: var(--success-background);
-    }
-
-    .task-entry.completed {
         color: var(--warning);
         border-left-color: var(--warning);
         background-color: var(--warning-background);
+    }
+
+    .task-entry.completed {
+        color: var(--success);
+        border-left-color: var(--success);
+        background-color: var(--success-background);
     }
 
     .task-entry:hover {

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import CompanyController from '../../controller/CompanyController';
-import BOSide from '../../components/SideMenu/BOSide';
 import { FaPlusCircle } from "../../../public/Icons.js"
 import './RoleNSkillset.css'
 import '../../../public/styles/common.css'
@@ -51,7 +50,6 @@ const RoleNSkillset = () => {
 
     return (
         <div className="App-content">
-            <BOSide />
             <div className="content">
                 <h1 className="App-header">Role & Skillset Management</h1>
             

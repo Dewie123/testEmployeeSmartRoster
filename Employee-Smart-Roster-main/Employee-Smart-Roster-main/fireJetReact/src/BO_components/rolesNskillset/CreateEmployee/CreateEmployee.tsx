@@ -85,8 +85,8 @@ const CreateAccount = () => {
             <SubmitButton onClick={() => setIsPopupOpen(true)} text="Create Account" />
 
             {isPopupOpen && (
-                <div className="App-popup" onClick={() => setIsPopupOpen(false)}>
-                    <div className="App-popup-content" onClick={(e) => e.stopPropagation()}>
+                <div className="App-popup">
+                    <div className="App-popup-content">
                         <div className='App-header'>
                             <h1>Create Account</h1>
                             <button className='icons' onClick={() => setIsPopupOpen(false)}>

@@ -28,6 +28,11 @@ div{
 
   .nav-link {
     width: 50px;
+    min-width: 50px;
+  }
+
+  .nav-user-role {
+    width: 100%;
   }
 
   .btn-group {
@@ -36,7 +41,6 @@ div{
     justify-content: end;
     gap: 5px;
     justify-self: end;
-
   }
 
   .navbar-brand {
@@ -44,12 +48,29 @@ div{
     font-weight: bold;
   }
   
-  .logout-button {
+  .nav-button {
     padding: 5px;
-  }
-  
-  .logout-button:hover {
-    background-color: var(--main-page-background);
-    color: black;
+    font-size: 30px;
+    cursor: pointer;
     border-radius: 5px;
   }
+  
+  .nav-button:hover {
+    background-color: var(--main-page-background);
+    color: black;
+  }
+
+  .hamburger-menu-icon {
+    display: none;
+    flex-direction: column;
+    width: fit-content;
+    height: fit-content;
+    margin-right: 5px;
+  }
+
+/* Mobile (all screens below 768px) */
+@media only screen and (max-width: 768px) {
+  .hamburger-menu-icon {
+    display: flex;
+  }
+}

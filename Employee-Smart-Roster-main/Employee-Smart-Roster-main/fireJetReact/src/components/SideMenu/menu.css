@@ -1,48 +1,94 @@
-.main {
-    margin-bottom: 5px;
-    margin-top: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    
-}
-
-.main:hover {
-    font-weight: 900;
-    font-style: oblique;
-}
-
-.sub-menu {
-    margin-left: 10px;
-    margin-bottom: 5px;
-    gap: 10px;
-    min-height: fit-content;
-    width: auto;
+.menu-item-container {
+    list-style-type: none; /* Remove bullet point from list */
     display: flex;
     flex-direction: column;
-    font-size: var(--secondary-text);
+    margin: 0px;
+    padding: 0px;
 }
 
-.sub-link {
-    min-height: fit-content;
-    width: max-content;
+/* Side menu tab */
+.side-menu-btn {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+
+    .menu-tab {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        font-size: 15px;
+        gap: 5px;
+
+        .menu-tab-label {
+            display: flex;
+            flex-direction: row;
+            width: fit-content;
+            justify-content: start;
+            gap: 5px;
+        }
+    }
+}
+/* Side menu expanded */
+.side-menu-btn.expanded {
+    background-color: var(--side-menu-hover-background);
+    border-bottom: var(--light-color-text);
+    border-bottom-style: outset;
+    border-bottom-width: 2px;
 }
 
-.sub-link-hover:hover {
-    text-decoration: underline;
+.side-menu-btn:hover {
+    border-radius: 7px;
+    background-color: var(--side-menu-hover-background);
 }
 
-/* SASide */
-.user, .issues, .landing {
-    display: none;
+.expand-icon, .menu-icon {
+    min-width: 17px;
+    font-size: 17px;
+    align-self: center;
 }
 
-/* BOSide */
-.company, .employee {
-    display: none;
+/* Sub menu */
+.sub-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    background-color: var(--main-page-background);
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    color: var(--primary-background);
+    padding: 4px;
+
+    .sub-navHref-hover {
+        padding: 5px;
+        border-bottom: var(--light-color-text);
+        border-bottom-style: outset;
+        border-bottom-width: 2px;
+        font-size: 14px;
+    }
+
+    .sub-navHref-hover:hover {
+        background-color: #D9B9ED;
+        font-weight: bold;
+    }
 }
 
+.sub-navHref-hover.active {
+    background-color: #DFD4F0;
+    font-weight: bold;
+    color: var(--primary-background);
+    border-radius: 7px;
+}
 
 /* Mobile (all screens below 768px) */
 @media only screen and (max-width: 768px) {
-    
+    .menu-for-mobile-responsive{
+        display: flex;
+    }
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useAlert } from "../../components/PromptAlert/AlertContext";
-import SASide from "../../components/SideMenu/SASide";
 import RatingChart from "../../SA_components/RatingChart/RatingChart";
 import SubscriptionBar from "../../SA_components/SubscriptionBar/SubscriptionBar";
 import RegisReq_m from "../../SA_components/Registration_Request/RegisReq_m";
@@ -53,7 +52,7 @@ export default function SADash() {
             showAlert(
                 "triggerFilterRegReq", 
                 "Failed to apply filter", 
-                error instanceof Error ? error.message : String(error), 
+                {error}.toString(), 
                 { type: 'error' }
             );
         }
@@ -65,18 +64,15 @@ export default function SADash() {
     ])
 
     return(
-        <div className="App-content">
-            <SASide />
-            <div className="content">
-                <div className="dashboard-content">
-                    <div className="virtual-data">
-                        <RatingChart />
-                        {/* <SubscriptionBar /> */}
-                    </div>
-                    <div className="regis-request-section">
-                        <RegisReqTitle noOfPendingRequest={filteredRegisRequest.length} />
-                        <RegisReq_m data={filteredRegisRequest}/>
-                    </div>
+        <div className="content">
+            <div className="dashboard-content">
+                <div className="virtual-data">
+                    <RatingChart />
+                    {/* <SubscriptionBar /> */}
+                </div>
+                <div className="regis-request-section">
+                    <RegisReqTitle noOfPendingRequest={filteredRegisRequest.length} />
+                    <RegisReq_m data={filteredRegisRequest}/>
                 </div>
             </div>
         </div>

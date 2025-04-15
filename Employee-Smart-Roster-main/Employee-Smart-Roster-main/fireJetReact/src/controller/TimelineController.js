@@ -81,7 +81,7 @@ async function getTaskDetail (userID) {
     const body = {
         employee_user_id: userID
     };
-
+// 
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/task/view', {
             method: 'POST',
@@ -102,9 +102,25 @@ async function getTaskDetail (userID) {
     }
 }
 
+function getRoleNeededForTask (allRoles, roleNeededID){
+    const roleNeeded = allRoles.filter((role) => 
+        role.roleID === roleNeededID
+    )
+    return roleNeeded
+} 
+
+function getSkillNeededForTask (allSkills, skillNeededID){
+    const skillNeeded = allSkills.filter((skill) => 
+        skill.skillSetID === skillNeededID
+    )
+    return skillNeeded
+} 
+
 export default {
     getTimelines, 
     boGetTaskDetail,
     deleteTaskDetail, 
     getTaskDetail,
+    getRoleNeededForTask,
+    getSkillNeededForTask,
 }

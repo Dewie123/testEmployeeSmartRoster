@@ -3,7 +3,6 @@ import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
 import TimelineController from '../../controller/TimelineController'
 import MonthCalendar from '../../components/Timelines/MonthCalendar'
-import BOSide from '../../components/SideMenu/BOSide';
 
 import './TimelinesPage.css'
 import '../../../public/styles/common.css'
@@ -46,11 +45,9 @@ const BOTimelinesPage = () => {
                 task.taskID !== taskID
         ));
     }
-
-
+    
     return (
         <div className="App-content">
-            <BOSide />
             {/* BO Side Menu here */}
             <div className="content">
                 <h1>Timeline Management</h1>

@@ -74,7 +74,6 @@ function UpdateProfile() {
 
   return (
     <div className="App-content">
-      <BOSide />
       <div className="content">
         <h1 className="logo">EmpRoster</h1>
         <div className="main-contents">

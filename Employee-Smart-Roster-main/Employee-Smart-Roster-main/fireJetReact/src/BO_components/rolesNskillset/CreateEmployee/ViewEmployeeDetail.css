@@ -4,6 +4,11 @@ body, html {
 }
 
 .viewProfileContainer {
+<<<<<<< HEAD
+  /* margin-left: 200px; */
+  /* margin-top: 50px; */
+=======
+>>>>>>> 137fa90da682af594a11dfe3b5eefdfba6eb6c51
   padding-right: 1rem;
 }
 
@@ -61,8 +66,14 @@ body, html {
   box-sizing: border-box;
 }
 
+<<<<<<< HEAD
+
+/* Responsive handling */
+@media (max-width: 768px) {
+=======
 /* Responsive handling */
 @media screen and (max-width: 768px) {
+>>>>>>> 137fa90da682af594a11dfe3b5eefdfba6eb6c51
   .viewProfileContainer {
     margin-left: 0;
     padding: 1rem;

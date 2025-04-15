@@ -1,6 +1,5 @@
 import "./Cell.css";
 import "../../../public/styles/common.css";
-import { JSX } from "react";
 
 export default function Cell({ className = "", text = "Text" }: CellProps) {
   return (
@@ -12,5 +11,5 @@ export default function Cell({ className = "", text = "Text" }: CellProps) {
 
 interface CellProps {
   className?: string;
-  text?: string | JSX.Element;
+  text?: React.ReactNode; 
 }

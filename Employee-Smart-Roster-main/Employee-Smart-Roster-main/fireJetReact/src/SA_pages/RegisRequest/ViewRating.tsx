@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-import SASide from "../../components/SideMenu/SASide";
 import "./ViewRating.css";
 import "../../../public/styles/common.css";
 import ViewRatingController from "../../controller/ViewRatingController";
@@ -82,73 +81,70 @@ const ViewRating = () => {
   };
 
   return (
-    <div className="viewRatingContainer">
-      <SASide />
-      <div className="ratingContent">
-        <h2>Ratings and Reviews</h2>
+    <div className="ratingContent">
+      <h2>Ratings and Reviews</h2>
 
-        {/* Conditional Show/Hide Filter Buttons */}
-        {showFilters ? (
-          <HideFilterButton onClick={() => setShowFilters(false)} text="Hide Filters" />
-        ) : (
-          <ShowFilterButton onClick={() => setShowFilters(true)} text="Show Filters" />
-        )}
+      {/* Conditional Show/Hide Filter Buttons */}
+      {showFilters ? (
+        <HideFilterButton onClick={() => setShowFilters(false)} text="Hide Filters" />
+      ) : (
+        <ShowFilterButton onClick={() => setShowFilters(true)} text="Show Filters" />
+      )}
 
-        {/* Desktop Table */}
-        <table className="ratingTable desktopOnly">
-          <thead>
-            <tr>
-              {[
-                { label: "Review ID", key: "reviewID" },
-                { label: "User ID", key: "user_id" },
-                { label: "Rating", key: "rating" },
-                { label: "Review", key: "review" },
-                { label: "Created On", key: "createdOn" },
-              ].map(({ label, key }) => (
-                <th key={key} onClick={() => handleSort(key as keyof ReviewRating)}>
-                  <div className="headerWithSort">
-                    {label} {renderSortIcon(key as keyof ReviewRating)}
-                  </div>
-                  {showFilters && (
-                    <input
-                      type="text"
-                      value={filters[key as keyof typeof filters]}
-                      onChange={(e) =>
-                        handleFilterChange(key as keyof typeof filters, e.target.value)
-                      }
-                      placeholder="Filter"
-                      className="filterInput"
-                    />
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredList.map((r) => (
-              <tr key={r.reviewID}>
-                <td>{r.reviewID}</td>
-                <td>{r.user_id}</td>
-                <td>{r.rating}</td>
-                <td>{r.review}</td>
-                <td>{new Date(r.createdOn).toLocaleString()}</td>
-              </tr>
+      {/* Desktop Table */}
+      <table className="ratingTable desktopOnly">
+        <thead>
+          <tr>
+            {[
+              { label: "Review ID", key: "reviewID" },
+              { label: "User ID", key: "user_id" },
+              { label: "Rating", key: "rating" },
+              { label: "Review", key: "review" },
+              { label: "Created On", key: "createdOn" },
+            ].map(({ label, key }) => (
+              <th key={key} onClick={() => handleSort(key as keyof ReviewRating)}>
+                <div className="headerWithSort">
+                  {label} {renderSortIcon(key as keyof ReviewRating)}
+                </div>
+                {showFilters && (
+                  <input
+                    type="text"
+                    value={filters[key as keyof typeof filters]}
+                    onChange={(e) =>
+                      handleFilterChange(key as keyof typeof filters, e.target.value)
+                    }
+                    placeholder="Filter"
+                    className="filterInput"
+                  />
+                )}
+              </th>
             ))}
-          </tbody>
-        </table>
-
-        {/* Mobile Card View */}
-        <div className="mobileCards">
+          </tr>
+        </thead>
+        <tbody>
           {filteredList.map((r) => (
-            <div className="mobileCard" key={r.reviewID}>
-              <p><strong>Review ID:</strong> {r.reviewID}</p>
-              <p><strong>User ID:</strong> {r.user_id}</p>
-              <p><strong>Rating:</strong> {r.rating}</p>
-              <p><strong>Review:</strong> {r.review}</p>
-              <p><strong>Created On:</strong> {new Date(r.createdOn).toLocaleString()}</p>
-            </div>
+            <tr key={r.reviewID}>
+              <td>{r.reviewID}</td>
+              <td>{r.user_id}</td>
+              <td>{r.rating}</td>
+              <td>{r.review}</td>
+              <td>{new Date(r.createdOn).toLocaleString()}</td>
+            </tr>
           ))}
-        </div>
+        </tbody>
+      </table>
+
+      {/* Mobile Card View */}
+      <div className="mobileCards">
+        {filteredList.map((r) => (
+          <div className="mobileCard" key={r.reviewID}>
+            <p><strong>Review ID:</strong> {r.reviewID}</p>
+            <p><strong>User ID:</strong> {r.user_id}</p>
+            <p><strong>Rating:</strong> {r.rating}</p>
+            <p><strong>Review:</strong> {r.review}</p>
+            <p><strong>Created On:</strong> {new Date(r.createdOn).toLocaleString()}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

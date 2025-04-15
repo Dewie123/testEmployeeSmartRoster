@@ -10,7 +10,7 @@ import "../../../public/styles/common.css";
 // Access the function from the default export
 
 const RegisReq = ({data=[], onUpdate}: RegisReqProps) => {
-    const [ selectedRequest, setSelectedRequest ] = useState<string | null>(null);
+    const [ selectedRequest, setSelectedRequest ] = useState<any>([]);
     const [ showDetail, setShowDetail ] = useState(false)
     
     const triggerSelectedDetail = (request:any) => {
@@ -20,7 +20,7 @@ const RegisReq = ({data=[], onUpdate}: RegisReqProps) => {
 
     function triggerCloseDetail(){
         setShowDetail(false)
-        setSelectedRequest(null)
+        setSelectedRequest([])
     }
 
     if(data.length === 0) return (
@@ -30,6 +30,7 @@ const RegisReq = ({data=[], onUpdate}: RegisReqProps) => {
     )
 
     return (
+        <>
         <div className="App-desktop-responsive-table">
             <div className="App-desktop-table-row desktop-table-header">
                 <Header className='header-uen' text='UEN' />
@@ -53,17 +54,17 @@ const RegisReq = ({data=[], onUpdate}: RegisReqProps) => {
                 </div>
             </div>
             ))}
-
-            {showDetail && selectedRequest && (
-                <div className="App-popup" onClick={triggerCloseDetail}>
-                    <RegisReqDetail 
-                        regisRequest= {selectedRequest}
-                        onClose={() => { triggerCloseDetail() }}
-                        onUpdate={onUpdate}
-                    />
-                </div>
-            )}
         </div>
+        {showDetail && selectedRequest && (
+            <div className="App-popup" onClick={triggerCloseDetail}>
+                <RegisReqDetail 
+                    regisRequest= {selectedRequest}
+                    onClose={() => { triggerCloseDetail() }}
+                    onUpdate={onUpdate}
+                />
+            </div>
+        )}
+        </>
     );
   };
 

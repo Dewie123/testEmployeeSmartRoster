@@ -6,6 +6,7 @@ function getCompanies (){
             bizName: "GOOGLE VENTURES PTE. LTD.",
             contactNo: "+65 6666 1111",
             bizFilePath: "https://mymailsimedu-my.sharepoint.com/:b:/g/personal/wmlim014_mymail_sim_edu_sg/EfaXUfD99AdHrSO5GjbQNssBfoSXi7ZLWPO2oGbLADvDAA?e=MT6By8",
+            email: "GoogleVentures@gmail.com",
             address: "#01-01 Clementi S111111",
             createdAt: "2025-3-25 12:00:08",
             lastUpdate: "",
@@ -16,6 +17,7 @@ function getCompanies (){
             bizName: "GOOGLE CARS",
             contactNo: "+65 6666 1112",
             bizFilePath: "https://mymailsimedu-my.sharepoint.com/:b:/g/personal/wmlim014_mymail_sim_edu_sg/EfaXUfD99AdHrSO5GjbQNssBfoSXi7ZLWPO2oGbLADvDAA?e=MT6By8",
+            email: "GoogleCars@gmail.com",
             address: "#02-02 Clementi S111122",
             createdAt: "2025-3-25 12:00:08",
             lastUpdate: "",
@@ -26,6 +28,7 @@ function getCompanies (){
             bizName: "GOOGLE CLOUD",
             contactNo: "+65 6666 1113",
             bizFilePath: "https://mymailsimedu-my.sharepoint.com/:b:/g/personal/wmlim014_mymail_sim_edu_sg/EfaXUfD99AdHrSO5GjbQNssBfoSXi7ZLWPO2oGbLADvDAA?e=MT6By8",
+            email: "GoogleCloud@gmail.com",
             address: "#03-03 Clementi S111133",
             createdAt: "2025-3-25 12:00:08",
             lastUpdate: "",
@@ -55,6 +58,32 @@ async function getCompany (uid){
     } catch (error) {
         console.error(`Network error for UID ${uid}: \n`, error);
         throw new Error(`Failed to fetch company data: ${error.message}`);
+    }
+}
+
+
+async function getCompanyBizFile (email){
+    const body = {
+        email: email,
+    }
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/s3/owner/downloadpdf', {
+
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch (error) {
+        console.error(`Network error for fetch company's BizFile: \n`, error);
+        throw new Error(`Failed to fetch company's BizFile: ${error.message}`);
     }
 }
 
@@ -110,6 +139,55 @@ function GetCompanySkillsets (){
     return data;
 }
 
+async function getCompanyRoles (boID){
+    // console.log(boID)
+    const body = {
+        business_owner_id: boID,
+    }
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/role/view', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch (error) {
+        console.error(`Network error for UID ${uid}: \n`, error);
+        throw new Error(`Failed to fetch company data: ${error.message}`);
+    }
+}
+
+async function getCompanySkillsets (boID){
+    const body = {
+        business_owner_id: boID,
+    }
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/skillset/view', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch (error) {
+        console.error(`Network error for UID ${uid}: \n`, error);
+        throw new Error(`Failed to fetch company data: ${error.message}`);
+    }
+}
+
 const handleSelectedDetail = (selectedCompany) => {
     return selectedCompany;
 }
@@ -128,10 +206,13 @@ function handleFilterUENBizName(companies, filterString){
 }
 
 export default {
-    getCompanies,
+    getCompanies, // Not using
     getCompany,
-    GetCompanyRoles,
-    GetCompanySkillsets,
+    getCompanyBizFile,
+    getCompanyRoles,
+    getCompanySkillsets,
+    GetCompanyRoles, // Not using
+    GetCompanySkillsets, // Not using
     handleSelectedDetail,
     handleFilterUENBizName,
 }

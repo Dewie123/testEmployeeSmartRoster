@@ -52,8 +52,8 @@ const EditEmployee = () => {
 
             {/* Popup Section */}
             {isPopupOpen && (
-                <div className="App-popup" onClick={() => setIsPopupOpen(false)}>
-                    <div className="App-popup-content" onClick={(e) => e.stopPropagation()}>
+                <div className="App-popup">
+                    <div className="App-popup-content">
 
                         <div className='App-header'>
                             <h1>Edit Account</h1> {/* Change the header to 'Edit Account' */}

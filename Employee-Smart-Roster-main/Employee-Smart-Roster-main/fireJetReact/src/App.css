@@ -54,14 +54,16 @@
 }
 
 .App-side-menu {
-  width: 200px;
+  width: 25%;
+  max-width: 250px;
   background-color: var(--side-menu-background);
   opacity: var(--side-menu-transparency);
   color: var(--light-color-text);
-  padding: 10px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  gap: 10px;
   overflow-y: auto; /* Enable scrolling if content overflows */
   z-index: 1000;
   height: 100%; /* Make it take full height of parent */
@@ -219,34 +221,6 @@ option:checked {
 .icons {
   font-size: 30px;
   color: var(--side-menu-background);
-}
-
-/* Display pdf */
-.App-pdf-frame {
-  position: 'relative';
-  width: '100vh';
-  height: '100vh';
-  border: '1px solid #ccc';
-  margin-top: '1rem';
-  background-color: var(--hover-background);
-  padding: 5px;
-  border-radius: 5px;
-
-  .App-close-pdf{
-    font-size: 20px;
-    cursor: pointer;
-    justify-self: end;
-  }
-
-  .App-close-pdf:hover{
-    color: var(--error);
-  }
-
-  .iframe {
-    width: 100lvh;
-    height: 100vh;
-    border: none;
-  }
 }
 
 /* Desktop Table Setup */

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import BOSide from "../../components/SideMenu/BOSide";
 import "./BOUpdateBOProfile.css";
 import "./ViewProfile.css";
 import "../../../public/styles/common.css";
@@ -33,7 +32,6 @@ function BOUpdateBOProfile() {
 
   return (
     <div className="App-content">
-      <BOSide />
       <div className="content">
         <h1 className="logo">EmpRoster</h1>
         <div className="main-contents">
