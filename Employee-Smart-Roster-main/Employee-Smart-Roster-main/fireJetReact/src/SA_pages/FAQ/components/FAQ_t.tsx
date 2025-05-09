@@ -6,18 +6,19 @@ import SecondaryButton from '../../../components/SecondaryButton/SecondaryButton
 
 import { FaQuestionCircle } from "react-icons/fa";
 import { RiQuestionAnswerFill } from "react-icons/ri";
-import { MdDeleteForever, FaRegEdit } from '../../../../public/Icons.js'
+import { MdDeleteForever, FaRegEdit, IoFlagSharp } from '../../../../public/Icons.js'
 import '../FAQMgt.css'
 import '../../../../public/styles/common.css'
 
 interface FAQ_TProps {
-    allFAQs: any
-    toggleCreateOrEdit: (faq: any) => void
-    triggerDeleteFAQ: (faqID: number) => void,
+    allFAQs: any;
+    toggleCreateOrEdit: (faq: any) => void; 
+    toggleDisplayOnLanding: (faq: any, isShown: number) => void;
+    triggerDeleteFAQ: (faqID: number) => void;
 }
 
 const FAQ_t = ({
-    allFAQs, triggerDeleteFAQ, toggleCreateOrEdit
+    allFAQs, triggerDeleteFAQ, toggleCreateOrEdit, toggleDisplayOnLanding
 } : FAQ_TProps) => {
 
     const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false)
@@ -80,6 +81,14 @@ const FAQ_t = ({
             <div className='App-desktop-table-row sa-view-faq-row' key={faq.faqID}>
                 <Cell className='body-sa-view-faq-question' text={faq.question_desc} />
                 <Cell className='body-sa-view-faq-ans' text={faq.answer} />
+                <div 
+                    className="App-desktop-table-icon sa-view-faq-edit-icon" 
+                    onClick={() => {
+                        toggleDisplayOnLanding(faq, faq.isShown)
+                    }}
+                >
+                    <IoFlagSharp style={{ color: faq.isShown === 1 ? '#b565ff' : '#a0a0a0' }}/>
+                </div>
                 <div 
                     className="App-desktop-table-icon sa-view-faq-edit-icon" 
                     onClick={() => {

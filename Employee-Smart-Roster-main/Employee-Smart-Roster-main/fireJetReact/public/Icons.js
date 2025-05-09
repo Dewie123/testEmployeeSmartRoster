@@ -5,7 +5,8 @@ import { BiSolidUserDetail,
          BiSolidHide,
          BiSolidShow } from "react-icons/bi";
 import { IoClose, 
-         IoArrowBack } from "react-icons/io5";
+         IoArrowBack,
+         IoFlagSharp } from "react-icons/io5";
 import { FaFilePdf, 
          FaInfoCircle, 
          FaPlusCircle,
@@ -60,6 +61,7 @@ export {
     TiTick, // Correct Icon
     GoAlertFill, // Triangle alert icon
     IoIosWarning, // Warning icon
+    IoFlagSharp, // Flag icon
     FaChevronCircleLeft, // Go previous in circle icon
     FaChevronCircleRight, // Go next in circle icon
     FaChevronCircleDown, // Expend item

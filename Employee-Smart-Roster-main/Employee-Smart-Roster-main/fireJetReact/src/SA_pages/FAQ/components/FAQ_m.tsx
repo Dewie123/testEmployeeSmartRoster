@@ -5,7 +5,7 @@ import { formatTextForDisplay } from '../../../controller/Variables.js'
 
 import { FaQuestionCircle } from "react-icons/fa";
 import { RiQuestionAnswerFill } from "react-icons/ri";
-import { MdDeleteForever, FaRegEdit } from '../../../../public/Icons.js'
+import { MdDeleteForever, FaRegEdit, IoFlagSharp } from '../../../../public/Icons.js'
 import '../FAQMgt.css'
 import '../../../../public/styles/common.css'
 
@@ -13,10 +13,11 @@ interface FAQ_MProps {
     allFAQs: any
     toggleCreateOrEdit: (faq: any) => void
     triggerDeleteFAQ: (faqID: number) => void,
+    toggleDisplayOnLanding: (faq: any, isShown: number) => void;
 }
 
 const FAQ_m = ({
-    allFAQs, triggerDeleteFAQ, toggleCreateOrEdit
+    allFAQs, triggerDeleteFAQ, toggleCreateOrEdit, toggleDisplayOnLanding
 } : FAQ_MProps) => {
 
     const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false)
@@ -76,6 +77,15 @@ const FAQ_m = ({
                         {faq.question_desc}
                     </h2>
                     <div className="sa-view-faq-row-btns-grp">
+                        <div 
+                            className="App-mobile-table-icon sa-view-faq-flag-icon" 
+                            onClick={() => {
+                                toggleDisplayOnLanding(faq, faq.isShown)
+                            }}
+                        >
+                           <IoFlagSharp style={{ color: faq.isShown === 1 ? '#b565ff' : '#a0a0a0' }}/>
+                        </div>
+                        
                         <div className="App-mobile-table-icon sa-view-faq-edit-icon" 
                             onClick={() => {
                                 toggleCreateOrEdit(faq)

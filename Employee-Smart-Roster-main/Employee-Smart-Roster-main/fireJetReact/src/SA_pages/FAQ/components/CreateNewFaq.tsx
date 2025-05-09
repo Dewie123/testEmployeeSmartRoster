@@ -15,7 +15,7 @@ interface CreateFAQProps {
     allFAQs?: any
     selectedFAQ?: any
     handleCreateFAQ: (values: any) => void;
-    triggerUpdateFAQ: (values: any) => void;
+    triggerUpdateFAQ: (faq: any, isShown: number) => void;
 }
 
 const { createNewFaq } = SAFAQController
@@ -91,7 +91,7 @@ const CreateFAQForm = ({
     }
 
     function processConfirmUpdate(){
-        triggerUpdateFAQ(values)
+        triggerUpdateFAQ(values, 0)
         // reset values
         setValues({
             faqID: new Date(), // Declare temp ID

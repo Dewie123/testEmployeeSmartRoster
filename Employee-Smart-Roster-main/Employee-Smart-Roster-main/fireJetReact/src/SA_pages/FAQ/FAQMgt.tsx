@@ -94,7 +94,7 @@ const FAQManagement = () => {
 
     // Function update FAQ
     function toggleCreateOrEdit(faq: any) {
-        console.log(faq)
+        // console.log(faq)
         if(faq)
             setIsCreateFaq(false)
         else
@@ -103,10 +103,22 @@ const FAQManagement = () => {
         setSelectedFaq(faq)
     }
 
-    const triggerUpdateFAQ = async(faq: any) => {
+    function toggleDisplayOnLanding(faq: any, isShown: number) {
+        if (isShown === 0)
+            triggerUpdateFAQ(faq, 1)
+        else
+            triggerUpdateFAQ(faq, 0)
+    }
+
+    const triggerUpdateFAQ = async(faq: any, isShown: number) => {
         // console.log(faq)
         try {
-            let response = await editFaq(faq);
+            const showFaq = {
+                ...faq,
+                isShown: isShown
+            }
+            console.log(showFaq)
+            let response = await editFaq(showFaq);
             if(response.message === 'Successfully updated and retrieved FAQ list.') {
                 response = response.FAQList || [];
                 // console.log(response)
@@ -149,11 +161,13 @@ const FAQManagement = () => {
                         allFAQs={searchedFaq}
                         toggleCreateOrEdit={toggleCreateOrEdit}
                         triggerDeleteFAQ={triggerDeleteFAQ}
+                        toggleDisplayOnLanding={toggleDisplayOnLanding}
                     />
                     <FAQ_m 
                         allFAQs={searchedFaq}
                         toggleCreateOrEdit={toggleCreateOrEdit}
                         triggerDeleteFAQ={triggerDeleteFAQ}
+                        toggleDisplayOnLanding={toggleDisplayOnLanding}
                     />
                     </>
                 ) : (
