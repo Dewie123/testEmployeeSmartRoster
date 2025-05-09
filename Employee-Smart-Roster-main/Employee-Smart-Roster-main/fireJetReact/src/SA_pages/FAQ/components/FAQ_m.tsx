@@ -104,7 +104,7 @@ const FAQ_m = ({
                 </div>
                 <div className="App-mobile-responsive-table-card-data">
                     <div className="App-mobile-responsive-table-card-data-detail">
-                        <p dangerouslySetInnerHTML={{ __html: formatTextForDisplay(faq.answer) }}></p>
+                        <p dangerouslySetInnerHTML={{ __html: formatTextForDisplay(faq.answer) }} />
                     </div>
                 </div>
             </div>

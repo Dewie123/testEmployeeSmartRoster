@@ -1,13 +1,13 @@
 import './SA_FAQ.css';
 import '../../../public/styles/common.css';
 import React, { useState } from 'react';
-import { FAQController, updateFAQ, addFAQ, deleteFAQ } from '../../controller/FAQController';
-import Header from "../../components/table/Header";
-import Cell from "../../components/table/Cell";
-import { IoClose, IoIosWarning } from '../../../public/Icons.js';
-import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
-import SecondaryButton from "../../components/SecondaryButton/SecondaryButton";
-import SA_FAQ_m from '../../SA_components/SA_FAQ/SA_FAQ_m';
+import { FAQController, updateFAQ, addFAQ, deleteFAQ } from '../../../controller/NotUsed/FAQController';
+import Header from "../../../components/table/Header";
+import Cell from "../../../components/table/Cell";
+import { IoClose, IoIosWarning } from '../../../../public/Icons.js';
+import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
+import SecondaryButton from "../../../components/SecondaryButton/SecondaryButton";
+import SA_FAQ_m from '../../../SA_components/SA_FAQ/SA_FAQ_m';
 
 const FAQManagement = () => {
   const { faqs, loading, error, refetch } = FAQController();

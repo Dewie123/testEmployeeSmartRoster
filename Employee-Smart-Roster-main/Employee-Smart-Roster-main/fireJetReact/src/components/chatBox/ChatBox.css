@@ -16,7 +16,7 @@
     right: 32px;
     transform: scale(1);
     transition: transform 0.3s;
-    z-index: 10000;
+    z-index: 1000;
 }
 .chatbot-toggle:hover {
     background: var(--side-menu-background);

@@ -16,6 +16,7 @@ import SideMenu_t from "./components/SideMenu/SideMenu_t";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import ReportIssues from "./pages/ReportIssues/ReportIssues";
 import UserMgts from "./pages/UserManagement/UserMgts";
+import IssueDetail from './pages/ReportIssues/IssuesDetail'
 
 // Pages for System Admin
 import SADash from "./SA_pages/Dashboard/SADash";
@@ -25,7 +26,6 @@ import VideoMgt from "./SA_pages/VideoMgt/VideoMgt";
 import PreviewLanding from "./SA_pages/PreviewLanding";
 import ViewRating from "./SA_pages/RegisRequest/ViewRating";
 import FAQManagement from "./SA_pages/FAQ/FAQMgt";
-// import FAQManagement from "./SA_pages/SA_FAQ/SA_FAQ";
 
 // Pages for Busines Owner
 import RequiredCompleteProfile from "./BO_pages/FirstLogin/RequiredCompleteProfile";
@@ -38,6 +38,9 @@ import BOLeaveManagement from "./BO_pages/LeaveManagement/LeaveManagement";
 import CreateOEditEmp from "./pages/UserManagement/BO_CreateOEditEmp/CreateOEdit";
 import BOTimelinesPage from "./BO_pages/ViewTimelines/TimelinesPage";
 import AllTasksInTimeline from "./BO_pages/ViewTimelines/AllTasksInTimeline";
+
+// Import for Employee Pages
+import EmpViewSchedule from "./EMP_pages/MySchedules/MySchedules";
 
 // Import for testing
 import "./App.css";
@@ -95,6 +98,15 @@ function App() {
                   <ProtectedRoute>
                     <SideMenu_t />
                     <ReportIssues />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/issue-detail"
+                element={
+                  <ProtectedRoute>
+                    <SideMenu_t />
+                    <IssueDetail />
                   </ProtectedRoute>
                 }
               />
@@ -332,11 +344,11 @@ function App() {
                 }
               />
               <Route
-                path="/employee-projects"
+                path="//my-schedule"
                 element={
                   <ProtectedRoute>
                     <SideMenu_t />
-                    <div>Employee Project</div>
+                    <EmpViewSchedule />
                   </ProtectedRoute>
                 }
               />
