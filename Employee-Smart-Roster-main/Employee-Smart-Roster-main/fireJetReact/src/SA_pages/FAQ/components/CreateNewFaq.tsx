@@ -185,6 +185,7 @@ const CreateFAQForm = ({
             </div> */}
             {/* Input Answer */}
             <textarea name='answer'
+                maxLength={500}
                 rows={4}
                 placeholder='Answer' 
                 value={values.answer}

@@ -333,7 +333,36 @@ function getSkillNeededForTask (allSkills, skillNeededID){
         skill.skillSetID === skillNeededID
     )
     return skillNeeded
-} 
+}
+
+////////////////////////////////////////////////////////////////////////////
+// Employee Timeline Control function below
+
+async function empGetAllTask (uid) {
+    // console.log(uid)
+    const body = {
+        user_id: uid
+    };
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/timeline/view', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to fetch task detail: ${error.message}`);
+    }
+}
 
 export default {
     createNewTimeline, 
@@ -350,4 +379,5 @@ export default {
     getTaskDetail,
     getRoleNeededForTask,
     getSkillNeededForTask,
+    empGetAllTask,
 }

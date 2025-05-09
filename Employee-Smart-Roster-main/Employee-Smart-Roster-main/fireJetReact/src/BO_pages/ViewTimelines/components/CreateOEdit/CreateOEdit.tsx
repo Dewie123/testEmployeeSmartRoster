@@ -33,13 +33,16 @@ const CreateOEditTask = ({
         allRoles?: any[];
         allSkillsets?: any[];
     };
+    const initialStartDate = new Date();
+    const initialEndDate = new Date();
+    initialEndDate.setDate(initialEndDate.getDate() + 14); // Add 14 days (2 weeks)
     const [ createTaskValues, setCreateTaskValues ] = useState({
         title: '',
         taskDescription: '',
         roleID: '',
         skillSetID: '',
-        startDate: generateSGDateTimeForDateTimeInput(new Date()),
-        endDate: generateSGDateTimeForDateTimeInput(new Date()),
+        startDate: generateSGDateTimeForDateTimeInput(initialStartDate),
+        endDate: generateSGDateTimeForDateTimeInput(initialEndDate),
         noOfEmp: 1
     });
     const [ createTimelineValues, setCreateTimelineValues ] = useState({

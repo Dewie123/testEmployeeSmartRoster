@@ -6,7 +6,7 @@ import './SA_FAQ_m.css';
 import '../../../public/styles/common.css';
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import SecondaryButton from "../../components/SecondaryButton/SecondaryButton";
-import { updateFAQ, deleteFAQ } from "../../controller/FAQController";
+import { updateFAQ, deleteFAQ } from "../../controller/NotUsed/FAQController.js";
 
 interface FAQProps {
   data?: any[];
