@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s]+$/
 export const PW_PATTERN = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
 export const COMPANY_PHONE_PATTERN = /^[6]\d{7}$/ // Valid singapore virtual number starting with 6
@@ -186,11 +188,18 @@ export function formatKey(key) {
         .replace(/^./, str => str.toUpperCase()); // capitalize first letter
 }
 
-export function removeDuplicates(arr, key) {
-    return arr.reduce((unique, item) => {
-        if (!unique.find((obj ) => obj[key] === item[key])) {
-            unique.push(item);
-        }
-        return unique;
-    }, []);
+export function formatTextForDisplay(text) {
+    if (!text) return '';
+    
+    // 1. Convert newlines to <br>
+    let formatted = String(text).replace(/\n/g, '<br/>');
+    
+    // 2. Auto-link URLs
+    formatted = formatted.replace(
+        /(https?:\/\/[^\s]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+    
+    // 3. Sanitize HTML
+    return DOMPurify.sanitize(formatted);
 }

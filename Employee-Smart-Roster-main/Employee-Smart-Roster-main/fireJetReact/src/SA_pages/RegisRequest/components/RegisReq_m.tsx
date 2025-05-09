@@ -83,9 +83,7 @@ const RegisReq_m = ({data=[], onUpdate}: RegisReqProps) => {
         </div>
         )}
         </>
-        
     )
-
 }
 
 interface RegisReqProps {
