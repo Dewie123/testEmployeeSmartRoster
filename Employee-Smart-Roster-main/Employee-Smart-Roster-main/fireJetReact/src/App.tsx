@@ -24,7 +24,8 @@ import SubsTransactions from "./SA_pages/SubsTrans/SubsTrans";
 import VideoMgt from "./SA_pages/VideoMgt/VideoMgt";
 import PreviewLanding from "./SA_pages/PreviewLanding";
 import ViewRating from "./SA_pages/RegisRequest/ViewRating";
-import FAQManagement from "./SA_pages/SA_FAQ/SA_FAQ";
+import FAQManagement from "./SA_pages/FAQ/FAQMgt";
+// import FAQManagement from "./SA_pages/SA_FAQ/SA_FAQ";
 
 // Pages for Busines Owner
 import RequiredCompleteProfile from "./BO_pages/FirstLogin/RequiredCompleteProfile";

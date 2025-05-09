@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { BiSolidUserDetail } from "../../../../public/Icons.js";
 import { formatDateTime } from "../../../controller/Variables.js"
-import Header from "../../../components/table/Header.js";
-import Cell from "../../../components/table/Cell.js";
+import Header from "../../../components/table/Header";
+import Cell from "../../../components/table/Cell";
 import RegisReqDetail from "./RegisReqDetail";
 import "./RegisReq.css";
 import "../../../../public/styles/common.css";

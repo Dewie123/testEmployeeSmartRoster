@@ -115,14 +115,19 @@ h4 {
     gap: 15px;
     height: fit-content;
     justify-content: start;
+  }
 
-    .App-popup-main-content {
+  .App-popup-main-content {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 5px;
       height: fit-content;
 
       .title {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        align-items: center;
         width: auto;
         height: fit-content;
         font-weight: bold;
@@ -139,7 +144,6 @@ h4 {
         color: var(--primary-background);
       }
     }
-  }
 
   .App-popup-prompt-content {
     display: flex;

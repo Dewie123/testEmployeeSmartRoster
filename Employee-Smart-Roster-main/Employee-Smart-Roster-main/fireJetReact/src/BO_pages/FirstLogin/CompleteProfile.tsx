@@ -160,14 +160,14 @@ const CompleteProfile = ({ userID, onDataUpdate }: CompleteProfileProps) => {
                 </div>
 
                 <div className="btns-grp">
-                <PrimaryButton 
-                    text="Confirm" 
-                    onClick={() => triggerSubmitCompleteProfile()}
-                />
-                <SecondaryButton 
-                    text="Cancel" 
-                    onClick={() => toggleConfirmation()}
-                />
+                    <PrimaryButton 
+                        text="Confirm" 
+                        onClick={() => triggerSubmitCompleteProfile()}
+                    />
+                    <SecondaryButton 
+                        text="Cancel" 
+                        onClick={() => toggleConfirmation()}
+                    />
                 </div>
             </div>
         </div>

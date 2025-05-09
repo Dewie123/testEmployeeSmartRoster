@@ -12,6 +12,7 @@ FYP 2025-S1-12
     npm i react-calendar
     npm i axios
     npm i react-simple-chatbot
+    npm install dompurify
     npm install react-icons --save
     npm i recharts
     npm install react-external-link --save
