@@ -24,7 +24,7 @@ const FAQManagement = () => {
 
             if(faqs.message === 'Succesfully retrieved FAQ List') {
                 faqs = faqs.FAQList || []
-                // console.log(faqs)
+                console.log(faqs)
                 setAllFAQs(faqs)
             }
         } catch (error) {

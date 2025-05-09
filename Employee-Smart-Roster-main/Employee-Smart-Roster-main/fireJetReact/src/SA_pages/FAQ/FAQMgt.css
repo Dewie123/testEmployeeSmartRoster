@@ -37,3 +37,10 @@
     max-width: 300px;
     align-self: flex-end;
 }
+
+.confirmation-prompt-ans-preview {
+    padding: 15px;
+    background-color: var(--main-page-background);
+    border-radius: 10px;
+    border: 1px solid var(--purple-color-text);
+}
