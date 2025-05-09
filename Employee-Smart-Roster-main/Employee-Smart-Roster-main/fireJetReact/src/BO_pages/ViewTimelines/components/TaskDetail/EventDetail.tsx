@@ -56,7 +56,7 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
                 const endTime = taskDetail.endDate;
                 taskDetail.endDate = formatDisplayDateTime(endTime).split(' ')
 
-                // console.log(taskDetail)
+                console.log(taskDetail)
                 setTaskDetail(taskDetail);
             }
         } catch (error) {
@@ -300,7 +300,7 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
                     <div className="task-detail-description">
                         <FaClipboardList className='App-popup-content-icon'/>
                         <p className="main-data">
-                            {taskDetail.description}
+                            {taskDetail.taskDescription}
                         </p>
                     </div>
                     {taskDetail?.startDate?.length === 2 && (

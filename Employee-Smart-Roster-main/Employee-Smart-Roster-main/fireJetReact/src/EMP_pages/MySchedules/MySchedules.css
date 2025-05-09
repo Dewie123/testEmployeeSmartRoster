@@ -1,0 +1,31 @@
+.task-status {
+    color: var(--info);
+    align-self: center;
+}
+.task-status.in-progress {
+    color: var(--warning);
+}
+.task-status.completed {
+    color: var(--success);
+}
+
+.emp-task-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.emp-view-task-detail-start-n-end{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* Mobile (all screens below 768px) */
+@media only screen and (max-width: 768px) {
+    .emp-view-task-detail-start-n-end{
+        flex-direction: column;
+        justify-content: start;
+        gap: 15px;
+    }
+}
