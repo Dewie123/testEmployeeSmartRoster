@@ -42,6 +42,7 @@
 
 .App-header {
   display: flex;
+  gap: 10px;
   flex-direction: row;
   width: 100%;
   align-content: center;
@@ -123,20 +124,6 @@ h4 {
       gap: 5px;
       height: fit-content;
 
-      .title {
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-        align-items: center;
-        width: auto;
-        height: fit-content;
-        font-weight: bold;
-      }
-
-      .main-data {
-        width: auto;
-        height: fit-content;
-      }
 
       .App-popup-content-icon {
         min-width: 15px;
@@ -169,6 +156,21 @@ h4 {
   }
 }
 
+.title {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  width: auto;
+  height: fit-content;
+  font-weight: bold;
+}
+
+.main-data {
+  width: auto;
+  height: fit-content;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -176,7 +178,7 @@ h4 {
 /* Timeline Structure for App */
 .App-timeline {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 5px;
   position: relative;
   padding-left: 40px;
@@ -237,6 +239,13 @@ h4 {
   margin-bottom: 5px;
 }
 
+.App-timeline-task-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
 .App-timeline-task-title {
   font-size: 16px;
   font-weight: bold;
@@ -719,19 +728,19 @@ option:checked {
   padding-left: 10px;
   padding-right: 10px;
   gap: 10px;
+}
 
-  .App-filter-container {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 5px;
+.App-filter-container {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+}
 
-    .App-filter-title {
-        color: var(--purple-color-text);
-        font-weight: bold;
-    }
-  }
+.App-filter-title {
+    color: var(--purple-color-text);
+    font-weight: bold;
 }
 
 .error-message {

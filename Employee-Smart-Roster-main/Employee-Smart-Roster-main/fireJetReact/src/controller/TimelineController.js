@@ -363,10 +363,9 @@ async function empGetAllTask (uid) {
     }
 }
 
-async function empUpdateTaskProgress (uid, taskID, status ) {
-    // console.log(uid)
+async function empUpdateTaskProgress (uid, taskID, status) {
     const body = {
-        uid: uid,
+        employee_user_id: uid,
         taskID: taskID,
         status: status
     };
