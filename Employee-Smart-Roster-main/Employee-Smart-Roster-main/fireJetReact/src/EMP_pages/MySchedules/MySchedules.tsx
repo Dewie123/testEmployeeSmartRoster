@@ -1,59 +1,44 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
 import { formatDisplayDateTime } from '../../controller/Variables.js'
-import TimelineController from '../../controller/TimelineController.js'
-
-
 import { GrSchedules } from "react-icons/gr";
-import { IoArrowBack } from '../../../public/Icons.js'
-import './TimelinesPage.css'
-import '../../../public/styles/common.css'
+import TimelineController from '../../controller/TimelineController'
 
-const { getAllTasksInATimeline } = TimelineController
+const { empGetAllTask } = TimelineController
 
-const AllTasksInTimeline = () => {
-    const { user } = useAuth();
-    const { showAlert } = useAlert();
-    const navigate = useNavigate()
-    const location = useLocation();
-    const { state } = location;
-    // console.log(state)
-    const [ allTasks, setAllTasks ] = useState<any>([])
+const EmpViewSchedule = () => {
+    const { showAlert } = useAlert()
+    const { user } = useAuth()
+    const [ allTasks, setAllTasks ] = useState([])
+    
 
-    // If no timeline
-    if(!state?.timeline) return (<div>No Timeline Data Provided</div>)
-
-    const fetchTasksInTimeline = async () => {
+    const fetchAllTasks = async () => {
         try {
-            let tasks = await getAllTasksInATimeline(user?.UID, state?.timeline.timeLineID);
-            if(tasks.message === 'Tasks retrieved successfully.') {
-                tasks = tasks.timelineTasks || []
-                // console.log(tasks)
-                setAllTasks(tasks)
+            let response = await empGetAllTask (user?.UID)
+            console.log(response)
+            if(response.message === 'Task  successfully retrieved') {
+                response = response.EmployeeTasks || []
+                console.log(response)
+                setAllTasks(response)
             }
         } catch (error) {
             showAlert(
-                "fetchTasksInTimeline",
-                "Fetch data error",
+                'fetchAllReportedIsses',
+                '',
                 error instanceof Error ? error.message : String(error),
                 { type: 'error' }
-            )
+            );
         }
-    };
-    useEffect(() => { fetchTasksInTimeline() }, [state?.timeline])
+    }
+    useEffect(() => {
+        fetchAllTasks()
+    }, [user])
 
     return(
         <div className="App-content">
             <div className="content">
-                <div className='App-header'>
-                    <IoArrowBack 
-                        onClick={() => navigate(-1)}
-                        className="icons"
-                    />
-                    <h1>Timeline: {state.timeline.title}</h1>
-                </div>
+                <h1>My Schedules</h1>
                 <div className="App-timeline">
                     {/* Timeline Line (Vertical) */}
                     <div className="App-timeline-line"></div>
@@ -82,4 +67,4 @@ const AllTasksInTimeline = () => {
     )
 }
 
-export default AllTasksInTimeline;
+export default EmpViewSchedule

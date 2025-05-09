@@ -264,6 +264,7 @@ const CreateEditTask = ({
                             Task Description <span style={{ color: 'red' }}>*</span>
                         </strong>
                         <textarea name='taskDescription'
+                            maxLength={500}
                             rows={4}
                             placeholder='Task Description' 
                             value={taskValues.taskDescription}
@@ -323,6 +324,7 @@ const CreateEditTask = ({
                             value={taskValues.startDate}
                             onChange={(e) => handleInputChange(e)}
                             min={generateSGDateTimeForDateTimeInput(new Date)}
+                            max={taskValues.endDate}
                             disabled={isTaskAssigned}
                             required
                         />
@@ -409,14 +411,15 @@ const TaskAssignationInfo = ({
                 // console.log(initialSelection)
                 setSelectedEmp(initialSelection || [])
                 // Merging if available employees are not empty
-                if(employees.length > 0){
-                    employees = [
-                        ...initialSelection,
-                        ...employees
-                    ]
-                } else {
-                    employees = [...initialSelection]
-                }
+                employees = [
+                    ...initialSelection,
+                    ...employees
+                ]
+                employees = employees.filter((employee: any, index: number, self: any[]) => 
+                    index === self.findIndex((e: any) => (
+                        e.user_id === employee.user_id
+                    ))
+                );
             }
             // console.log(employees)
             setAllEmployees(employees)
@@ -445,6 +448,7 @@ const TaskAssignationInfo = ({
     };
 
     const handleSelectEmployee = (employee: any) => {
+        // console.log(employee)
         if(selectedEmp.length >= taskValues.noOfEmp) {
             showAlert(
                 "Task Assignment Limit",
@@ -469,8 +473,9 @@ const TaskAssignationInfo = ({
     };
 
     const triggerSubmitConfirmAllocation = async() => {
+        const employeesArray = Array.isArray(selectedEmp) ? selectedEmp : [selectedEmp];
         try {
-            selectedEmp.map(async(allocation: any, index: number) => {
+            employeesArray.map(async(allocation: any, index: number) => {
                 let response = await handleManualUpdateTaskAllocation(
                     allocation.user_id, assignedTask[index].taskAllocationID, 
                     taskValues.title
