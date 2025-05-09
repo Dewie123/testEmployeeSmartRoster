@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAlert } from '../../../components/PromptAlert/AlertContext'
+import { formatTextForDisplay } from '../../../controller/Variables.js'
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton'
 import SecondaryButton from '../../../components/SecondaryButton/SecondaryButton';
 import SAFAQController from '../../../controller/SAFAQController'
@@ -125,7 +126,10 @@ const CreateFAQForm = ({
                             <RiQuestionAnswerFill className='App-popup-content-icon'/>
                             Answer: 
                         </p>
-                        <p className="main-data">{values.answer}</p>
+                        <p 
+                            className="main-data confirmation-prompt-ans-preview"
+                            dangerouslySetInnerHTML={{ __html: formatTextForDisplay(values.answer) }}
+                        />
                     </div>
                 </div>
                 <div className="btns-grp">
