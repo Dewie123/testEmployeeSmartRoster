@@ -28,6 +28,9 @@ const VideoMgt: React.FC = () => {
             // console.log(response)
             if (response?.videos){
                 response = response.videos
+                .slice()
+                .sort((a: any, b: any) => b.id - a.id); // Sort by descending order of ID
+
                 setAllVideos(response)
                 // Get video shown in landing page as default preview video
                 const defaultPreview = filterIsShownVideo(response, 1)
@@ -129,7 +132,7 @@ const VideoMgt: React.FC = () => {
         setAllVideos(updatedData)
     }
 
-    console.log(uploading)
+    // console.log(uploading)
 
     return(
         <div className="App-content">

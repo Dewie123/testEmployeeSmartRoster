@@ -79,7 +79,7 @@
 .sa-view-video-display-card:hover,
 .sa-view-video-display-card.onhover {
     cursor: pointer;
-    background-color: rgb(224, 190, 255);
+    background-color: rgb(237, 218, 255);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 

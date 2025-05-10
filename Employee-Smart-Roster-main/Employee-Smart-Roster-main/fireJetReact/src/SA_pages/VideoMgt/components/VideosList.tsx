@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
 import SA_LandingMgtController from '../../../controller/SA_LandingMgtController'
 
-import { BiSolidShow } from '../../../../public/Icons.js'
+import { BiSolidShow , IoFlagSharp} from '../../../../public/Icons.js'
 import '../VideoMgt.css'
 import '../../../../public/styles/common.css'
 import { useState } from 'react';
@@ -44,14 +44,10 @@ const AllVideos = ({videos, updatePreviewVideo, updateLandingVideo}: AllVideoPro
                     <div className="App-mobile-responsive-table-card-data-detail uploaded-demo-video-list-item">
                         <h4>{video.title}</h4>
                         <div className="btns-grp">
-                            {video.isShown === 0 ? (
-                                <PrimaryButton 
-                                    text='Display on Landing'
-                                    onClick={() => updateLandingVideo(video.id, video.url)}
-                                />
-                            ):(
-                                <p>Displayed in Landing</p>
-                            )}
+                            <IoFlagSharp 
+                                onClick={() => updateLandingVideo(video.id, video.url)}
+                                style={{ color: video.isShown === 1 ? '#b565ff' : '#a0a0a0' }}
+                            />
                         </div>
                     </div>
                 </div>
