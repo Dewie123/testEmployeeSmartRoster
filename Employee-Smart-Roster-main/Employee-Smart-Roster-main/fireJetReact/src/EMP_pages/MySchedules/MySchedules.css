@@ -28,4 +28,23 @@
         justify-content: start;
         gap: 15px;
     }
+
+    .App-timeline-task-title-container {
+        flex-direction: column !important;
+        gap: 0px !important;
+    }
+
+    .App-timeline-time {
+        display: flex;
+        flex-direction: row;
+        font-size: 13px;
+        color: var(--secondary-text);
+        margin-bottom: 5px;
+        margin-right: auto !important;
+        margin-left: 0px !important;
+        gap: 5px;
+        align-items: center;
+        color: #6c6c6c;
+        min-width: 143px;
+        }
 }

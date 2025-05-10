@@ -77,10 +77,10 @@ const EmpViewSchedule = () => {
                 <div className="App-timeline">
                     {/* Timeline Line (Vertical) */}
                     <div className="App-timeline-line"></div>
-
                     {/* Timeline Items */}
                     {allTasks.length > 0 && allTasks.map((task: any) => (
                         <div key={task.taskID} className="App-timeline-item">
+
                             {/* Timeline Point (Icon) */}
                             <div className="App-timeline-point">
                                 <GrSchedules className="App-timeline-icon" />
@@ -92,17 +92,20 @@ const EmpViewSchedule = () => {
                                 onClick={() => toggleShowTaskDetail(task)}
                             >
                                 <div className='App-timeline-task-title-container'>
-                                    <FaCircle 
-                                        className={`task-status
-                                                    ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
-                                                    ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
-                                        style={{ fontSize: '12px', minWidth: '12px', minHeight: '12px' }}
-                                    />
-                                    <h3 className="App-timeline-task-title">{task.title}</h3>
+                                    <div className='App-timeline-task-title'>
+                                        <FaCircle 
+                                            className={`task-status
+                                                        ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                                        ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                                            style={{ fontSize: '12px', minWidth: '12px', minHeight: '12px' }}
+                                        />
+                                        <h3 className="App-timeline-task-title">{task.title}</h3>
+                                    </div>
                                     <p className="App-timeline-time">
                                         <FaClock></FaClock>
                                         {formatMSDisplayDateTime(task.startDate)}
                                     </p>
+
                                 </div>
                                 <hr className="App-timeline-divider" />
                                 <p

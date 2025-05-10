@@ -222,7 +222,7 @@ h4 {
 
 .App-timeline-icon {
   color: var(--light-color-text);
-  font-size: 14px;
+  font-size: 18.5px;
 }
 
 /* Timeline Content */
@@ -247,7 +247,6 @@ h4 {
   align-items: center;
   color: #6c6c6c;
   min-width: 143px;
-
 }
 
 .App-timeline-divider {
@@ -255,7 +254,6 @@ h4 {
   border-top: 1px solid #c5c5c5;
   width: 100%;
 }
-
 
 .App-timeline-task-title-container {
   display: flex;
@@ -265,7 +263,12 @@ h4 {
   gap: 10px;
 }
 
-.App-timeline-task-title {
+.App-timeline-task-title{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
   font-size: 16px;
   font-weight: bold;
   color: #333;
