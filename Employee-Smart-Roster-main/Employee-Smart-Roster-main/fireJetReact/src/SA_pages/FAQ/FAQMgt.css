@@ -44,3 +44,7 @@
     border-radius: 10px;
     border: 1px solid var(--purple-color-text);
 }
+
+.sa-view-faq-flag-icon {
+    font-size: 20px !important; 
+}

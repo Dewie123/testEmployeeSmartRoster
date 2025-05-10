@@ -20,21 +20,24 @@ const VideoMgt: React.FC = () => {
         'initial' | 'uploading' | 'success' | 'fail'
     >('initial');
     const [ allVideos, setAllVideos ] = useState<any>([]);
+    const [uploading, setUploading] = useState<boolean>(false)
 
     const fetchVideos = async() => {
         try {
-            let response = await getAllUploadedVideos()
+            let response = await getDemoVideo()
             // console.log(response)
-            if (response.message === 'Succesfully retrieved video list'){
-                response = response.VideoList
-                // console.log(response)
-                setAllVideos(response)
+            if (response?.videos){
+                response = response.videos
+                .slice()
+                .sort((a: any, b: any) => b.id - a.id); // Sort by descending order of ID
 
+                setAllVideos(response)
                 // Get video shown in landing page as default preview video
                 const defaultPreview = filterIsShownVideo(response, 1)
-                // console.log(defaultPreview)
-                if(defaultPreview)
-                    triggerSelectVideo(defaultPreview[0].video_link)
+                // console.log(defaultPreview.url)
+                if (defaultPreview) {
+                    setVideoPreview(defaultPreview[0].url); // Use the existing URL
+                }
             }
         } catch(error) {
             showAlert(
@@ -60,13 +63,16 @@ const VideoMgt: React.FC = () => {
     const triggerUploadVideo = async() => {
         if (uploadedDemoVideo) {
             try {
+                setUploading(true)
                 setFileStatus('uploading')
                 await uploadLandingVideo(uploadedDemoVideo, newVideoTitle)
+                setUploading(false)
                 setFileStatus('success');
                 setUploadedDemoVideo(null);
                 setNewVideoTitle('');
                 fetchVideos(); // re-fetch video
             } catch(error) {
+                setUploading(false)
                 setFileStatus('fail');
                 showAlert(
                     'triggerUploadVideo',
@@ -79,31 +85,32 @@ const VideoMgt: React.FC = () => {
     }
 
     // Trigger selected video
-    const triggerSelectVideo = async(videoLink: string) => {
-        try {
-            let response = await getDemoVideo(videoLink)
-            console.log("Presigned URL: ", response)
-            if(response)
-                setVideoPreview(response)
-        } catch(error) {
+    const triggerSelectVideo = (url: string) => {
+        // Find the selected video in the existing list
+        const selectedVideo = allVideos.find((video: any) => video.url === url);
+        // console.log(url)
+        if (selectedVideo) {
+            setVideoPreview(selectedVideo.url);
+        } else {
             showAlert(
                 'triggerSelectVideo',
                 'Failed to Change Selected Video',
-                error instanceof Error ? error.message : String(error),
+                'Selected video not found.',
                 { type: 'error' }
-            )
+            );
         }
     }
+
     // console.log(videoPreview)
 
     // Trigger selected video
-    const triggerChangeVideoDisplayOnLanding = async(videoId: number, videoLink: string) => {
+    const triggerChangeVideoDisplayOnLanding = async(id: number, url: string) => {
         try {
-            let response = await setVideoDisplayOnLanding(videoId)
+            let response = await setVideoDisplayOnLanding(id)
             // console.log("Change Landing: ", response)
-            updateDisplayStatus(videoId)
+            updateDisplayStatus(id)
             if(response.message === 'Succesfully selected video.'){
-                triggerSelectVideo(videoLink)
+                triggerSelectVideo(url)
             }
         } catch(error) {
             showAlert(
@@ -116,14 +123,16 @@ const VideoMgt: React.FC = () => {
     }
 
     // Update display status locally
-    function updateDisplayStatus(videoId: number) {
-        const updatedData = allVideos.map((video: any) => 
-            video.videoID === videoId 
-            ? { ...video, isShown: 1}
-            : { ...video, isShown: 0}
+    function updateDisplayStatus(id: number) {
+        const updatedData = allVideos.map((videos: any) => 
+            videos.id === id 
+            ? { ...videos, isShown: 1}
+            : { ...videos, isShown: 0}
         )
         setAllVideos(updatedData)
     }
+
+    // console.log(uploading)
 
     return(
         <div className="App-content">
@@ -137,9 +146,17 @@ const VideoMgt: React.FC = () => {
                         Upload New Demo Video
                         <button 
                             className={`upload-video-button ${
-                                (!uploadedDemoVideo || !newVideoTitle) ? 'disabled' : ''
+                                (
+                                    !uploadedDemoVideo 
+                                    || !newVideoTitle 
+                                    || uploading
+                                ) ? 'disabled' : ''
                             }`}
-                            disabled={!uploadedDemoVideo || !newVideoTitle}
+                            disabled={
+                                !uploadedDemoVideo 
+                                || !newVideoTitle 
+                                || uploading
+                            }
                             onClick={triggerUploadVideo}
                         >
                             <FaUpload />
@@ -169,7 +186,14 @@ const VideoMgt: React.FC = () => {
 
                 {allVideos.length > 0 ?(
                     <div className="uploaded-video-container">
-                        <video className='default-preview-video' autoPlay muted playsInline>
+                        <video 
+                            className='default-preview-video' 
+                            autoPlay
+                            muted
+                            playsInline
+                            loop
+                            key={videoPreview}
+                        >
                         {videoPreview ? (
                             <source src={videoPreview} type="video/mp4" />
                         ):(
@@ -192,4 +216,3 @@ const VideoMgt: React.FC = () => {
 }
 
 export default VideoMgt
-

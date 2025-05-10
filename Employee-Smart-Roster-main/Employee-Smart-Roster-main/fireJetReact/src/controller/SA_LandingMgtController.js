@@ -59,8 +59,8 @@ async function getDemoVideo(fileName) {
         };
 
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/s3/video/download', {
-            method: 'POST',
-            body: JSON.stringify(body),
+            method: 'GET',
+            // body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' }
         });
         if(!response.ok) {
@@ -70,9 +70,9 @@ async function getDemoVideo(fileName) {
         const data = await response.json();
         // console.log(data)
         // Step 2: Get the pre-signed URL from the response
-        const presignedUrl = data.presignedUrl;
-        // const downloadResponse = await fetch(presignedUrl);
-        return presignedUrl;
+        // const presignedUrl = data.presignedUrl;
+        // // const downloadResponse = await fetch(presignedUrl);
+        return data;
 
     } catch(error) {
         // console.error(`Failed to register: \n`, error);
