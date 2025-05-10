@@ -50,7 +50,7 @@ const Navbar = () => {
              && !isOnReqResetEmail
              && !isOnResetPw 
              && !isOnPreviewLanding
-             &&(
+             && (
                 <div className="navbar">
                     <div className="nav-button hamburger-menu-icon">
                         <SideMenu_m />
