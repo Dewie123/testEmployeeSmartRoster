@@ -181,7 +181,7 @@ h4 {
   flex-direction: column;
   gap: 5px;
   position: relative;
-  padding-left: 40px;
+  padding-left: 41.5px;
 }
 
 .App-timeline-title {
@@ -196,8 +196,8 @@ h4 {
   left: 15px;
   top: 0;
   bottom: 0;
-  width: 2px;
-  background-color: #e0e0e0;
+  width: 3px;
+  background-color: #cdcdcd;
 }
 
 /* Timeline Items */
@@ -226,6 +226,8 @@ h4 {
 
 /* Timeline Content */
 .App-timeline-content {
+  display: flex;
+  flex-direction: column;
   padding: 15px;
   background-color: white;
   border: 1.5px solid var(--light-color-text);
@@ -234,10 +236,25 @@ h4 {
 }
 
 .App-timeline-time {
-  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  font-size: 13px;
   color: var(--secondary-text);
   margin-bottom: 5px;
+  margin-left: auto;
+  gap: 5px;
+  align-items: center;
+  color: #6c6c6c;
+  min-width: 143px;
+
 }
+
+.App-timeline-divider {
+  margin: 10px 0;
+  border-top: 1px solid #c5c5c5;
+  width: 100%;
+}
+
 
 .App-timeline-task-title-container {
   display: flex;
@@ -246,6 +263,7 @@ h4 {
   align-items: center;
   gap: 10px;
 }
+
 .App-timeline-task-title {
   font-size: 16px;
   font-weight: bold;
