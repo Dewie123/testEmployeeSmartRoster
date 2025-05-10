@@ -25,6 +25,7 @@ const BOCompanyProfile = () => {
     const [ allRoles, setAllRoles ] = useState<any>([])
     const [ allSkillsets, setAllSkillsets ] = useState<any>([]) 
     const [ newRole, setNewRole ] = useState<string>('')
+    const [ selectedRoleForNewSkill, setSelectedRoleForNewSkill ] = useState<any>('')
     const [ newSkillset, setNewSkillset ] = useState<string>('')
     const [ showEditCompanyProfile, setShowEditCompanyProfile ] = useState(false)
 
@@ -151,7 +152,7 @@ const BOCompanyProfile = () => {
             );
         } else {
             try {
-                const response = await createSkillset (newSkillset, user?.UID)
+                const response = await createSkillset (newSkillset, user?.UID, selectedRoleForNewSkill)
                 // console.log(response)
                 if(response.message === "Skillset added successfully") {
                     const lastSkillNo = response.skillSetID.length - 1
@@ -302,7 +303,7 @@ const BOCompanyProfile = () => {
                     </div> 
     
                     <div className="create-new-role-n-skill card">
-                        <h3>Create New Role/Skillset</h3>
+                        <h3>Create New Role</h3>
                         <div className="add-new-role">
                             <input type='text' 
                                 name='role'
@@ -319,21 +320,42 @@ const BOCompanyProfile = () => {
                                 <FaPlusCircle/>
                             </button>
                         </div>
-                        <div className="add-new-skillset">
-                            <input type='text' 
-                                name='skillset'
-                                placeholder='Input New Skillset Here...' 
-                                value={newSkillset}
-                                onChange={(e) => setNewSkillset(e.target.value)}
-                                required
-                            />
-                            <button 
-                                className="add-role-skill"
-                                onClick={() => triggerCreateSkillset()}
-                                disabled = {!newSkillset}
-                            >
-                                <FaPlusCircle/>
-                            </button>
+                        <div className="create-new-skillset-card">
+                            <h3>Create New Skillset</h3>
+                            {/* Role */}
+                            <div className='forms-input'>
+                                {/* Role dropdown */}
+                                <select 
+                                    name="roleID"
+                                    value={selectedRoleForNewSkill}
+                                    onChange={(e) => setSelectedRoleForNewSkill(e.target.value)}
+                                >
+                                    <option value={''}>No Role Selected</option>
+                                    {allRoles.map((role:any) => (
+                                    <option key={role.roleID} value={role.roleID}>
+                                        {role.roleName}
+                                    </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="add-new-skillset">
+                                <input type='text' 
+                                    name='skillset'
+                                    placeholder='Input New Skillset Here...' 
+                                    value={newSkillset}
+                                    onChange={(e) => setNewSkillset(e.target.value)}
+                                    required
+                                />
+                                <button 
+                                    className={`add-role-skill 
+                                        ${!newSkillset || !selectedRoleForNewSkill ? 'disabled' : ''}`}
+                                    onClick={() => triggerCreateSkillset()}
+                                    disabled = {!newSkillset || !selectedRoleForNewSkill}
+                                >
+                                    <FaPlusCircle/>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

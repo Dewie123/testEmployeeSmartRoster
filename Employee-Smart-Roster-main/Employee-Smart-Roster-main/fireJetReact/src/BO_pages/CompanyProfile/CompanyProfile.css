@@ -89,6 +89,27 @@
     }
 }
 
+.create-new-skillset-card {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: var(--main-page-background);
+
+    .add-role-skill.disabled {
+        color: var(--light-color-text);
+    }
+    .add-role-skill.disabled:hover {
+        cursor: default;
+        color: var(--light-color-text);
+        background-color: white;
+    }
+}
+
 .confirm-company-info-data {
     .title {
         font-weight: bold;

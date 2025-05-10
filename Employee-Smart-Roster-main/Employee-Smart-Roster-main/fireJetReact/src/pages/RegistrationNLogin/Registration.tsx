@@ -145,6 +145,15 @@ const Register = () => {
                         action="" 
                         onSubmit={triggerRegistration}
                     >
+                        <span className='warning-message warining-message-in-confirmatiom-prompt'>
+                            <div className="title">
+                                <GoAlertFill />
+                                <strong>Registered Accounts Begin with Free Tier by Default</strong> 
+                            </div>
+                            <span className='warning-message-text'>
+                                You may upgrade your subscription plan after your registration is approved
+                            </span>
+                        </span>
                         <div className="registration-form-content">
                             <div className="registration-form-company">
                                 {/* BizFile */}

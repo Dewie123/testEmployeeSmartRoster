@@ -184,10 +184,11 @@ async function createRole (roleName, boUID) {
     }
 }
 
-async function createSkillset (skillset, boUID) {
+async function createSkillset (skillset, boUID, roleID) {
     const body = {
         business_owner_id: boUID,
-        skillSetName: skillset
+        skillSetName: skillset,
+        roleID: roleID
     }
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/skillset/add', {
