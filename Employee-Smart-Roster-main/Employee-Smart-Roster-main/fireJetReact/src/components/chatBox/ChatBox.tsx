@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useAlert } from "../../components/PromptAlert/AlertContext";
 import ChatBot from 'react-simple-chatbot';
 import SAFAQController from "../../controller/SAFAQController";
 
 import { BsChatLeftDotsFill } from "react-icons/bs";
-import { IoClose, FiRefreshCw } from '../../../public/Icons.js'
+import { IoClose, FiRefreshCw } from '../../../public/Icons.js';
 import './ChatBox.css'
 import '../../../public/styles/common.css'
 
@@ -15,6 +16,7 @@ const { handleSubmitQuesToChatBox } = SAFAQController;
 const ApiResponse = ({ previousStep, triggerNextStep }: any) => {
     const { showAlert } = useAlert();
     const [ answer, setAnswer ] = useState("Let me check for you...");
+
 
     const triggerSendQuestion = async() => {
         try {
@@ -61,6 +63,14 @@ const CustomHeader = ({ toggleChat, resetChat }: {
 const EmpRosterChat = () => {
     const [ showChat, setShowChat ] = useState(false);
     const [ chatKey, setChatKey ] = useState(0);
+    const location = useLocation()
+    const isOnLanding = location.pathname.includes('home');
+    const isOnLogin = location.pathname.includes('login');
+    const isOnRegister = location.pathname.includes('register');
+    const isOnReqResetEmail = location.pathname.includes('request-reset-pw-email');
+    const isOnResetPw = location.pathname.includes('reset-pw');
+    const isOnPreviewLanding = location.pathname.includes('preview-landing-page');
+
 
     const steps = [
         {
@@ -107,7 +117,14 @@ const EmpRosterChat = () => {
         setChatKey(prev => prev + 1);
     };
 
-    if (!showChat) {
+    if (!showChat 
+        && !isOnLanding
+        && !isOnLogin
+        && !isOnRegister
+        && !isOnReqResetEmail
+        && !isOnResetPw 
+        && !isOnPreviewLanding
+    ) {
         return (
             <button 
                 className={`chatbot-toggle ${showChat ? 'open' : ''}`}
@@ -122,22 +139,32 @@ const EmpRosterChat = () => {
     }
 
     return (
-        <div className="custom-chat-container">
-            {/* Your custom header */}
-            <CustomHeader 
-                toggleChat={() => toggleShowChatBox()}
-                resetChat={() => resetChat()}
-            />
-            
-            {/* The actual chatbot */}
-            <ChatBot
-                key={chatKey}
-                steps={steps}
-                hideHeader={true}
-                recognitionEnable={true}
+        <>
+        {!isOnLanding
+         && !isOnLogin
+         && !isOnRegister
+         && !isOnReqResetEmail
+         && !isOnResetPw 
+         && !isOnPreviewLanding 
+         && (
+            <div className="custom-chat-container">
+                {/* Your custom header */}
+                <CustomHeader 
+                    toggleChat={() => toggleShowChatBox()}
+                    resetChat={() => resetChat()}
+                />
+                
+                {/* The actual chatbot */}
+                <ChatBot
+                    key={chatKey}
+                    steps={steps}
+                    hideHeader={true}
+                    recognitionEnable={true}
 
-            />
-        </div>
+                />
+            </div>
+        )}
+        </>
     );
 }
 
