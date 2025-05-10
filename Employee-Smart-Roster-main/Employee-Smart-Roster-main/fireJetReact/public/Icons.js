@@ -36,7 +36,7 @@ import { HiMiniViewfinderCircle,
 import { RxHamburgerMenu } from "react-icons/rx";
 import { HiOutlineIdentification } from "react-icons/hi";
 import { FiRefreshCw } from "react-icons/fi";
-import { FaUpload } from "react-icons/fa6";
+import { FaUpload, FaClock } from "react-icons/fa6";
 
 export {
     LuLogOut,   // Logout icon
@@ -72,6 +72,7 @@ export {
     VscDebugBreakpointData, // List point icon
     HiMiniViewfinderCircle, // Allocated time view icon
     TiTime, // Time icon
+    FaClock, // Clock icon
     FaRegEdit, // Edit icon
     HiOutlineIdentification, // Identification icon
     HiOutlineCalendarDateRange, // Date icon

@@ -7,11 +7,24 @@ import { GrSchedules } from "react-icons/gr";
 import TaskDetail from './components/TaskDetail';
 import TimelineController from '../../controller/TimelineController';
 
-import { FaCircle } from '../../../public/Icons.js'
+import { FaCircle, FaClock } from '../../../public/Icons.js'
 import './MySchedules.css'
 import '../../../public/styles/common.css'
 
 const { empGetAllTask } = TimelineController
+
+// Utility function to format date only for MySchedules
+export function formatMSDisplayDateTime(dateString: string) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = String(date.getFullYear()).slice(-2);
+    const hours = date.getHours() % 12 || 12;
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+    //const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
+}
 
 const EmpViewSchedule = () => {
     const { showAlert } = useAlert()
@@ -64,10 +77,10 @@ const EmpViewSchedule = () => {
                 <div className="App-timeline">
                     {/* Timeline Line (Vertical) */}
                     <div className="App-timeline-line"></div>
-
                     {/* Timeline Items */}
                     {allTasks.length > 0 && allTasks.map((task: any) => (
                         <div key={task.taskID} className="App-timeline-item">
+
                             {/* Timeline Point (Icon) */}
                             <div className="App-timeline-point">
                                 <GrSchedules className="App-timeline-icon" />
@@ -78,23 +91,27 @@ const EmpViewSchedule = () => {
                                 className="App-timeline-content"
                                 onClick={() => toggleShowTaskDetail(task)}
                             >
-                                <p className="App-timeline-time">
-                                    {formatDisplayDateTime(task.startDate)}
-                                </p>
                                 <div className='App-timeline-task-title-container'>
-                                    <FaCircle 
-                                        className={`task-status
-                                                    ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
-                                                    ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
-                                    />
-                                    <h3 className="App-timeline-task-title">{task.title}</h3>
+                                    <div className='App-timeline-task-title'>
+                                        <FaCircle 
+                                            className={`task-status
+                                                        ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                                        ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                                            style={{ fontSize: '12px', minWidth: '12px', minHeight: '12px' }}
+                                        />
+                                        <h3 className="App-timeline-task-title">{task.title}</h3>
+                                    </div>
+                                    <p className="App-timeline-time">
+                                        <FaClock></FaClock>
+                                        {formatMSDisplayDateTime(task.startDate)}
+                                    </p>
+
                                 </div>
-                                
-                                <p 
+                                <hr className="App-timeline-divider" />
+                                <p
                                     className="App-timeline-task-description"
                                     dangerouslySetInnerHTML={{ __html: formatTextForDisplay(task.taskDescription) }}
                                 />
-
                             </div>
                         </div>
                     ))}
