@@ -181,7 +181,7 @@ h4 {
   flex-direction: column;
   gap: 5px;
   position: relative;
-  padding-left: 41.5px;
+  padding-left: 39px;
 }
 
 .App-timeline-title {
@@ -210,13 +210,14 @@ h4 {
   position: absolute;
   left: -40px;
   top: 0;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background-color: var(--side-menu-hover-background);
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
 .App-timeline-icon {
