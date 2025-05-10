@@ -331,6 +331,18 @@ function App() {
                   }
                 />
 
+                <Route
+                  path="/review-n-rating-management"
+                  element={
+                    <ProtectedRoute>
+                      <div className="App-content">
+                        <SideMenu_t />
+                        <h1>Review & Rating Management</h1>
+                      </div>
+                    </ProtectedRoute>
+                  }
+                />
+
               </Route>
               
               {/* Route for Employee pages */}
@@ -344,7 +356,7 @@ function App() {
                 }
               />
               <Route
-                path="//my-schedule"
+                path="/my-schedule"
                 element={
                   <ProtectedRoute>
                     <SideMenu_t />
