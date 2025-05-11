@@ -244,26 +244,29 @@ const BODetail = ({company = [], onClose, onUpdate }: BODetailProps) => {
                         <p className="main-data">{company.owner.reasonOfSuspend}</p>
                     </div>
                 )}
-                <div className="subs-info">
-                    <div className="subs-info-data">
-                        <p className="title">Subscription Status: </p>
-                        <p className="main-data">
-                            {company.transactions[0]?.subsStatus || 'Unsubscribed'}
-                        </p>
+                {company.transactions[0]?.subsPlanID === 2 && (
+                    <div className="subs-info">
+                        <div className="subs-info-data">
+                            <p className="title">Subscription Status: </p>
+                            <p className="main-data">
+                                {company.transactions[0]?.subsStatus || 'Unsubscribed'}
+                            </p>
+                        </div>
+                        {company.transactions.length > 0 ? (
+                        <div className="subs-info-data">
+                            <p className="title">Subscription Period: </p>
+                            <p className="main-data">
+                                {formatDateTime(company.transactions[0].startDate)}
+                                &nbsp;to&nbsp;
+                                {formatDateTime(company.transactions[0].endDate)}
+                            </p>
+                        </div>
+                        ):(
+                            <></>
+                        )}
                     </div>
-                    {company.transactions.length > 0 ? (
-                    <div className="subs-info-data">
-                        <p className="title">Subscription Period: </p>
-                        <p className="main-data">
-                            {formatDateTime(company.transactions[0].startDate)}
-                            &nbsp;to&nbsp;
-                            {formatDateTime(company.transactions[0].endDate)}
-                        </p>
-                    </div>
-                    ):(
-                        <></>
-                    )}
-                </div>
+                )}
+                
             </div>
             <div className="suspend-btn">
                 {company.owner?.isSuspended === 1 ? (

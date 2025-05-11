@@ -17,6 +17,7 @@ export const YEAR_CHANGE = ['prevYear', 'nextYear'];
 export const USER_ROLE = ['System Admin', 'Business Owner', 'Employee']
 export const TASK_STATUS = ['Not Started', 'In Progress', 'Completed'];
 export const REG_STATUS = ["Pending", "Approved", "Rejected"];
+export const SUB_PLAN = ['Free', 'Premium']
 export const SUB_STATUS = ["Pending", "Completed", "Failed", "Cancelled", "Expired"];
 export const PASS_TYPE = ['Singapore Citizen/PR', 'Employment Pass', 'S Pass', 'Work Permit', 'Other Work Pass'];
 export const IS_ACC_SUSPENDED = ['Activated', 'Suspended'];
