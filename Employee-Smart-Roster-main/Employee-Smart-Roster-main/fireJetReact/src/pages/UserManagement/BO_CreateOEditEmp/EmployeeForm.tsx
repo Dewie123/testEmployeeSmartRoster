@@ -46,7 +46,6 @@ const CreateEditAccount = ({
         hpNo: '',
         fullName: '',
         resStatusPassType: '',
-        jobTitle: '',
         roleID: '',
         skillSetID: '',
         startWorkTime: '',
@@ -161,7 +160,6 @@ const CreateEditAccount = ({
             'nric',
             'hpNo',
             'resStatusPassType',
-            'jobTitle',
             'roleID',
             'skillSetID',
             'startWorkTime',
@@ -535,21 +533,6 @@ const CreateEditAccount = ({
                                 <span className="checkmark"></span>
                             </label>
                         ))}
-                    </div>
-                    {/* Input Employee Name */}
-                    <div className='forms-input'>
-                        <strong>
-                            Job Title <span style={{ color: 'red' }}>*</span>
-                        </strong>
-                        <div className="fields">
-                            <input type='text' 
-                                name='jobTitle'
-                                placeholder='Job Title' 
-                                value={employeeData.jobTitle}
-                                onChange={(e) => handleInputChange(e)}
-                                required
-                            />
-                        </div>
                     </div>
                     {/* Input Employee Name */}
                     <div className='forms-input'>

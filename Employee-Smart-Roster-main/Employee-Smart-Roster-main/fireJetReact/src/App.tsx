@@ -374,7 +374,6 @@ function App() {
             </Routes>
           </div>
           <EmpRosterChat />
-
         </Router>
       </div>
     </AuthProvider>

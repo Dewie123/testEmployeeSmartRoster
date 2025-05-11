@@ -47,7 +47,6 @@ const CreateOEditEmp = ({
         hpNo: '',
         fullName: '',
         resStatusPassType: PASS_TYPE[0],
-        jobTitle: '',
         roleID: '',
         skillSetID: '',
         startWorkTime: '09:00',
