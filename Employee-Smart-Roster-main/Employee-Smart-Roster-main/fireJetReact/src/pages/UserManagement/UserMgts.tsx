@@ -45,8 +45,9 @@ const UserMgts = () => {
     const fetchEmpUsersData = async () => {
         try{
             let data = await getEmployeeList(user?.UID);
-            data = data.employeeList || [];
+            // data = data.employeeList || [];
             setEmployees(data);
+            // console.log(data)
             if (data.length > 0){
                 const empLength = data.filter((data: any) => {
                     return data.activeOrInactive === 1

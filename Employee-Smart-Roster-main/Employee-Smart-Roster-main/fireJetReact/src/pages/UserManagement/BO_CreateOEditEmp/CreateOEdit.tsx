@@ -20,7 +20,7 @@ interface employeeProps {
     onCloseDetail?: () => void
 }
 
-const { getCompanyRoles, getCompanySkillsets } = CompanyController;
+const { getCompanyRoles, getCompanySkillsets, getSkillsetsForARole } = CompanyController;
 
 const CreateOEditEmp = ({ 
     isCreate, selectedEmpValues, empLength,
@@ -36,6 +36,7 @@ const CreateOEditEmp = ({
         allRoles?: any[];
         allSkillsets?: any[];
         empLength?: number;
+        skillsetsForSelectedRole?: any[];
     };
     const [ allRoles, setAllRoles ] = useState<any>([]);
     const [ allSkillsets, setAllSkillsets ] = useState<any>([]);
@@ -84,13 +85,17 @@ const CreateOEditEmp = ({
 
     useEffect(() => {
         if (allRoles.length > 0 && allSkillsets.length > 0) {
+            const skillsets = getSkillsetsForARole(allRoles[0].roleID, allSkillsets)
+            // console.log(skillsets)
             setCreateEmpValues((prev) => ({
                 ...prev,
                 roleID: allRoles[0].roleName,
-                skillSetID: allSkillsets[0].skillSetName
+                skillSetID: skillsets[0].skillSetName
             }));
         }
     }, [allRoles, allSkillsets]);
+
+    
 
     function toggleShowEmpForm (){
         if(isMobile && isCreate)
@@ -99,7 +104,7 @@ const CreateOEditEmp = ({
                     defaultValues: createEmpValues,
                     allRoles,
                     allSkillsets,
-                    empLength
+                    empLength,
                 }
             })
 

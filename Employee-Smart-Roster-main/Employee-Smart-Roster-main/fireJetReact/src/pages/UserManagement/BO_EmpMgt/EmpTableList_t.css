@@ -1,12 +1,8 @@
 .header-employee-name,
-.body-employee-name {
-    min-width: 120px;
-    max-width: 120px;
-}
-
+.body-employee-name,
 .header-employee-email,
 .body-employee-email {      
-    min-width: auto
+    min-width: 1fr
 }
 
 .header-employee-phone,
@@ -15,8 +11,6 @@
     max-width: 120px;
 }
 
-.header-employee-job-title,
-.body-employee-job-title,
 .header-employee-role,
 .body-employee-role, 
 .header-employee-skill,
