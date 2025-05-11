@@ -97,7 +97,6 @@ const EMPUserList_t = ({ users, roles, skillsets, onEmpUpdate }: BOListTableProp
           <Header className="header-employee-name" text="NAME" />
           <Header className="header-employee-email" text="EMAIL" />
           <Header className="header-employee-phone" text="PHONE" />
-          <Header className="header-employee-job-title" text="JOB TITLE" />
           <Header className="header-employee-role" text="ROLE" />
           <Header className="header-employee-skill" text="SKILL" />
           <Header className="App-header-icon-gap" text="" />
@@ -107,7 +106,6 @@ const EMPUserList_t = ({ users, roles, skillsets, onEmpUpdate }: BOListTableProp
             <Cell className="body-employee-name" text={employee.fullName} />
             <Cell className="body-employee-email" text={employee.email} />
             <Cell className="body-employee-phone" text={formatPhoneNumber(String(employee.hpNo))} />
-            <Cell className="body-employee-job-title" text={employee.jobTitle} />
             <Cell className="body-employee-role" text={returnRoleName(employee.roleID)} />
             <Cell
               className="body-employee-skill"

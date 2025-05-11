@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../../components/PromptAlert/AlertContext"; 
 import { formatPhoneNumber, formatNRIC, PASS_TYPE,
-         FIRST_3_MIN_MC, MIN_YEAR1_ANNUAL, formatKey,
-         convertDateToSGTime } from '../../../controller/Variables.js';
+         FIRST_3_MIN_MC, MIN_YEAR1_ANNUAL, formatKey } from '../../../controller/Variables.js';
 import BOEmployeeController from "../../../controller/BOEmployeeController";
 import UserController from '../../../controller/User/UserController';
 import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
@@ -28,17 +27,17 @@ interface CreateOrEditEmpProps {
 
 const { validateEmail, validatePhoneNo, validateNRICofFIN } = UserController;
 const { validateEndWorkTime, createEmployee, editEmployee,
-        getRoleNameForEmp, getSkillNameForEmp } = BOEmployeeController
+        getRoleIdForEmp, getRoleNameForEmp, getSkillNameForEmp } = BOEmployeeController
 
 const CreateEditAccount = ({
     isCreate, currentUser, defaultValues, 
-    allRoles, allSkillsets, empLength = 0,
-    onEmpUpdate, onEmpAdd, onCloseDetail, 
-    onClose}: CreateOrEditEmpProps) => {
+    allRoles, allSkillsets, empLength = 0, 
+    onEmpUpdate, onEmpAdd, onCloseDetail, onClose}: CreateOrEditEmpProps) => {
     // console.log("Default Value", defaultValues)
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const [ showConfirmation, setShowConfirmation ] = useState(false);
+    const [ selectedRoleSkillset, setSelectedRoleSkillset ] = useState<any>([])
     const isMobile = window.innerWidth <= 768;
     const [ employeeData, setEmployeeData ] = useState({
         email: '',
@@ -64,6 +63,7 @@ const CreateEditAccount = ({
 
     useEffect(() => {
         let updatedValues = { ...defaultValues };
+        
         if(!isCreate){
             const phoneStr = String(defaultValues.hpNo)
             updatedValues.hpNo = formatPhoneNumber(phoneStr)
@@ -74,8 +74,9 @@ const CreateEditAccount = ({
             const skillset = getSkillNameForEmp(allSkillsets, updatedValues.skillSetID)
             updatedValues.skillSetID = skillset[0].skillSetName
         }
+        handleFindSkillToSelectedRole(updatedValues.roleID)
         setEmployeeData(updatedValues)
-    }, [defaultValues])
+    }, [defaultValues, allRoles, allSkillsets])
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -96,6 +97,9 @@ const CreateEditAccount = ({
                 ...prevData,
                 [name]: String(value),
             }));
+            if(name === 'roleID') {
+                handleFindSkillToSelectedRole(value)
+            }
         } else {
             setEmployeeData((prevData) => ({
                 ...prevData,
@@ -104,6 +108,17 @@ const CreateEditAccount = ({
         }
     };
     // useEffect(() => { console.log(employeeData) }, [employeeData])
+
+    function handleFindSkillToSelectedRole(value: string) {
+        // console.log(value)
+        const role = getRoleIdForEmp(allRoles, value)
+        // console.log(role)
+        const filteredSkillsets = allSkillsets.filter((skillset: any) => {
+            return skillset.roleID === role[0].roleID
+        })
+        // console.log(filteredSkillsets)
+        setSelectedRoleSkillset(filteredSkillsets)
+    }
 
     const triggerEmailValidation = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         // Store email value
@@ -571,23 +586,25 @@ const CreateEditAccount = ({
                         </select>
                     </div>
                     {/* Skillsets */}
-                    <div className='forms-input'>
-                        <strong>
-                            Skillsets <span style={{ color: 'red' }}>*</span>
-                        </strong>
-                        {/* Skillsets dropdown */}
-                        <select 
-                            name="skillSetID"
-                            value={employeeData.skillSetID}
-                            onChange={(e) => handleInputChange(e)}
-                        >
-                            {allSkillsets.map((skill:any) => (
-                            <option key={skill.skillSetID} value={skill.skillSetName}>
-                                {skill.skillSetName}
-                            </option>
-                            ))}
-                        </select>
-                    </div>
+                    {selectedRoleSkillset && (
+                        <div className='forms-input'>
+                            <strong>
+                                Skillsets <span style={{ color: 'red' }}>*</span>
+                            </strong>
+                            {/* Skillsets dropdown */}
+                            <select 
+                                name="skillSetID"
+                                value={employeeData.skillSetID}
+                                onChange={(e) => handleInputChange(e)}
+                            >
+                                {selectedRoleSkillset.map((skill:any) => (
+                                <option key={skill.skillSetID} value={skill.skillSetName}>
+                                    {skill.skillSetName}
+                                </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                     {/* Start Working Time */}
                     <div className='forms-input'>
                         <strong>

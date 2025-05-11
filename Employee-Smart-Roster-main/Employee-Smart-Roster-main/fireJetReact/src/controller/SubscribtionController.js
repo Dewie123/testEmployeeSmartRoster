@@ -1,3 +1,5 @@
+import { SUB_PLAN } from "./Variables";
+
 // return subscription transactions for each company
 async function saGetSubscriptionTransactions () {
     const body = {
@@ -71,12 +73,17 @@ const mergePremiumSubscriptions = (transactions) => {
 };
 
 function handleFilterSubsStatus (companies, status) {
-    // console.log(companies)
+    // console.log(companies, status)
+    let planID = 0
+    if (status === SUB_PLAN[0])
+        planID = 1
+    else
+        planID = 2
     const filteredData = companies.filter((company) => {
-        const DEFAULT_STATUS = 'Unsubscribed';
-        const latestStatus = company.transactions?.[0]?.subsStatus || DEFAULT_STATUS;
-        return status === '' || latestStatus === status;
+        let latestSubsPlan = company.transactions?.[0]?.subsPlanID
+        return planID === '' || latestSubsPlan === planID;
     })
+    // console.log(filteredData)
     return filteredData;
 }
 

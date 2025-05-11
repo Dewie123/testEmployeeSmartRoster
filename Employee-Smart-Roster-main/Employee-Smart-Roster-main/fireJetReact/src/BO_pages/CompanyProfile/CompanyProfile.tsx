@@ -249,13 +249,14 @@ const BOCompanyProfile = () => {
         setCompanyInfo(updatedData)
     }
 
+    // This is for mobile to show/close 
+    // the skillset contained by a selected role
     function triggerExpendRole(role: any) {
         setRoleSelectedToShow(role);
         const skillToRole = getSkillsetsForARole(role.roleID, allSkillsets)
         setSkillsetForSelectedRole(skillToRole);
         setIsExpendRole(true);
     }
-
     function triggerCloseRole() {
         setIsExpendRole(false);
         setSkillsetForSelectedRole({});
@@ -263,6 +264,7 @@ const BOCompanyProfile = () => {
     }
 
     // Toggle show/hide skillsets for a role
+    // This is for desktop and tablet only
     function toggleExpendRole(role?: any) {
         if(role?.roleID !== roleSelectedToShow?.roleID){
             setRoleSelectedToShow(role);

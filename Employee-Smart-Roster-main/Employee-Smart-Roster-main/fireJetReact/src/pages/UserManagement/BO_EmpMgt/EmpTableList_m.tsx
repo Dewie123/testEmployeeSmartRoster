@@ -77,16 +77,28 @@ const EMPUserList_m = ({ users, roles, skillsets, onEmpUpdate }: BOListMobilePro
             <div className="App-mobile-responsive-table-card-data">
               <div className="App-mobile-responsive-table-card-data-detail">
                 <p className="App-mobile-responsive-table-card-data-title">
-                  NRIC
+                  Email
                 </p>
-                <p>{user.nric}</p>
+                <p>{user.email}</p>
               </div>
 
               <div className="App-mobile-responsive-table-card-data-detail">
                 <p className="App-mobile-responsive-table-card-data-title">
-                  Status
+                  H/P
                 </p>
-                <p>{user.isSuspended ? "Suspended" : "Active"}</p>
+                <p>{user.hpNo}</p>
+              </div>
+              <div className="App-mobile-responsive-table-card-data-detail">
+                <p className="App-mobile-responsive-table-card-data-title">
+                  Role
+                </p>
+                <p>{returnRoleName(user.roleID)}</p>
+              </div>
+              <div className="App-mobile-responsive-table-card-data-detail">
+                <p className="App-mobile-responsive-table-card-data-title">
+                  Skillset
+                </p>
+                <p>{returnSkillName(user.skillSetID)}</p>
               </div>
             </div>
           </div>

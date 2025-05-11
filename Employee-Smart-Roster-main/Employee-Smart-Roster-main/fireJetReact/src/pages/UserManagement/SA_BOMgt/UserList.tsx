@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAlert } from '../../../components/PromptAlert/AlertContext';
-import { SUB_STATUS, IS_ACC_SUSPENDED } from '../../../controller/Variables';
+import { SUB_PLAN, SUB_STATUS, IS_ACC_SUSPENDED, NO_DATA_MATCHED } from '../../../controller/Variables';
 import CompanyController from '../../../controller/CompanyController';
 import SubscribtionController from '../../../controller/SubscribtionController';
 import UserController from '../../../controller/User/UserController';
@@ -26,7 +26,7 @@ interface BOListProps {
 const BOUserList = ({boUsers = []}: BOListProps) => {
     // console.log(boUsers)
     const { showAlert } = useAlert();
-    const [ filterSubsStatus, setFilterSubsStatus ] = useState(SUB_STATUS[0]);
+    const [ filterSubsStatus, setFilterSubsStatus ] = useState(SUB_PLAN[0]);
     const [ filterAccStatus, setFilterAccStatus ] = useState(IS_ACC_SUSPENDED[0]);
     const [ filterUENOBizName, setFilterUENOBizName ] = useState('');
     const [ allCompanies, setAllCompanies ] = useState<any>([])
@@ -74,7 +74,7 @@ const BOUserList = ({boUsers = []}: BOListProps) => {
             )
         }
     }
-    // Auto trigger when companies length change
+    // Auto trigger when boUsers changed
     useEffect(() => { fetchCompaniesData(); }, [boUsers]);
     // useEffect(() => {console.log(allCompanies)})   // Debug to check the latest json Object
     
@@ -121,13 +121,13 @@ const BOUserList = ({boUsers = []}: BOListProps) => {
         <>
         <div className="App-filter-search-component">
             <div className="App-filter-container subscription-status">
-                <p className='App-filter-title'>Subscription Status</p>
+                <p className='App-filter-title'>Subscribed To</p>
                 {/* Subscription Status dropdown */}
                 <select 
                     value={filterSubsStatus}
                     onChange={(e) => setFilterSubsStatus(e.target.value)}
                 >
-                {SUB_STATUS.map(status => (
+                {SUB_PLAN.map(status => (
                     <option key={status} value={status}>
                         {status}
                     </option>
@@ -169,7 +169,7 @@ const BOUserList = ({boUsers = []}: BOListProps) => {
                 companies={companies}
                 onUpdate={handleDataUpdate} />
         </>
-        ):(<>No Data Matched with Filter</>)}
+        ):(NO_DATA_MATCHED)}
         </>
     )
 }

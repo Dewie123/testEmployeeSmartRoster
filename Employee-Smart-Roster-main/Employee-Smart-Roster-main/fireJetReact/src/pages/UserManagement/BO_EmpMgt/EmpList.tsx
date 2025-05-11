@@ -26,6 +26,7 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
 
   // Explicitly type state as an array of User objects.
   const [ allUsers, setAllUsers ] = useState<any>(empUsers);
+  const [ skillsetForSelectedRole, setSkillsetForSelectedRole ] = useState<any>([]);
   const [ filteredUsers, setFilteredUsers ] = useState<any>([]);
   const [ filterAccStatus, setFilterAccStatus ] = useState<string>('Activated');
   const [ filterRole, setFilterRole ] = useState<any>("All");
@@ -40,21 +41,16 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
       filtered = handleFilterEmpAccStatus(allUsers, filterAccStatus);
 
       if(filterRole !== 'All') {
-        // Find roleID for filter
-        const findFilterRoleID = roles.filter((role:any) => {
-          return role.roleName === filterRole
-        })
-        // console.log("Filtered role", findFilterRoleID)
-        filtered = handleFilterRole(filtered, findFilterRoleID[0].roleID)
+        const skillsets = handleFindSkillToSelectedRole(filterRole)
+        console.log("Filtered role", skillsets)
+        setSkillsetForSelectedRole(skillsets)
+        filtered = handleFilterRole(filtered, filterRole)
+      } else {
+        setSkillsetForSelectedRole([]); // Clear skillsets if all roles selected
       }
 
       if(filterSkill !== 'All') {
-        // Find roleID for filter
-        const findFilterSkillID = skillsets.filter((skillset:any) => {
-          return skillset.skillSetName === filterSkill
-        })
-        // console.log("Filtered skill", findFilterSkillID)
-        filtered = handleFilterSkill(filtered, findFilterSkillID[0].skillSetID)
+        filtered = handleFilterSkill(filtered, filterSkill)
       }
 
       if(filterPassType !== 'All')
@@ -71,20 +67,44 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
   };
   
   // Re-run the employee lists when employee data updated
+  // useEffect(() => {
+  //   setAllUsers(empUsers);
+  //   triggerFilterUsers();
+  // }, [empUsers]);
+
+  // Auto trigger when role filter dropdown changes 
+  // to update skillset contained in the selected role
   useEffect(() => {
-    setAllUsers(empUsers);
-    triggerFilterUsers();
-  }, [empUsers]);
+      if (filterRole === 'All') {
+          setSkillsetForSelectedRole([]);
+      } else {
+          const skillsets = handleFindSkillToSelectedRole(filterRole);
+          console.log(skillsets)
+          setSkillsetForSelectedRole(skillsets);
+      }
+  }, [filterRole, skillsets]);
   
   // Re-run filtering when source data or filter values change.
   useEffect(() => {
     triggerFilterUsers();
-  }, [allUsers, 
+  }, [
+      allUsers, 
       filterAccStatus, 
       filterRole, 
       filterSkill, 
       filterPassType,
-      filterNameOnric]);
+      filterNameOnric
+    ]);
+
+  function handleFindSkillToSelectedRole(value: string) {
+      console.log(value)
+      const filteredSkillsets = skillsets.filter((skillset: any) => {
+          return skillset.roleID === Number(value)
+      })
+      console.log(filteredSkillsets)
+      setSkillsetForSelectedRole(filteredSkillsets)
+      return filteredSkillsets
+  }
 
   // Callback to update a single user in state after an update (e.g., suspension).
   const handleUserUpdate = (updatedUser: any) => {
@@ -109,7 +129,7 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
               >
                 <option value="All">ALL</option>
                 {roles.map((role:any) => (
-                  <option key={role.roleID} value={role.roleName}>
+                  <option key={role.roleID} value={role.roleID}>
                     {role.roleName}
                   </option>
                 ))}
@@ -122,9 +142,9 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
                   value={filterSkill}
                   onChange={(e) => setFilterSkill(e.target.value)}
               >
-                <option value="All">ALL</option>
-                {skillsets.map((skill:any) => (
-                  <option key={skill.skillSetID} value={skill.skillSetName}>
+                {skillsetForSelectedRole.length === 0 && <option value="All">ALL</option>}
+                {skillsetForSelectedRole.map((skill:any) => (
+                  <option key={skill.skillSetID} value={skill.skillSetID}>
                     {skill.skillSetName}
                   </option>
                 ))}
@@ -132,7 +152,7 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
           </div>
           <div className="App-filter-container subscription-status">
               <p className='App-filter-title'>Reg. Pass Type</p>
-              {/* Skillset dropdown */}
+              {/* Pass Type dropdown */}
               <select 
                   value={filterPassType}
                   onChange={(e) => setFilterPassType(e.target.value)}

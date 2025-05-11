@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAlert } from '../../../components/PromptAlert/AlertContext';
 import { BiSolidUserDetail } from '../../../../public/Icons.js';
-import { NO_DATA_MATCHED } from "../../../controller/Variables.js"
+import { SUB_PLAN } from "../../../controller/Variables.js"
 import BODetail from './BODetail';
 import CompanyController from '../../../controller/CompanyController';
 
@@ -73,12 +73,17 @@ const BOUserList_m = ({ companies = [], onUpdate }: BOListMobileProps) => {
                     </p>
                     <p>{company.UEN}</p>
                 </div>
-
                 <div className='App-mobile-responsive-table-card-data-detail'>
                     <p className='App-mobile-responsive-table-card-data-title'>
-                        Subs.Status
+                        Email
                     </p>
-                    <p>{company.transactions[0]?.subsStatus || 'Unsubscribed'}</p>
+                    <p>{company.owner.email}</p>
+                </div>
+                <div className='App-mobile-responsive-table-card-data-detail'>
+                    <p className='App-mobile-responsive-table-card-data-title'>
+                        Subs.To
+                    </p>
+                    <p>{company.transactions[0]?.subsPlanID === 1 ? SUB_PLAN[0] : SUB_PLAN[1]}</p>
                 </div>
             </div>
         </div>
