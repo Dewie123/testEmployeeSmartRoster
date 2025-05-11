@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
 import { useAuth } from '../../AuthContext'
-import { formatPhoneNumber } from '../../controller/Variables.js'
+import { formatPhoneNumber, formatTextForDisplay } from '../../controller/Variables.js'
 import CompanyController from '../../controller/CompanyController'
 import EditCompanyProfile from './components/EditCompanyPr'
 
 import { FaRegBuilding } from "react-icons/fa";
 import { FaFilePdf, FaRegEdit, 
-         MdDeleteForever, FaPlusCircle } from '../../../public/Icons.js'
+         MdDeleteForever, FaPlusCircle, 
+         IoClose, FiRefreshCw } from '../../../public/Icons.js'
 import './CompanyProfile.css'
 import '../../../public/styles/common.css'
 
@@ -15,19 +16,24 @@ const { getCompany, getCompanyRoles,
         getCompanySkillsets, getCompanyBizFile,
         createSkillset, createRole,
         removeRole, removeSkillset,
-        checkIfRoleCreated, checkIfSkillsetCreated } = CompanyController;
+        checkIfRoleCreated, checkIfSkillsetCreated,
+        getSkillsetsForARole } = CompanyController;
 
 const BOCompanyProfile = () => {
     const { user } = useAuth();
     const { showAlert } = useAlert();
-    const [ companyInfo, setCompanyInfo ] = useState<any>([])
-    const [ bizFileURL, setBizFileURL ] = useState<string>('')
-    const [ allRoles, setAllRoles ] = useState<any>([])
-    const [ allSkillsets, setAllSkillsets ] = useState<any>([]) 
-    const [ newRole, setNewRole ] = useState<string>('')
-    const [ selectedRoleForNewSkill, setSelectedRoleForNewSkill ] = useState<any>('')
-    const [ newSkillset, setNewSkillset ] = useState<string>('')
-    const [ showEditCompanyProfile, setShowEditCompanyProfile ] = useState(false)
+    const [ companyInfo, setCompanyInfo ] = useState<any>([]);
+    const [ bizFileURL, setBizFileURL ] = useState<string>('');
+    const [ allRoles, setAllRoles ] = useState<any>([]);
+    const [ allSkillsets, setAllSkillsets ] = useState<any>([]);
+    const [ newRole, setNewRole ] = useState<string>('');
+    const [ selectedRoleForNewSkill, setSelectedRoleForNewSkill ] = useState<string>('');
+    const [ newSkillset, setNewSkillset ] = useState<string>('');
+    const [ showEditCompanyProfile, setShowEditCompanyProfile ] = useState(false);
+    const [ roleSelectedToShow, setRoleSelectedToShow ] = useState<any>({})
+    const [ skillsetsForSelectedRole, setSkillsetForSelectedRole ] = useState<any>([])
+    const [ isExpendRole, setIsExpendRole ] = useState(false);
+    const isMobile = window.innerWidth <= 768;
 
     const fetchCompanyProfile = async() => {
         if (!user?.UID) return;
@@ -37,14 +43,14 @@ const BOCompanyProfile = () => {
             setCompanyInfo(companyData)
 
             let companyRoles = await getCompanyRoles(user?.UID);
-            companyRoles = companyRoles.roleName;
+            companyRoles = companyRoles.roleName || [];
             // console.log(companyRoles)
-            setAllRoles(Array.isArray(companyRoles) ? companyRoles : []);
+            setAllRoles(companyRoles);
 
             let companySkillsets = await getCompanySkillsets(user?.UID);
-            companySkillsets = companySkillsets.skillSets;
+            companySkillsets = companySkillsets.skillSets || [];
             // console.log(companySkillsets)
-            setAllSkillsets(Array.isArray(companySkillsets) ? companySkillsets : []);
+            setAllSkillsets(companySkillsets);
 
             // Get company biz file
             await fetchBizFilePDF();
@@ -109,7 +115,7 @@ const BOCompanyProfile = () => {
                     const newRoleID = response.roleID[lastRoleNo].roleID
                     const newRoleObj = {
                         roleName: newRole,
-                        roleID: newRoleID
+                        roleID: newRoleID,
                     };
     
                     setAllRoles((prevRoles: any) => [
@@ -159,13 +165,21 @@ const BOCompanyProfile = () => {
                     const newSkillSetID = response.skillSetID[lastSkillNo].skillSetID
                     const newSkillSetObj = {
                         skillSetName: newSkillset,
-                        skillSetID: newSkillSetID
+                        skillSetID: newSkillSetID,
+                        roleID: Number(selectedRoleForNewSkill)
                     };
     
                     setAllSkillsets((prevSkills: any) => [
                         ...prevSkills, 
                         newSkillSetObj
                     ]);
+
+                    if(Number(selectedRoleForNewSkill) === roleSelectedToShow.roleID){
+                        setSkillsetForSelectedRole((prevSkills: any) => [
+                            ...prevSkills,
+                            newSkillSetObj
+                        ])
+                    }
 
                     showAlert(
                         'Create Skillset',
@@ -205,36 +219,13 @@ const BOCompanyProfile = () => {
                     `Role: "${roleName}" Removed successfully`,
                     { type: 'success' }
                 );
-            }
-
-        } catch (error) {
-            showAlert(
-                'triggerRemoveRole',
-                '',
-                error instanceof Error ? error.message : String(error),
+            } else {
+                showAlert(
+                'Failed to Delete Role',
+                `${roleName} is not deleted`,
+                `${response.message}`,
                 { type: 'error' }
             );
-        }
-    }
-
-    // Remove skillset
-    const triggerRemoveSkillset = async(skillSetName: string) => {
-        try {
-            const response = await removeSkillset(skillSetName, user?.UID)
-            // console.log(response)
-
-            if(response.message === 'Skillset deleted successfully') {
-                // Update removal locally
-                const removedSkillset = allSkillsets.filter((skill: any) => 
-                    skill.skillSetName !== skillSetName
-                )
-                setAllSkillsets(removedSkillset)
-                showAlert(
-                    'Remove Role',
-                    ``,
-                    `Role: "${skillSetName}" Removed successfully`,
-                    { type: 'success' }
-                );
             }
 
         } catch (error) {
@@ -258,12 +249,54 @@ const BOCompanyProfile = () => {
         setCompanyInfo(updatedData)
     }
 
+    function triggerExpendRole(role: any) {
+        setRoleSelectedToShow(role);
+        const skillToRole = getSkillsetsForARole(role.roleID, allSkillsets)
+        setSkillsetForSelectedRole(skillToRole);
+        setIsExpendRole(true);
+    }
+
+    function triggerCloseRole() {
+        setIsExpendRole(false);
+        setSkillsetForSelectedRole({});
+        setRoleSelectedToShow({});
+    }
+
+    // Toggle show/hide skillsets for a role
+    function toggleExpendRole(role?: any) {
+        if(role?.roleID !== roleSelectedToShow?.roleID){
+            setRoleSelectedToShow(role);
+            const skillToRole = getSkillsetsForARole(role.roleID, allSkillsets)
+            setSkillsetForSelectedRole(skillToRole);
+            setIsExpendRole(true);
+        } else {
+            setIsExpendRole(false);
+            setSkillsetForSelectedRole({});
+            setRoleSelectedToShow({});
+        }
+    }
+
+    // Update all skillset if a skill is removed 
+    function updateRemoveSkill(newSkills: any){
+        setAllSkillsets(newSkills)
+        if(Number(selectedRoleForNewSkill) === roleSelectedToShow.roleID){
+            setSkillsetForSelectedRole(newSkills)
+        }
+
+    }
+
     return (
         <>
         {companyInfo && (
             <>
             <div className="content company-profile-page-container">
-                <h1>My Company</h1>
+                <div className='company-profile-page-header'>
+                    <h1>My Company</h1>
+                    <FiRefreshCw 
+                        className='refresh-page-icon'
+                        onClick={() => location.reload()}
+                    />
+                </div>
                 <div className="company-profile-page-top">
                     <div className="company-profile card">
                         <div className="company-profile-title">
@@ -294,7 +327,10 @@ const BOCompanyProfile = () => {
                         </div>
                         <div className="company-profile-data company-address odd-row">
                             <p className="title">Address</p>
-                            <p className="main-data">{companyInfo.address}</p>
+                            <p 
+                                className="main-data"
+                                dangerouslySetInnerHTML={{ __html: formatTextForDisplay(companyInfo.address)}}
+                            />
                         </div>
                         <div className="company-profile-data company-contact">
                             <p className="title">Contact Number</p>
@@ -360,7 +396,7 @@ const BOCompanyProfile = () => {
                     </div>
                 </div>
                 <div className="roles-n-skillsets-container">
-                    <div className="roles card">
+                    <div className={`roles card ${isMobile ? 'mobile' :''}`}>
                         <h3>Roles</h3>
                         {!allRoles || allRoles.length === 0 ? (
                             <p className='role-n-skillset-text even-row'>
@@ -369,8 +405,17 @@ const BOCompanyProfile = () => {
                         ) : (
                             allRoles?.map((role:any, index: any) => (
                                 <p key={role.roleID}
-                                    className={`role-n-skillset-text 
-                                    ${index % 2 === 0 ? 'even-row' : ''}`}
+                                    className={`role-text-content role-n-skillset-text 
+                                    ${index % 2 === 0 ? 'even-row' : ''}
+                                    ${roleSelectedToShow.roleID === role.roleID
+                                        ? 'selected' : ''
+                                    }`}
+                                    onClick={() => {
+                                        if(isMobile)
+                                            triggerExpendRole(role)
+                                        else
+                                            toggleExpendRole(role)
+                                    }}
                                 >
                                     {role.roleName}
                                     <MdDeleteForever 
@@ -382,27 +427,19 @@ const BOCompanyProfile = () => {
                         )}
                     </div>
     
-                    <div className="skillsets card">
-                        <h3>Skillsets</h3>
-                        {!allSkillsets || allSkillsets.length === 0 ? (
-                            <p className='role-n-skillset-text even-row'>
-                                No Skillset Added
-                            </p>
-                        ) : (
-                            allSkillsets?.map((skillset:any, index:number) => (
-                                <p key={skillset.skillSetID}
-                                    className={`role-n-skillset-text 
-                                                ${index % 2 === 0 ? 'even-row' : ''}`}
-                                >
-                                    {skillset.skillSetName}
-                                    <MdDeleteForever 
-                                        className='icons remove-role-n-skillset-icon'
-                                        onClick={() => triggerRemoveSkillset(skillset.skillSetName)}
-                                    />
-                                </p>
-                            ))
-                        )}
-                    </div>
+                    {isExpendRole 
+                        && !isMobile 
+                        && roleSelectedToShow
+                        && skillsetsForSelectedRole
+                        && (
+                        <SkillsetToRole 
+                            allSkillsets={allSkillsets}
+                            skillSets={skillsetsForSelectedRole}
+                            roleSelected={roleSelectedToShow}
+                            updateRemoveSkill={updateRemoveSkill}
+                        />
+                    )}
+                    
                 </div>
             </div>
             {showEditCompanyProfile && (
@@ -412,12 +449,114 @@ const BOCompanyProfile = () => {
                     onUpdate={handleUpdateCompanyProfile}
                 />
             )}
+            {isMobile 
+                && isExpendRole 
+                && roleSelectedToShow
+                && skillsetsForSelectedRole
+                && (  
+                <div className="App-popup" 
+                    onClick={triggerCloseRole}>
+                    <div className='App-popup-content' onClick={(e) => e.stopPropagation()}>
+                        <div className='App-header'>
+                            <h1>Skillsets for {roleSelectedToShow.roleName}</h1>
+                            <IoClose 
+                                className='icons'
+                                onClick={triggerCloseRole}
+                            />
+                        </div>
+                        <SkillsetToRole 
+                            allSkillsets={allSkillsets}
+                            skillSets={skillsetsForSelectedRole}
+                            roleSelected={roleSelectedToShow}
+                            updateRemoveSkill={updateRemoveSkill}
+                        />
+                    </div>
+                </div>
+            )}
             </>
         )}
         </>
-        
-        
     );
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+interface SkillsetProps {
+    allSkillsets: any;
+    skillSets: any;
+    roleSelected: any;
+    updateRemoveSkill: (newSkills: any) => void;
+}
+const SkillsetToRole = ({
+    allSkillsets, skillSets, roleSelected, updateRemoveSkill 
+}: SkillsetProps) => {
+    console.log(skillSets)
+    const { showAlert } = useAlert();
+    const { user } = useAuth();
+    const isMobile = window.innerWidth <= 768;
+    
+    // Remove skillset
+    const triggerRemoveSkillset = async(skillSetName: string) => {
+        try {
+            const response = await removeSkillset(skillSetName, user?.UID)
+            // console.log(response)
+
+            if(response.message === 'Skillset deleted successfully') {
+                // Update removal locally
+                const removedSkillset = allSkillsets.filter((skill: any) => 
+                    skill.skillSetName !== skillSetName
+                )
+                skillSets = removedSkillset
+                if(updateRemoveSkill)
+                    updateRemoveSkill(removedSkillset)
+
+                showAlert(
+                    'Skillset Removed',
+                    ``,
+                    `Skillset: "${skillSetName}" Removed successfully`,
+                    { type: 'success' }
+                );
+            } else {
+                showAlert(
+                    'Skillset Removed',
+                    ``,
+                    `Skillset: "${skillSetName}" Removed successfully`,
+                    { type: 'warning' }
+                );
+            }
+
+        } catch (error) {
+            showAlert(
+                'triggerRemoveSkillset',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+
+    return(
+        <div className="skillsets card">
+            {!isMobile && (<h3>Skillsets for {roleSelected.roleName}</h3>)}
+            
+            {!skillSets || skillSets.length === 0 ? (
+                <p className='role-n-skillset-text even-row'>
+                    No Skillset Added
+                </p>
+            ) : (
+                skillSets?.map((skillset:any, index:number) => (
+                    <p key={skillset.skillSetID}
+                        className={`role-n-skillset-text 
+                                    ${index % 2 === 0 ? 'even-row' : ''}`}
+                    >
+                        {skillset.skillSetName}
+                        <MdDeleteForever 
+                            className='icons remove-role-n-skillset-icon'
+                            onClick={() => triggerRemoveSkillset(skillset.skillSetName)}
+                        />
+                    </p>
+                ))
+            )}
+        </div>
+    )
+}
 export default BOCompanyProfile;

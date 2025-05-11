@@ -7,7 +7,7 @@ import SecondaryButton from '../../components/SecondaryButton/SecondaryButton';
 import CompanyController from '../../controller/CompanyController';
 import UserController from '../../controller/User/UserController';
 
-import { GoAlertFill, TiTick, FaPlusCircle } from '../../../public/Icons.js';
+import { GoAlertFill, TiTick } from '../../../public/Icons.js';
 import './CompleteProfile.css';
 import '../../../public/styles/common.css';
 
@@ -59,7 +59,7 @@ const CompleteProfile = ({ userID, onDataUpdate }: CompleteProfileProps) => {
 
                 showAlert(
                     "Complete Profile Successfully",
-                    "For Edit ",
+                    "The information had been updated",
                     "",
                     { type: 'success' }
                 );

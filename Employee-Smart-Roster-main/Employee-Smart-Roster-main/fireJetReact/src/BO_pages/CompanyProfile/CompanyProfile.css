@@ -5,6 +5,19 @@
 
 }
 
+.company-profile-page-header {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: start;
+    align-items: center;
+}
+
+.refresh-page-icon:hover {
+    color: var(--error);
+    cursor: pointer;
+}
+
 .card {
     background-color: white;
     padding: 15px;
@@ -23,6 +36,19 @@
     display: flex;
     flex-direction: row;
     gap: 20px;
+}
+.roles {
+    max-width: 49%;
+}
+.roles.mobile {
+    max-width: none;
+}
+.role-text-content:hover {
+    cursor: pointer;
+    background-color: var(--info-background) !important;
+}
+.role-text-content.selected {
+    border: 2px solid var(--primary-background) !important;
 }
 
 .create-new-role-n-skill {

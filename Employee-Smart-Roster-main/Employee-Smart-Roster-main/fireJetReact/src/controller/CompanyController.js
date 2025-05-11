@@ -27,7 +27,8 @@ async function getCompany (uid){
 async function updateCompanyProfile (data){
     // console.log(data)
     const cleaned = data.contactNo.replace(/\D/g, '').slice(0, 8);
-    
+    // const address = data.address.toUpperCase()
+
     const body = {
         UEN: data.UEN,
         address: data.address,
@@ -130,7 +131,7 @@ async function setBOCompleteProfile(boID, cContact, address, nric, hpNo, name) {
     // Remove all non-digit characters
     cContact = cContact.replace(/\D/g, '').slice(0, 8);
     hpNo = hpNo.replace(/\D/g, '').slice(0, 8);
-    
+
     const body = {
         business_owner_id: boID,
         BusinessContactNo: cContact,
@@ -226,7 +227,7 @@ async function removeRole (roleName, boUID) {
             throw new Error(errorData.message || `HTTP error status: ${response.status}`);
         }
         const data = await response.json();
-        // console.log(data);
+        console.log(data);
 
         return await data;
     } catch (error) {
@@ -294,17 +295,24 @@ function checkIfRoleCreated (allRoles, roleName) {
     // console.log("All Roles: ", allRoles)
     // console.log("New Role: ", roleName)
     const role = allRoles.filter((role) => 
-        role.roleName === roleName
+        role.roleName.toUpperCase() === roleName.trim().toUpperCase()
     )
     return role
 }
 
 function checkIfSkillsetCreated (allSkills, skillName){
     const skill = allSkills.filter((skill) => 
-        skill.skillSetName === skillName
+        skill.skillSetName.toUpperCase() === skillName.trim().toUpperCase()
     )
     return skill
-} 
+}
+
+function getSkillsetsForARole (roleId, allSkills) {
+    const skill = allSkills.filter((skill) => 
+        skill.roleID === roleId
+    )
+    return skill
+}
 
 export default {
     getCompany,
@@ -322,4 +330,5 @@ export default {
     removeSkillset,
     checkIfRoleCreated,
     checkIfSkillsetCreated,
+    getSkillsetsForARole,
 }
