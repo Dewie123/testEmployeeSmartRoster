@@ -5,7 +5,8 @@ import { useAuth } from '../../../../AuthContext';
 import PrimaryButton from '../../../../components/PrimaryButton/PrimaryButton';
 import SecondaryButton from '../../../../components/SecondaryButton/SecondaryButton';
 import MoreDetail from './MoreDetail';
-import { TASK_STATUS,formatDateTime, formatDisplayDateTime } from '../../../../controller/Variables.js';
+import { TASK_STATUS,formatDateTime, formatDisplayDateTime,
+         formatTextForDisplay } from '../../../../controller/Variables.js';
 import AllocatedStaffDetail from './AlloctedStaffDetail';
 import TimelineController from '../../../../controller/TimelineController.js';
 import { IoClose, CgProfile, FaCircle, TbTarget, FaClipboardList,
@@ -299,9 +300,9 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
                     {/* Task description */}
                     <div className="task-detail-description">
                         <FaClipboardList className='App-popup-content-icon'/>
-                        <p className="main-data">
-                            {taskDetail.taskDescription}
-                        </p>
+                        <p className="main-data"
+                            dangerouslySetInnerHTML={{ __html: formatTextForDisplay(taskDetail.taskDescription) }}
+                        />
                     </div>
                     {taskDetail?.startDate?.length === 2 && (
                     <div className="start-date-detail">

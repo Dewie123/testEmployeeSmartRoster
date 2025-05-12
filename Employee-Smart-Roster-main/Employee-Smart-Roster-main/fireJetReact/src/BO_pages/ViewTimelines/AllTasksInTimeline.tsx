@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
-import { formatDisplayDateTime } from '../../controller/Variables.js'
+import { formatDisplayDateTime, formatTextForDisplay, TASK_STATUS } from '../../controller/Variables.js'
+import EventDetail from './components/TaskDetail/EventDetail'
 import TimelineController from '../../controller/TimelineController.js'
 
-
 import { GrSchedules } from "react-icons/gr";
-import { IoArrowBack } from '../../../public/Icons.js'
+import { FaCircle, IoArrowBack, FaClock } from '../../../public/Icons.js'
 import './TimelinesPage.css'
 import '../../../public/styles/common.css'
 
@@ -21,6 +21,8 @@ const AllTasksInTimeline = () => {
     const { state } = location;
     // console.log(state)
     const [ allTasks, setAllTasks ] = useState<any>([])
+    const [ showTaskDetail, setShowTaskDetail ] = useState(false)
+    const [ selectedTask, setSelectedTask ] = useState({})
 
     // If no timeline
     if(!state?.timeline) return (<div>No Timeline Data Provided</div>)
@@ -44,6 +46,11 @@ const AllTasksInTimeline = () => {
     };
     useEffect(() => { fetchTasksInTimeline() }, [state?.timeline])
 
+    function toggleShowTaskDetail(task: any) {
+        setSelectedTask(task)
+        setShowTaskDetail(!showTaskDetail)
+    }
+
     return(
         <div className="App-content">
             <div className="content">
@@ -62,7 +69,11 @@ const AllTasksInTimeline = () => {
 
                     {/* Timeline Items */}
                     {allTasks.length > 0 && allTasks.map((task: any) => (
-                        <div key={task.taskID} className="App-timeline-item">
+                        <div 
+                            key={task.taskID} 
+                            className="App-timeline-item"
+                            onClick={() => toggleShowTaskDetail(task)}
+                        >
                             {/* Timeline Point (Icon) */}
                             <div className="App-timeline-point">
                                 <GrSchedules className="App-timeline-icon" />
@@ -70,15 +81,38 @@ const AllTasksInTimeline = () => {
 
                             {/* Timeline Content */}
                             <div className="App-timeline-content">
-                                <p className="App-timeline-time">
-                                    {formatDisplayDateTime(task.startDate)}
-                                </p>
-                                <h3 className="App-timeline-task-title">{task.title}</h3>
-                                <p className="App-timeline-task-description">{task.taskDescription}</p>
+                                <div className='App-timeline-task-title-container'>
+                                    <div className='App-timeline-task-title'>
+                                        <FaCircle 
+                                            className={`task-status
+                                                        ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                                        ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                                            style={{ fontSize: '12px', minWidth: '12px', minHeight: '12px' }}
+                                        />
+                                        <h3 className="App-timeline-task-title">{task.title}</h3>
+                                    </div>
+                                    <p className="App-timeline-time">
+                                        <FaClock></FaClock>
+                                        {formatDisplayDateTime(task.startDate)}
+                                    </p>
+
+                                </div>
+                                <hr className="App-timeline-divider" />
+                                <p
+                                    className="App-timeline-task-description"
+                                    dangerouslySetInnerHTML={{ __html: formatTextForDisplay(task.taskDescription) }}
+                                />
                             </div>
                         </div>
                     ))}
                 </div>
+                {showTaskDetail && selectedTask && (
+                    <EventDetail 
+                        task={selectedTask}
+                        onClose={() => toggleShowTaskDetail({})}
+                        // onUpdate={handleUpdateTask}
+                    />
+                )}
                 </>  
             ):(
                 <p>No Tasks Created for {state.timeline.timelineTitle}</p>
