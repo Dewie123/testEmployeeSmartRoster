@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useAlert } from '../../../components/PromptAlert/AlertContext';
-import { BiSolidUserDetail } from '../../../../public/Icons.js';
 import UserDetail from './UserDetail';
+import { formatPhoneNumber } from '../../../controller/Variables.js'
 
+
+import { BiSolidUserDetail } from '../../../../public/Icons.js';
 import '../../../../public/styles/common.css';
 
 interface BOListMobileProps {
@@ -86,7 +88,7 @@ const EMPUserList_m = ({ users, roles, skillsets, onEmpUpdate }: BOListMobilePro
                 <p className="App-mobile-responsive-table-card-data-title">
                   H/P
                 </p>
-                <p>{user.hpNo}</p>
+                <p>{formatPhoneNumber(String(user.hpNo))}</p>
               </div>
               <div className="App-mobile-responsive-table-card-data-detail">
                 <p className="App-mobile-responsive-table-card-data-title">

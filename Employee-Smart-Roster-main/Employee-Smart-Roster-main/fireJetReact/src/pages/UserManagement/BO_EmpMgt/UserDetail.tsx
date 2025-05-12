@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IoClose } from '../../../../public/Icons.js'; // Adjust the import path as needed
 import { useAlert } from '../../../components/PromptAlert/AlertContext';
-import { convertDateToSGTime, formatPhoneNumber } from '../../../controller/Variables.js';
+import { formatDateTime, formatDisplayDateTime, formatPhoneNumber } from '../../../controller/Variables.js';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
 import SecondaryButton from '../../../components/SecondaryButton/SecondaryButton';
 import CreateOEditEmp from '../BO_CreateOEditEmp/CreateOEdit';
@@ -10,8 +10,7 @@ import BOEmployeeController from '../../../controller/BOEmployeeController.js';
 import { HiOutlineIdentification,
          MdOutlineMailOutline,
          MdContactPhone,
-         HiOutlineCalendarDateRange,
-         TiTime } from '../../../../public/Icons.js'
+         HiOutlineCalendarDateRange, } from '../../../../public/Icons.js'
 import './UserDetail.css';
 import '../../../../public/styles/common.css';
 
@@ -105,9 +104,17 @@ const UserDetail = ({ user, role, skillset, onClose, onEmpUpdate }: UserDetailPr
     <div className="App-popup-content" onClick={(e) => e.stopPropagation()}>
       <div className="App-header">
         <h1>{user.fullName}</h1>
-        <button className="icons" onClick={onClose}>
-          <IoClose />
-        </button>
+        <div className="suspend-btn">
+          <CreateOEditEmp 
+            isCreate={false}
+            selectedEmpValues={user}
+            onEmpUpdate={onEmpUpdate}
+            onCloseDetail={onClose}
+          />
+          <button className="icons" onClick={onClose}>
+            <IoClose />
+          </button>
+        </div>
       </div>
       <div className="App-popup-main-content">
         <div className="user-info">
@@ -137,10 +144,6 @@ const UserDetail = ({ user, role, skillset, onClose, onEmpUpdate }: UserDetailPr
         {/* Job and Position Information */}
         <div className="job-position-info">
           <h3>Job & Position Information</h3>
-          <div className="job-position-info-data job-title">
-            <p className="title">Job Title:</p>
-            <p className="main-data">{user.jobTitle}</p>
-          </div>
           <div className="job-position-info-data role">
             <p className="title">Role:</p>
             <p className="main-data">{role}</p>
@@ -153,7 +156,7 @@ const UserDetail = ({ user, role, skillset, onClose, onEmpUpdate }: UserDetailPr
             <p className="title">Date Joined:</p>
             <p className="main-data display-date">
               <HiOutlineCalendarDateRange className='App-popup-content-icon'/>
-              {convertDateToSGTime(user.dateJoined)[0]}
+              {formatDisplayDateTime(user.dateJoined).split(' ')[0]}
             </p>
           </div>
         </div>
@@ -167,28 +170,22 @@ const UserDetail = ({ user, role, skillset, onClose, onEmpUpdate }: UserDetailPr
                 : "Suspended" }
             </p>
           </div>
-          <div className="account-info-data last-update">
+          {/* <div className="account-info-data last-update">
             <p className="title">Last Update:</p>
             <div className="last-update-date-time">
               <p className="main-data display-date">
                 <HiOutlineCalendarDateRange className='App-popup-content-icon'/>
-                {convertDateToSGTime(user.dateJoined)[0]}
+                {formatDateTime(user.dateJoined).split(' ')[0]}
               </p>
               <p className="main-data display-date">
                 <TiTime className='App-popup-content-icon'/>
-                {convertDateToSGTime(user.dateJoined)[1].split('.')[0]}
+                {formatDateTime(user.dateJoined).split(' ')[1]}
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="suspend-btn">
-        <CreateOEditEmp 
-          isCreate={false}
-          selectedEmpValues={user}
-          onEmpUpdate={onEmpUpdate}
-          onCloseDetail={onClose}
-        />
         {!user.isSuspended && (
           <SecondaryButton 
             text={ user.activeOrInactive === 1 

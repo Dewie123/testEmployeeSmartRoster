@@ -51,7 +51,7 @@ function handleFilterRole (employees, roleID) {
 }
 
 function handleFilterSkill (employees, skillID) {
-  // console.log(skillID)
+  console.log(skillID)
   const filteredData = employees.filter((employee) => {
       const skillMatch = employee.skillSetID || '';
       return skillMatch === '' || skillMatch === skillID;

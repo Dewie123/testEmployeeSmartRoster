@@ -7,7 +7,7 @@ import CompanyController from "../../../controller/CompanyController";
 import CreateEditAccount from "./EmployeeForm";
 import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
 
-import { FaPlusCircle } from '../../../../public/Icons.js'
+import { FaPlusCircle, FaRegEdit } from '../../../../public/Icons.js'
 import "./CreateNEditEmp.css"
 import "../../../../public/styles/common.css";
 
@@ -26,6 +26,7 @@ const CreateOEditEmp = ({
     isCreate, selectedEmpValues, empLength,
     onEmpAdd, onEmpUpdate , onCloseDetail
 }: employeeProps) => {
+    // console.log(selectedEmpValues)
     // const [ isCreate, setIsCreate ] = useState(true)
     const { user } = useAuth();
     const { showAlert } = useAlert();
@@ -94,8 +95,6 @@ const CreateOEditEmp = ({
             }));
         }
     }, [allRoles, allSkillsets]);
-
-    
 
     function toggleShowEmpForm (){
         if(isMobile && isCreate)
@@ -176,8 +175,8 @@ const CreateOEditEmp = ({
             </>
         ) : (
             <>
-                <PrimaryButton 
-                    text="Edit Employee Information"
+                <FaRegEdit 
+                    className="icons"
                     onClick={() => toggleShowEmpForm()}
                 />
                 {showEmpForm && !isMobile && (

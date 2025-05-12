@@ -107,7 +107,7 @@ async function createEmployee(boUID, values, allRoles, allSkills) {
             empData: {
                 ...values,
                 user_id: parseInt(Date.now()), // Generate temper new employee ID
-                hpNo: parseInt(cleanedHp, 8), // Convert to number like other records
+                hpNo: cleanedHp, 
                 dateJoined: new Date().toISOString(),
                 roleID: role[0].roleID,
                 skillSetID: skill[0].skillSetID,
