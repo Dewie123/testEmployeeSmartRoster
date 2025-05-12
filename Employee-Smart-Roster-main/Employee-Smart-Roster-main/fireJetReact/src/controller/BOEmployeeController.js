@@ -23,6 +23,7 @@ function calWrkingHrs(startTime, endTime) {
 
 
 function getRoleIdForEmp (allRoles, roleName){
+    // console.log(allRoles, roleName)
     const role = allRoles.filter((role) => 
         role.roleName === roleName
     )
@@ -106,7 +107,7 @@ async function createEmployee(boUID, values, allRoles, allSkills) {
             empData: {
                 ...values,
                 user_id: parseInt(Date.now()), // Generate temper new employee ID
-                hpNo: parseInt(cleanedHp, 10), // Convert to number like other records
+                hpNo: parseInt(cleanedHp, 8), // Convert to number like other records
                 dateJoined: new Date().toISOString(),
                 roleID: role[0].roleID,
                 skillSetID: skill[0].skillSetID,
@@ -115,7 +116,7 @@ async function createEmployee(boUID, values, allRoles, allSkills) {
                 noOfMCAvailable: values.noOfMC,
                 activeOrInactive: 1
             },
-            response: {...data} // Spread any additional fields from the API response
+            response: {...data}
         };
     } catch (error) {
         throw new Error(`Failed to create employee: ${error.message}`);

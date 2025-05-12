@@ -87,11 +87,8 @@ const UserMgts = () => {
     }, [user?.role])
 
     function handleNewEmpAdd(newEmp: any) {
-        setEmployees((prevData: any[]) => {
-            const updated = [...prevData, newEmp];
-            // console.log("Updated employees array:", updated);
-            return updated;
-        });
+        const updated = [...employees, newEmp]
+        setEmployees(updated);
     }
 
     return (

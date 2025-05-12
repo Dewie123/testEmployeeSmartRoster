@@ -16,7 +16,7 @@ interface TaskProps {
     onTaskUpdate?: (updateTask: any) => void;
 }
 
-const { getCompanyRoles, getCompanySkillsets } = CompanyController;
+const { getCompanyRoles, getCompanySkillsets, getSkillsetsForARole  } = CompanyController;
 
 const CreateOEditTask = ({
     isCreate, selectedTask, onTaskUpdate
@@ -78,10 +78,12 @@ const CreateOEditTask = ({
 
     useEffect(() => {
         if (allRoles.length > 0 && allSkillsets.length > 0) {
+            const skillsetsForRole = getSkillsetsForARole(allRoles[0].roleID, allSkillsets)
+            // console.log(skillsetsForRole)
             setCreateTaskValues((prev) => ({
                 ...prev,
                 roleID: allRoles[0].roleName,
-                skillSetID: allSkillsets[0].skillSetName
+                skillSetID: skillsetsForRole[0].skillSetName
             }));
         }
     }, [allRoles, allSkillsets]);

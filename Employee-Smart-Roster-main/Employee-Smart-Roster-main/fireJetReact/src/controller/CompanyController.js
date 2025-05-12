@@ -308,6 +308,7 @@ function checkIfSkillsetCreated (allSkills, skillName){
 }
 
 function getSkillsetsForARole (roleId, allSkills) {
+    // console.log(roleId, allSkills)
     const skill = allSkills.filter((skill) => 
         skill.roleID === roleId
     )

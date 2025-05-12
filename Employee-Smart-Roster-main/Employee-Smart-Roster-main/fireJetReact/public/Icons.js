@@ -17,7 +17,8 @@ import { FaFilePdf,
          FaChevronCircleDown,
          FaChevronCircleUp,
          FaRegListAlt,
-         FaRegEdit } from "react-icons/fa";
+         FaRegEdit,
+         FaMinusCircle } from "react-icons/fa";
 import { IoIosAlert } from "react-icons/io";
 import { GiRotaryPhone } from "react-icons/gi";
 import { MdContactPhone, 
@@ -48,6 +49,7 @@ export {
     IoArrowBack, // Go back to previous page icons
     FaFilePdf,  // PDF icon
     FaPlusCircle,  // Plus sign icon (to add new item)
+    FaMinusCircle, // Minus sign icon (to minus item)
     MdDeleteForever, // Delete icon
     IoIosAlert, // Alert icon
     GiRotaryPhone, // Home phone icon

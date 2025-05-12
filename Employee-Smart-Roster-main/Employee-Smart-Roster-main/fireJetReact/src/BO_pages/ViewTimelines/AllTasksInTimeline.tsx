@@ -47,12 +47,14 @@ const AllTasksInTimeline = () => {
     return(
         <div className="App-content">
             <div className="content">
-                <div className='App-header'>
+            {allTasks.length > 0 ? (
+                <>
+                <div className='App-header timeline-header'>
                     <IoArrowBack 
                         onClick={() => navigate(-1)}
                         className="icons"
                     />
-                    <h1>Timeline: {state.timeline.title}</h1>
+                    <h1>Timeline: {state.timeline.timelineTitle}</h1>
                 </div>
                 <div className="App-timeline">
                     {/* Timeline Line (Vertical) */}
@@ -77,6 +79,10 @@ const AllTasksInTimeline = () => {
                         </div>
                     ))}
                 </div>
+                </>  
+            ):(
+                <p>No Tasks Created for {state.timeline.timelineTitle}</p>
+            )}
             </div>
         </div>
     )

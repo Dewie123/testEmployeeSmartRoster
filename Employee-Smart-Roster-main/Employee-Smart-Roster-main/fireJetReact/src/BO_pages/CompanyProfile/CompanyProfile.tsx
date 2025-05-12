@@ -284,7 +284,6 @@ const BOCompanyProfile = () => {
         if(Number(selectedRoleForNewSkill) === roleSelectedToShow.roleID){
             setSkillsetForSelectedRole(newSkills)
         }
-
     }
 
     return (

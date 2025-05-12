@@ -56,7 +56,7 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
                 const endTime = taskDetail.endDate;
                 taskDetail.endDate = formatDisplayDateTime(endTime).split(' ')
 
-                console.log(taskDetail)
+                // console.log(taskDetail)
                 setTaskDetail(taskDetail);
             }
         } catch (error) {
@@ -221,7 +221,7 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
                         onClick={redirectToTimelineTasksDetail}
                     >
                         <p className='title'>Timeline: </p>
-                        <p className='main-data'>{containedTimeline.title}</p>
+                        <p className='main-data'>{containedTimeline.timelineTitle}</p>
                     </div>
                 )}
 

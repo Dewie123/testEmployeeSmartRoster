@@ -199,10 +199,7 @@ const CreateEditAccount = ({
     }
 
     function allowedToAddEmp() {
-        const isSubsExp = 1
-        // If the subscription plan is expired or is in free plan
-        // if(isSubsExp === 1 && empLength === 5){
-        if(currentUser?.isSubsExp === 1 && empLength === 5){
+        if(currentUser?.isSubsExp === 1 && empLength >= 5){
             return false
         }
         return true
@@ -213,13 +210,6 @@ const CreateEditAccount = ({
             const response = await createEmployee(currentUser?.UID, employeeData, allRoles, allSkillsets)
             // console.log(response)
             if(response.response.message === "Employee added successfully"){
-                showAlert(
-                    "Employee Account Created Successfully",
-                    `${employeeData.email} : ${employeeData.fullName}`,
-                    ``,
-                    { type: 'success' }
-                );
-
                 if(onEmpAdd)
                     onEmpAdd(response.empData)
 
@@ -231,6 +221,12 @@ const CreateEditAccount = ({
                     toggleConfirmation()
                     navigate('/users-management')
                 }
+                showAlert(
+                    "Employee Account Created Successfully",
+                    `${employeeData.email} : ${employeeData.fullName}`,
+                    ``,
+                    { type: 'success' }
+                );
             } else {
                 showAlert(
                     "Failed to Create Employee Account",
@@ -556,8 +552,7 @@ const CreateEditAccount = ({
                         </strong>
                         <div className="fields">
                             <input type='date' 
-                                name='dateJoined'
-                                placeholder='Job Title' 
+                                name='dateJoined' 
                                 value={employeeData.dateJoined}
                                 onChange={(e) => handleInputChange(e)}
                                 required

@@ -108,7 +108,7 @@ const CreateOEditEmp = ({
                 }
             })
 
-        if(isMobile && !isCreate)
+        else if(isMobile && !isCreate)
             navigate('/edit-employee', {
                 state: {
                     defaultValues: selectedEmpValues,
@@ -116,6 +116,7 @@ const CreateOEditEmp = ({
                     allSkillsets
                 }
             })
+            
         else
             setShowEmpForm(!showEmpForm)
     }
