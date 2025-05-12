@@ -113,9 +113,11 @@ h4 {
     border-radius: 8px;
     max-width: 600px;
     width: 100%;
+    max-height: 98%;
     gap: 15px;
     height: fit-content;
     justify-content: start;
+    overflow: scroll;
   }
 
   .App-popup-main-content {
@@ -123,7 +125,6 @@ h4 {
       flex-direction: column;
       gap: 5px;
       height: fit-content;
-
 
       .App-popup-content-icon {
         min-width: 15px;

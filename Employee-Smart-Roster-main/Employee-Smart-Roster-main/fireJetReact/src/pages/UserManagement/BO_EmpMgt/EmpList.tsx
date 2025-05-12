@@ -37,20 +37,21 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
   // Update filtering logic (this filters based on fullName).
   const triggerFilterUsers = () => {
     try {
-      let filtered = allUsers;
-      filtered = handleFilterEmpAccStatus(allUsers, filterAccStatus);
+      let filtered = handleFilterEmpAccStatus(allUsers, filterAccStatus);
+      // console.log(filtered)
 
       if(filterRole !== 'All') {
         const skillsets = handleFindSkillToSelectedRole(filterRole)
-        console.log("Filtered role", skillsets)
         setSkillsetForSelectedRole(skillsets)
-        filtered = handleFilterRole(filtered, filterRole)
+        filtered = handleFilterRole(filtered, Number(filterRole))
+        // console.log("Filtered role", filtered)
       } else {
         setSkillsetForSelectedRole([]); // Clear skillsets if all roles selected
       }
 
       if(filterSkill !== 'All') {
-        filtered = handleFilterSkill(filtered, filterSkill)
+        filtered = handleFilterSkill(filtered, Number(filterSkill))
+        // console.log("Filtered role", skillsets)
       }
 
       if(filterPassType !== 'All')
@@ -67,10 +68,10 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
   };
   
   // Re-run the employee lists when employee data updated
-  // useEffect(() => {
-  //   setAllUsers(empUsers);
-  //   triggerFilterUsers();
-  // }, [empUsers]);
+  useEffect(() => {
+    setAllUsers(empUsers);
+    triggerFilterUsers();
+  }, [empUsers]);
 
   // Auto trigger when role filter dropdown changes 
   // to update skillset contained in the selected role
@@ -79,7 +80,7 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
           setSkillsetForSelectedRole([]);
       } else {
           const skillsets = handleFindSkillToSelectedRole(filterRole);
-          console.log(skillsets)
+          // console.log(skillsets)
           setSkillsetForSelectedRole(skillsets);
       }
   }, [filterRole, skillsets]);
@@ -97,11 +98,11 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
     ]);
 
   function handleFindSkillToSelectedRole(value: string) {
-      console.log(value)
+      // console.log(value)
       const filteredSkillsets = skillsets.filter((skillset: any) => {
           return skillset.roleID === Number(value)
       })
-      console.log(filteredSkillsets)
+      // console.log(filteredSkillsets)
       setSkillsetForSelectedRole(filteredSkillsets)
       return filteredSkillsets
   }

@@ -38,7 +38,8 @@ export const MIN_YEAR8_ANNUAL = 14 // 8th and after that year annual leave
 
 // Format Local date time to display
 export function formatDisplayDateTime(isoString) {
-    const dateTime = isoString.split('T')
+    const isoStr = new Date (isoString).toISOString()
+    const dateTime = isoStr.split('T')
     // 2025-05-08T21:09:00.000Z
     const date = dateTime[0].split('-');
     let time = dateTime[1].split('.')[0];

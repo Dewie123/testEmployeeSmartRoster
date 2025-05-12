@@ -63,7 +63,7 @@ const CreateEditAccount = ({
 
     useEffect(() => {
         let updatedValues = { ...defaultValues };
-        
+        // console.log(updatedValues)
         if(!isCreate){
             const phoneStr = String(defaultValues.hpNo)
             updatedValues.hpNo = formatPhoneNumber(phoneStr)
@@ -73,6 +73,8 @@ const CreateEditAccount = ({
 
             const skillset = getSkillNameForEmp(allSkillsets, updatedValues.skillSetID)
             updatedValues.skillSetID = skillset[0].skillSetName
+
+            updatedValues.dateJoined = updatedValues.dateJoined.split('T')[0]
         }
         handleFindSkillToSelectedRole(updatedValues.roleID)
         setEmployeeData(updatedValues)
