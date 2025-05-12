@@ -100,6 +100,19 @@ export function generateSGDateTimeForPaymentRequestRef(date) {
     return `${year}${month}${day}${hours}${minutes}`;
 }
 
+// Utility function to format date only for MySchedules
+export function formatMSDisplayDateTime(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = String(date.getFullYear()).slice(-2);
+    const hours = date.getHours() % 12 || 12;
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+    //const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
+}
+
 // PDF processor
 export async function encodeFileContent(file) {
     return new Promise((resolve, reject) => {

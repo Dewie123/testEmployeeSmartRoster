@@ -236,6 +236,11 @@ h4 {
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+.App-timeline-content:hover {
+  border: 2px outset var(--primary-background);
+  cursor: pointer;
+
+}
 
 .App-timeline-time {
   display: flex;
@@ -247,7 +252,7 @@ h4 {
   gap: 5px;
   align-items: center;
   color: #6c6c6c;
-  min-width: 143px;
+  min-width: 150px;
 }
 
 .App-timeline-divider {

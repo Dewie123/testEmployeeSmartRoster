@@ -13,19 +13,6 @@ import '../../../public/styles/common.css'
 
 const { empGetAllTask } = TimelineController
 
-// Utility function to format date only for MySchedules
-export function formatMSDisplayDateTime(dateString: string) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = date.toLocaleString('en-US', { month: 'short' });
-    const year = String(date.getFullYear()).slice(-2);
-    const hours = date.getHours() % 12 || 12;
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-    //const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
-}
-
 const EmpViewSchedule = () => {
     const { showAlert } = useAlert()
     const { user } = useAuth()
@@ -103,7 +90,7 @@ const EmpViewSchedule = () => {
                                     </div>
                                     <p className="App-timeline-time">
                                         <FaClock></FaClock>
-                                        {formatMSDisplayDateTime(task.startDate)}
+                                        {formatDisplayDateTime(task.startDate)}
                                     </p>
 
                                 </div>
