@@ -13,7 +13,7 @@ const AllocatedStaffDetail = ({ allocatedStaff = [] }: AllocatedStaffDetailProps
     
     return (
         <div className="allocated-staff-content">
-            <p className="title allocated-staff-title">{allocatedStaff.jobTitle}</p>
+            {/* <p className="title allocated-staff-title">{allocatedStaff.jobTitle}</p> */}
             <div className="allocated-staff-info">
                 {/* Display contact number */}
                 <div className="allocated-staff-contact-no">

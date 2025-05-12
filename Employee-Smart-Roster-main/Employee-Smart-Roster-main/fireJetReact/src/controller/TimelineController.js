@@ -3,8 +3,8 @@ async function createNewTimeline (userID, values) {
     // console.log(`boID: ${userID}\n`, values)
     const body = {
         business_owner_id: userID,
-        title: values.title,
-        timeLineDescription: values.timeLineDescription
+        title: values.title.trim(),
+        timeLineDescription: values.timeLineDescription.trim()
     };
 
     try{
@@ -335,6 +335,13 @@ function getSkillNeededForTask (allSkills, skillNeededID){
     return skillNeeded
 }
 
+function isSameTimelineCreated(allTimelines, timelineName) {
+    const filteredData = allTimelines.filter((timeline) => {
+        return timeline.timelineTitle.toUpperCase() === timelineName.toUpperCase().trim()
+    })
+    return filteredData
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // Employee Timeline Control function below
 async function empGetAllTask (uid) {
@@ -390,8 +397,6 @@ async function empUpdateTaskProgress (uid, taskID, status) {
     }
 }
 
-
-
 export default {
     createNewTimeline, 
     getTimelines,
@@ -409,4 +414,5 @@ export default {
     getSkillNeededForTask,
     empGetAllTask,
     empUpdateTaskProgress,
+    isSameTimelineCreated,
 }

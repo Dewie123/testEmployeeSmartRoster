@@ -14,7 +14,8 @@ interface TimelineFormProps {
     newTimelineValue: (timelineValue: any) => void;
 }
 
-const { createNewTimeline, getTimelines, getTimelineSelected } = TimelineController
+const { createNewTimeline, getTimelines, getTimelineSelected,
+        isSameTimelineCreated } = TimelineController
 
 const TimelineForm = ({ 
     isCreateTask, defaultValues, bo_UID, newTimelineValue
@@ -30,7 +31,7 @@ const TimelineForm = ({
     })
     useEffect(() => { 
         timelineDefaultSetup() 
-    }, [isCreateTask, allTimelines.length])
+    }, [isCreateTask, allTimelines])
     // Set default timeline setup
     function timelineDefaultSetup() {
         if(isCreateTask) {
@@ -38,7 +39,7 @@ const TimelineForm = ({
                 const initialTimeline = allTimelines[0];
                 const value = {
                     timeLineID: initialTimeline.timeLineID,
-                    title: initialTimeline.title,
+                    title: initialTimeline.timelineTitle,
                     timeLineDescription: initialTimeline.timeLineDescription,
                 };
                 setTimelineValues(value);
@@ -89,7 +90,7 @@ const TimelineForm = ({
         if (timelineMatch) {
             const value = {
                 timeLineID: timelineMatch.timeLineID,
-                title: timelineMatch.title,
+                title: timelineMatch.timelineTitle,
                 timeLineDescription: timelineMatch.timeLineDescription,
             }
             setTimelineValues(value)
@@ -99,31 +100,49 @@ const TimelineForm = ({
     }
 
     const triggerCreateTimeline = async() => {
-        try {
-            const response = await createNewTimeline (bo_UID, timelineValue)
-            // console.log(response)
-            // Return: message, timeLineID
-            if(response.message === 'Timeline created successfully') {
-                const newData = {
-                    ...timelineValue,
-                    timeLineID: response.timelineID
-                }
-                // console.log(newData)
-                if(newTimelineValue)
-                    newTimelineValue(newData)
+        let isCreated = isSameTimelineCreated(allTimelines, timelineValue.title)
+        isCreated = isCreated || []
+        if (isCreated.length === 0) {
+            try {
+                let response = await createNewTimeline(bo_UID, timelineValue)
+                // console.log(response)
+                // Return: message, timeLineID
+                if(response.message === 'Timeline created successfully') {
+                    const newData = {
+                        ...timelineValue,
+                        timeLineID: response.timelineID
+                    }
+                    // console.log(newData)
+                    if(newTimelineValue)
+                        newTimelineValue(newData)
 
-                setTimelineValues({
-                    timeLineID: newData.timeLineID,
-                    title: newData.title,
-                    timeLineDescription: newData.timeLineDescription,
-                })
-                toggleisCreateTimeline()
+                    setTimelineValues({
+                        timeLineID: newData.timeLineID,
+                        title: newData.title,
+                        timeLineDescription: newData.timeLineDescription,
+                    })
+                    toggleisCreateTimeline()
+                } else {
+                    showAlert(
+                        "triggerCreateTimeline",
+                        `Failed to Create Timeline for "${timelineValue.title}"`,
+                        `${response.body}`,
+                        { type: 'error' }
+                    );
+                }
+            } catch(error) {
+                showAlert(
+                    "triggerCreateTimeline",
+                    `Failed to Create Timeline for "${timelineValue.title}"`,
+                    error instanceof Error ? error.message : String(error),
+                    { type: 'error' }
+                );
             }
-        } catch(error) {
+        } else {
             showAlert(
-                "triggerCreateTimeline",
-                `Failed to Create Timeline for "${timelineValue.title}"`,
-                error instanceof Error ? error.message : String(error),
+                "Create Timeline Failed",
+                `Failed to Create Timeline`,
+                `"${timelineValue.title}" is created before`,
                 { type: 'error' }
             );
         }
@@ -131,6 +150,11 @@ const TimelineForm = ({
 
     function toggleisCreateTimeline() {
         setIsCreateTimeline(!isCreateTimeline)
+        setTimelineValues({
+            timeLineID: '',
+            title: '',
+            timeLineDescription: '',
+        })
     }
 
     if(isCreateTimeline) return (
@@ -167,13 +191,14 @@ const TimelineForm = ({
                             placeholder='Timeline Description' 
                             value={timelineValue.timeLineDescription}
                             onChange={(e) => handleInputChange(e)}
+                            maxLength={500}
                             required
                         />
                     </div>
                     <PrimaryButton 
                         text="Create Timeline"
                         disabled={!timelineValue.title
-                                || !timelineValue.timeLineDescription}
+                                    || !timelineValue.timeLineDescription}
                         onClick={() => triggerCreateTimeline()}
                     />
                 </div>
@@ -202,7 +227,7 @@ const TimelineForm = ({
                     >
                         {allTimelines.map((timeline:any) => (
                         <option key={timeline.timeLineID} value={timeline.timeLineID}>
-                            {timeline.title}
+                            {timeline.timelineTitle}
                         </option>
                         ))}
                     </select>

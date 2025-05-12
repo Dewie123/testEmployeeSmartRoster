@@ -1,7 +1,7 @@
 .timeline-header {
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: start !important;
     align-items: center;
     gap: 10px;
 }
