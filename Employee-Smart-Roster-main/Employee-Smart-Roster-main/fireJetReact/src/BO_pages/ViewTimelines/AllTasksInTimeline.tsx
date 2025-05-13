@@ -47,6 +47,7 @@ const AllTasksInTimeline = () => {
     useEffect(() => { fetchTasksInTimeline() }, [state?.timeline])
 
     function toggleShowTaskDetail(task: any) {
+        // console.log(task)
         setSelectedTask(task)
         setShowTaskDetail(!showTaskDetail)
     }

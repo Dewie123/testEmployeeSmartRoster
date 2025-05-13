@@ -7,6 +7,7 @@ import PrimaryButton from "../../../../components/PrimaryButton/PrimaryButton";
 import CreateEditTask from "./TaskForm";
 import CompanyController from "../../../../controller/CompanyController";
 
+import { FaRegEdit } from '../../../../../public/Icons.js'
 import "./CreateNEditTask.css"
 import "../../../../../public/styles/common.css"
 

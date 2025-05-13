@@ -24,20 +24,6 @@
         .company-profile-icon {
             font-size: 30px;
         }
-        
-        .edit-company-profile {
-            font-size: 30px;
-            padding: 3px;
-            padding-top: 6px;
-            padding-bottom: 6px;
-            border-radius: 5px;
-        }
-        
-        .edit-company-profile:hover {
-            cursor: pointer;
-            background-color: var(--primary-background);
-            color: var(--light-color-text);
-        }
     }
 
     .company-profile-data {

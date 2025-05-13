@@ -207,25 +207,25 @@ const BOCompanyProfile = () => {
             const response = await removeRole(roleName, user?.UID)
             // console.log(response)
 
-            if(response.message === 'Role deleted successfully') {
+            if(response?.message === 'Role deleted successfully') {
                 // Update removal locally
                 const removedRole = allRoles.filter((role: any) => 
                     role.roleName !== roleName
                 )
                 setAllRoles(removedRole)
                 showAlert(
-                    'Remove Role',
+                    'Role Removed',
                     ``,
                     `Role: "${roleName}" Removed successfully`,
                     { type: 'success' }
                 );
             } else {
                 showAlert(
-                'Failed to Delete Role',
-                `${roleName} is not deleted`,
-                `${response.message}`,
-                { type: 'error' }
-            );
+                    'Failed to Remove Role',
+                    `Role: "${roleName}"`,
+                    `Contained Skillset(s)`,
+                    { type: 'warning' }
+                );
             }
 
         } catch (error) {
@@ -313,7 +313,7 @@ const BOCompanyProfile = () => {
                                     <FaFilePdf />
                                 </a>
                                 <FaRegEdit 
-                                    className='edit-company-profile'
+                                    className='icons edit-company-profile'
                                     onClick={() => toggleEditCompanyProfile()}
                                 />
                             </div>
@@ -490,7 +490,7 @@ interface SkillsetProps {
 const SkillsetToRole = ({
     allSkillsets, skillSets, roleSelected, updateRemoveSkill 
 }: SkillsetProps) => {
-    console.log(skillSets)
+    // console.log(skillSets)
     const { showAlert } = useAlert();
     const { user } = useAuth();
     const isMobile = window.innerWidth <= 768;
@@ -501,7 +501,7 @@ const SkillsetToRole = ({
             const response = await removeSkillset(skillSetName, user?.UID)
             // console.log(response)
 
-            if(response.message === 'Skillset deleted successfully') {
+            if(response?.message === 'Skillset deleted successfully') {
                 // Update removal locally
                 const removedSkillset = allSkillsets.filter((skill: any) => 
                     skill.skillSetName !== skillSetName
@@ -518,9 +518,9 @@ const SkillsetToRole = ({
                 );
             } else {
                 showAlert(
-                    'Skillset Removed',
-                    ``,
-                    `Skillset: "${skillSetName}" Removed successfully`,
+                    'Failed to Remove Skillset',
+                    `Skillset: "${skillSetName}"`,
+                    `Some Employee Contained this Skillset`,
                     { type: 'warning' }
                 );
             }

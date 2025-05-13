@@ -1,34 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAlert  } from '../../../../components/PromptAlert/AlertContext';
 import { useAuth } from '../../../../AuthContext';
 import PrimaryButton from '../../../../components/PrimaryButton/PrimaryButton';
 import SecondaryButton from '../../../../components/SecondaryButton/SecondaryButton';
 import MoreDetail from './MoreDetail';
+import AllocatedStaffDetail from './AlloctedStaffDetail';
+import CreateOEditTask from '../CreateOEdit/CreateOEdit';
 import { TASK_STATUS,formatDateTime, formatDisplayDateTime,
          formatTextForDisplay } from '../../../../controller/Variables.js';
-import AllocatedStaffDetail from './AlloctedStaffDetail';
 import TimelineController from '../../../../controller/TimelineController.js';
+
 import { IoClose, CgProfile, FaCircle, TbTarget, FaClipboardList,
          TbTargetArrow, TiTime } from '../../../../../public/Icons.js';
-
 import './EventDetail.css'
 import '../../../../../public/styles/common.css'
 
 interface EventDetailProps {
     task: any;
-    onUpdate?: (updatedData: any) => void;
+    onTaskUpdate?: (updatedData: any) => void;
     onDelete?: (deletedTaskId: number) => void;
     onClose?: () => void;
 }
 
 const { boGetTaskDetail, deleteTaskDetail, getTimelines, getTimelineSelected } = TimelineController;
 
-const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
+const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) => {
     // console.log(task)
     const { showAlert } = useAlert()
     const { user } = useAuth()
     const navigate = useNavigate()
+    const location = useLocation()
+    const isInTimeline = location.pathname.includes('timeline-tasks-list')
     const [ containedTimeline, setContainedTimeline ] = useState<any>([])
     const [ allTaskDetail, setAllTaskDetail ] = useState<any>([])
     const [ taskDetail, setTaskDetail ] = useState<any>([])
@@ -44,7 +47,7 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
             let taskDetail = await boGetTaskDetail(task.taskID);
             // console.log(taskDetail)
             if(taskDetail.message === "Task details successfully retrieved"){
-                setAllTaskDetail(taskDetail.taskDetails || []) // Store all task detail 
+                setAllTaskDetail(taskDetail.taskDetails || []) // Store all task detail
 
                 taskDetail = taskDetail.taskDetails[0] || []
                 // console.log(taskDetail)
@@ -93,7 +96,7 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
     // Auto trigger if having 
     useEffect(() => {
         fetchAllTimelines()
-    }, [taskDetail.timelineID])
+    }, [taskDetail, taskDetail.timelineID])
 
     // Close allocated staff detail when clicking outside
     useEffect(() => {
@@ -213,17 +216,26 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
             <div className='App-popup-content' onClick={(e) => e.stopPropagation()}>
                 <div className="App-header">
                     <h1>{taskDetail.title}</h1>
-                    <IoClose className='icons' onClick={onClose}/>
+                    <div className="event-detail-header-btns-grp">
+                        <CreateOEditTask 
+                            isCreate={false}
+                            selectedTask={taskDetail}
+                        />
+                        <IoClose className='icons' onClick={onClose}/>
+                    </div>
                 </div>
 
                 {containedTimeline && (
-                    <div 
-                        className='task-detail-contained-timeline'
+                    <button 
+                        className={`task-detail-contained-timeline
+                            ${isInTimeline ? 'disabled' : ''}
+                        `}
                         onClick={redirectToTimelineTasksDetail}
+                        disabled={isInTimeline}
                     >
                         <p className='title'>Timeline: </p>
                         <p className='main-data'>{containedTimeline.timelineTitle}</p>
-                    </div>
+                    </button>
                 )}
 
                 <div className="task-allocation-detail">
@@ -337,9 +349,6 @@ const EventDetail = ({task, onUpdate, onDelete, onClose}: EventDetailProps) => {
                 </div>
                 
                 <div className="event-button-group">
-                    <PrimaryButton 
-                        text='Edit Task'
-                    />
                     <SecondaryButton 
                         text='Delete Task'
                         onClick={() => toggleShowDelete()}

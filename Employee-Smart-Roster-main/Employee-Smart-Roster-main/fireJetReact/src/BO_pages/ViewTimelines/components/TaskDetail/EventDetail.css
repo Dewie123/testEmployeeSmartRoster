@@ -19,6 +19,7 @@
   justify-content: start;
   align-items: start;
   gap: 15px;
+  width: auto;
 }
 
 .task-detail-contained-timeline {
@@ -35,13 +36,18 @@
   }
 }
 
-.task-detail-contained-timeline:hover {
+.task-detail-contained-timeline:hover,
+.task-detail-contained-timeline.disabled {
   background-color: var(--main-page-background);
   border-style: solid;
   color: var(--primary-text);
   border-width: 2px;
   border-color: var(--side-menu-background);
   cursor: pointer;
+}
+
+.task-detail-contained-timeline.disabled {
+  cursor: default !important;
 }
 
 .allocated-staff-container-title {
@@ -121,6 +127,12 @@
   border-bottom-style: dotted;
   border-bottom-color: var(--side-menu-background);
   padding-bottom: 5px;
+}
+
+.event-detail-header-btns-grp {
+  display: flex;
+  gap: 5px;
+  width: fit-content;
 }
 
 /* See Allocated Staff Detail Content (invisible by default) */

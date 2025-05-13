@@ -227,7 +227,7 @@ async function removeRole (roleName, boUID) {
             throw new Error(errorData.message || `HTTP error status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         return await data;
     } catch (error) {
@@ -312,6 +312,7 @@ function getSkillsetsForARole (roleId, allSkills) {
     const skill = allSkills.filter((skill) => 
         skill.roleID === roleId
     )
+    // console.log(roleId, skill)
     return skill
 }
 
