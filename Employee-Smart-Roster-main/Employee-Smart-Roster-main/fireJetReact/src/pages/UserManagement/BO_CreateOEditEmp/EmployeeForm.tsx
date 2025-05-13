@@ -627,11 +627,11 @@ const CreateEditAccount = ({
                             required
                         />
                         {errors.endWorkTime && (
-                                <span className='error-message'>
-                                    <GoAlertFill /> 
-                                    <span className='error-message-text'>{errors.endWorkTime}</span>
-                                </span>
-                            )}
+                            <span className='error-message'>
+                                <GoAlertFill /> 
+                                <span className='error-message-text'>{errors.endWorkTime}</span>
+                            </span>
+                        )}
                         {!errors.endWorkTime && employeeData.endWorkTime && (
                             <span className='valid-message'>
                                 <TiTick className='valid-icon'/>Valid End Work Time
