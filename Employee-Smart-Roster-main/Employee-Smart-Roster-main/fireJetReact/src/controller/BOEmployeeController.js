@@ -27,6 +27,7 @@ function getRoleIdForEmp (allRoles, roleName){
     const role = allRoles.filter((role) => 
         role.roleName === roleName
     )
+    // console.log(allRoles, roleName)
     return role
 } 
 
@@ -38,7 +39,7 @@ function getSkillIdForEmp (allSkills, skillName){
 } 
 
 function getRoleNameForEmp (allRoles, roleID){
-    console.log(allRoles, roleID)
+    // console.log(allRoles, roleID)
     const role = allRoles.filter((role) => 
         role.roleID === roleID
     )

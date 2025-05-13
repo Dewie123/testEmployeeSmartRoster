@@ -293,7 +293,7 @@ const CreateEditAccount = ({
                 {isCreate ? (
                     <>
                     <h3 className="App-prompt-confirmation-title App-header">
-                        Confirm The Employee Information
+                        Confirm The {employeeData.fullName}'s Information
                     </h3>
 
                     <span className='warning-message warining-message-in-confirmatiom-prompt'>
@@ -316,41 +316,46 @@ const CreateEditAccount = ({
                 ) : (
                     <>
                     <h3 className="App-prompt-confirmation-title App-header">
-                        Confirm Update for Employee Information
+                        Confirm Update {employeeData.fullName}'s Information
                     </h3>
                     </>
                 )}
 
                 <div className="all-create-employee-data">
-                    {Object.entries(employeeData).map(([key, value], index) => (
-                        <div key={`task-value-${key}-${index}`}
-                            className={`create-employee-confirmation-detail 
-                                        ${index % 2 === 1 ? 'odd-row' : ''}`}>
-                            {key === 'roleID' ? ( // If current key is roleID
-                                <p className="title">Role</p>
-                            ) : key === 'skillSetID' ? ( // If current key is skillSetID
-                                <p className="title">Skillset</p>
-                            ) : key === 'noOfMC' ? (
-                                <p className="title">No Of MC</p>
-                            ) : key === 'activeOrInactive' ? (
-                                <></>
-                            ) : key === 'noOfMCAvailable' ? (
-                                <p className="title">No Of MC Available</p>
-                            ) : (
-                                <p className="title">{formatKey(key)}</p>
-                            )}
-
-                            {/* {key === 'activeOrInactive' ? (
-                                <></>
-                            ) : key === 'dateJoined' ? (
-                                <p className="main-data">
-                                    {formatKey(key)}
-                                </p>
-                            ) : ( */}
-                                <p className="main-data">{String(value)}</p>
-                            
-                        </div>
-                    ))}
+                    <div className="create-employee-confirmation-detail">
+                        <p className="title">Email</p>
+                        <p className="main-data">{employeeData.email}</p>
+                    </div>
+                    <div className="create-employee-confirmation-detail odd-row">
+                        <p className="title">NRIC</p>
+                        <p className="main-data">{employeeData.nric}</p>
+                    </div>
+                    <div className="create-employee-confirmation-detail">
+                        <p className="title">Regs.Pass Type</p>
+                        <p className="main-data">{employeeData.resStatusPassType}</p>
+                    </div>
+                    <div className="create-employee-confirmation-detail odd-row">
+                        <p className="title">Role</p>
+                        <p className="main-data">{employeeData.roleID}</p>
+                    </div>
+                    <div className="create-employee-confirmation-detail">
+                        <p className="title">Skillset</p>
+                        <p className="main-data">{employeeData.skillSetID}</p>
+                    </div>
+                    <div className="create-employee-confirmation-detail odd-row">
+                        <p className="title">Working Hours</p>
+                        <p className="main-data">
+                            {employeeData.startWorkTime} ~ {employeeData.endWorkTime} &nbsp;
+                            ({employeeData.daysOfWork} days per weeks)
+                        </p>
+                    </div>
+                    <div className="create-employee-confirmation-detail">
+                        <p className="title">No. Of Leave</p>
+                        <p className="main-data">
+                            {employeeData.noOfLeave} annual leaves ; &nbsp;
+                            {employeeData.noOfMC} MCs
+                        </p>
+                    </div>
                 </div>
                 <div className="btns-grp">
                     {!allowedToAddEmp() && (

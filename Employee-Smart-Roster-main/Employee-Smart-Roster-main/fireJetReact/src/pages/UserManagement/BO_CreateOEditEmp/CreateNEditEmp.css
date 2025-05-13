@@ -105,6 +105,10 @@
     }
 }
 
+.edit-employee-icon {
+    font-size: 23px !important;
+}
+
 /* Mobile (all screens below 768px) */
 @media only screen and (max-width: 768px) {
     .create-employee-form {
@@ -113,6 +117,13 @@
 
     .create-emp-right {
         margin-bottom: 20px;
+    }
+
+    .warining-message-in-confirmatiom-prompt {
+        display: flex;
+        flex-direction: column;
+        gap: 10px !important;
+        justify-content: start;
     }
 
     .confirm-create-edit-emp-completion {
@@ -127,8 +138,13 @@
     }
 
     .all-create-employee-data {
+        max-height: 250px;
+        overflow: auto;
+
         .create-employee-confirmation-detail {
+            flex-direction: column;
             height: auto;
+
             .title {
                 width: 140px;
                 min-width: 140px;

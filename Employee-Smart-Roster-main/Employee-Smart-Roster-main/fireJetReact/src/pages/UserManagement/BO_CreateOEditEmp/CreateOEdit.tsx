@@ -176,7 +176,7 @@ const CreateOEditEmp = ({
         ) : (
             <>
                 <FaRegEdit 
-                    className="icons"
+                    className="edit-employee-icon icons"
                     onClick={() => toggleShowEmpForm()}
                 />
                 {showEmpForm && !isMobile && (

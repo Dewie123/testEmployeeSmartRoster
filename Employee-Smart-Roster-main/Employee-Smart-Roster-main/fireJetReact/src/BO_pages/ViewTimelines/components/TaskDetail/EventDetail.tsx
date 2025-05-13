@@ -47,21 +47,22 @@ const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) 
             let taskDetail = await boGetTaskDetail(task.taskID);
             // console.log(taskDetail)
             if(taskDetail.message === "Task details successfully retrieved"){
-                setAllTaskDetail(taskDetail.taskDetails || []) // Store all task detail
-
-                taskDetail = taskDetail.taskDetails[0] || []
+                taskDetail = taskDetail.taskDetails || []
                 // console.log(taskDetail)
-                
-                // Convert task start time to Singapore time
-                const startTime = taskDetail.startDate;
-                taskDetail.startDate = formatDisplayDateTime(startTime).split(' ')
-                
-                // Convert task start time to Singapore time
-                const endTime = taskDetail.endDate;
-                taskDetail.endDate = formatDisplayDateTime(endTime).split(' ')
-
-                // console.log(taskDetail)
-                setTaskDetail(taskDetail);
+                if(taskDetail.length > 0) {
+                    for(let i = 0; i < taskDetail.length; i++){
+                        // Convert task start time to Singapore time
+                        const startTime = taskDetail[i].startDate;
+                        taskDetail[i].startDate = formatDisplayDateTime(startTime).split(' ')
+                        
+                        // Convert task start time to Singapore time
+                        const endTime = taskDetail[i].endDate;
+                        taskDetail[i].endDate = formatDisplayDateTime(endTime).split(' ')
+                    }
+                    setAllTaskDetail(taskDetail)
+                    // console.log(taskDetail)
+                    setTaskDetail(taskDetail[0]);
+                }
             }
         } catch (error) {
             showAlert(
@@ -220,6 +221,8 @@ const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) 
                         <CreateOEditTask 
                             isCreate={false}
                             selectedTask={taskDetail}
+                            selectedTaskTimeline={containedTimeline}
+                            allTasksAllocation={allTaskDetail}
                         />
                         <IoClose className='icons' onClick={onClose}/>
                     </div>
