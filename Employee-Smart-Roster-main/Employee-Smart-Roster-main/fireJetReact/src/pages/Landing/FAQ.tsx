@@ -11,12 +11,29 @@ interface FAQItem {
 
 const FAQSection: React.FC = () => {
   const [faqData, setFaqData] = useState<FAQItem[]>([]);
+  console.log("Test FAQ: ",faqData)
 
   useEffect(() => {
     const fetchFAQ = async () => {
       try {
-        const data = await LandingPageController.getFAQ();
-        setFaqData(data);
+        // call the controller
+        const result = await LandingPageController.getFAQ();
+        // normalize: if result.FAQList exists, use that, otherwise assume it's already the mapped array
+        const list: any[] = (result as any).FAQList ?? (result as any);
+        // if they came in API shape, map now; if already mapped, just cast
+        const mapped: FAQItem[] = (list[0] && (list[0] as any).question_desc)
+          ? // raw API items: filter isShown and map
+            (list as any[])
+              .filter(faq => faq.isShown === 1)
+              .map(faq => ({
+                faqID: faq.faqID,
+                question: faq.question_desc,
+                answer: faq.answer,
+                createdOn: new Date(faq.createdOn).toLocaleDateString(),
+              }))
+          : // already-mapped shape
+            (list as FAQItem[]);
+        setFaqData(mapped);
       } catch (error) {
         console.error("Error fetching FAQ data:", error);
       }

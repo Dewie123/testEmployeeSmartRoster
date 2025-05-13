@@ -2,54 +2,43 @@ import React, { useEffect, useState } from "react";
 import "./Video.css";
 import LandingPageController from "../../controller/LandingPageController";
 
-const extractVideoId = (url: string) => {
-  const match = url.match(/(?:\/|v=)([a-zA-Z0-9_-]{11})/);
-  return match ? match[1] : "";
+type VideoItem = {
+  videoUrl: string;
+  title: string;
+  createdOn: string;
 };
 
 const Video: React.FC = () => {
-  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [video, setVideo] = useState<VideoItem | null>(null);
 
   useEffect(() => {
-    const fetchVideo = async () => {
+    (async () => {
       try {
-        const data = await LandingPageController.getVideo();
-        if (data && data.length > 0) {
-          setVideoUrl(data[0].videoUrl);
-        } else {
-          console.warn("No video data available, using fallback video.");
-          setVideoUrl("https://www.youtube.com/watch?v=A8Hg4z16xLI");
-        }
-      } catch (error) {
-        console.error("Error fetching video data:", error);
-        setVideoUrl("https://www.youtube.com/watch?v=A8Hg4z16xLI");
+        const vids = await LandingPageController.getVideo();
+        // pick first shown video
+        if (vids.length > 0) setVideo(vids[0]);
+      } catch {
+        // nothing – controller already falls back
       }
-    };
-
-    fetchVideo();
+    })();
   }, []);
 
-  const embedUrl = videoUrl
-    ? videoUrl.replace("watch?v=", "embed/") +
-      `?autoplay=1&mute=1&loop=1&playlist=${extractVideoId(videoUrl)}`
-    : "";
+  if (!video) return <p>Loading video…</p>;
 
   return (
     <div className="video-section">
-      {embedUrl ? (
-        <div className="video-container">
-          <iframe
-            className="video-player"
-            src={embedUrl}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="autoplay; fullscreen; encrypted-media"
-            allowFullScreen
-          ></iframe>
-        </div>
-      ) : (
-        <p>Loading video...</p>
-      )}
+      {/* <h2>{video.title}</h2> */}
+      <video
+        className="video-player"
+        src={video.videoUrl}
+        controls
+        width="100%"
+      >
+        Your browser doesn’t support HTML5 video.
+      </video>
+      {/* <p className="video-date">
+        Uploaded on: {new Date(video.createdOn).toLocaleDateString()}
+      </p> */}
     </div>
   );
 };

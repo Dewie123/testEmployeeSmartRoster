@@ -45,6 +45,8 @@ const getDummyHeading = () => {
   ];
 };
 
+// LandingPageController.js
+
 // Fetch video data
 const getVideo = async () => {
   try {
@@ -52,45 +54,42 @@ const getVideo = async () => {
       "https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/systemadmin/video/view",
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const { VideoList = [] } = await response.json();
 
-    const data = await response.json();
-    const realData = data.VideoList || [];
-    console.log("Video:", data.VideoList);
+    // Filter to only those with isShown === 1
+    const shown = VideoList.filter(v => v.isShown === 1);
 
-    if (realData.length === 2) {
-      console.warn("API returned empty video list, using dummy video.");
+    if (shown.length === 0) {
+      console.warn("No shown videos; falling back to dummy");
       return getDummyVideo();
     }
 
-    return realData.map((video) => ({
-      videoUrl: `https://www.youtube.com/embed/${video.video_link.replace(
-        /[^a-zA-Z0-9_-]/g,
-        ""
-      )}`,
+    // Map to direct S3 URLs
+    return shown.map(v => ({
+      videoUrl: `https://emproster.s3.ap-southeast-2.amazonaws.com/video/${v.video_link}`,
+      title: v.title,
+      createdOn: v.createdOn
     }));
-  } catch (error) {
-    console.error("Failed to fetch video:", error);
+  } catch (err) {
+    console.error("getVideo error:", err);
     return getDummyVideo();
   }
 };
 
-// Dummy video data
-const getDummyVideo = () => {
-  return [
-    {
-      videoUrl: "https://www.youtube.com/watch?v=A8Hg4z16xLI",
-    },
-  ];
-};
+const getDummyVideo = () => [
+  {
+    videoUrl: "https://emproster.s3.ap-southeast-2.amazonaws.com/video/1746798395556_Demo2.mp4",
+    title: "Fallback Demo",
+    createdOn: new Date().toISOString()
+  }
+];
+
+
 
 // Fetch review data
 const getReview = async () => {
@@ -209,12 +208,13 @@ const getDummyReviews = () => {
 
 
 // Fetch FAQ data
+// LandingPageController.js
+
+// Fetch FAQ data
 const getFAQ = async () => {
   try {
     const response = await fetch(
       "https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/systemadmin/faq/view",
-      
-      
       {
         method: "GET",
         headers: {
@@ -222,34 +222,35 @@ const getFAQ = async () => {
         },
       }
     );
-
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
     const realData = data.FAQList || [];
-
     console.log("FAQ Returned:", realData);
 
-    if (realData.length === 0) {
-      console.warn("API returned empty FAQ list, using dummy FAQs.");
+    // first filter by isShown === 1
+    const shownFAQs = realData.filter((faq) => faq.isShown === 1);
+
+    // if there are none, or if the API returned nothing at all, use dummy
+    if (realData.length === 0 || shownFAQs.length === 0) {
+      console.warn(
+        "No visible FAQs returned from API—falling back to dummy FAQs."
+      );
       return getDummyFAQ();
     }
 
-    // 👉 First filter by isShown === 1
-    const shownFAQs = realData.filter((faq) => faq.isShown === 1);
-
-    // 👉 Then map
+    // otherwise map the filtered set
     return shownFAQs.map((faq) => ({
       faqID: faq.faqID,
       question: faq.question_desc,
       answer: faq.answer,
       createdOn: new Date(faq.createdOn).toLocaleDateString(),
     }));
-
   } catch (error) {
     console.error("Failed to fetch FAQs:", error);
+    // error also triggers dummy data
     return getDummyFAQ();
   }
 };
