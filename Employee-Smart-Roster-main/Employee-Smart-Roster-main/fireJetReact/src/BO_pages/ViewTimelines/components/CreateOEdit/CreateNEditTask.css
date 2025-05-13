@@ -184,6 +184,16 @@
     }
 }
 
+.create-n-edit-task-btns-grp {
+    display: flex;
+    gap: 15px;
+    justify-content: end;
+
+    .error-message-icon {
+        min-width: 15px;
+    }
+}
+
 /* Mobile (all screens below 768px) */
 @media only screen and (max-width: 768px) {
     .create-n-edit-task-form-container {

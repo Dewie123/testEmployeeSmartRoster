@@ -11,7 +11,8 @@ import TimelineController from "../../../../controller/TimelineController";
 
 import { IoArrowBack, FaPlusCircle, FaMinusCircle,
          FaChevronCircleDown, FaChevronCircleUp,
-         FaChevronCircleLeft, FaChevronCircleRight  } from '../../../../../public/Icons.js'
+         FaChevronCircleLeft, FaChevronCircleRight,
+         GoAlertFill } from '../../../../../public/Icons.js'
 import "./CreateNEditTask.css"
 import "../../../../../public/styles/common.css"
 
@@ -36,7 +37,10 @@ const CreateEditTask = ({
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const isMobile = window.innerWidth <= 768;
-    const [ currentTask, setCurrentTask ] = useState(0)
+    const duplicateTaskError = 'Task title contain in a timeline must be unique.'
+    const duplicateRoleSkillError = 'Same role and skillset are assigned to multiple tasks.'
+    const [ currentTask, setCurrentTask ] = useState(0);
+    const [ error, setError ] = useState<string>('');
     const [ showConfirmation, setShowConfirmation ] = useState(false);
     const [ isHavingTimeline, setIsHavingTimeline ] = useState(false);
     const [ isTaskAssigned, setIsTaskAssigned ] = useState(false);
@@ -89,10 +93,30 @@ const CreateEditTask = ({
             isExpended: true,
             skillsetForSelect: skillsetsForRole
         }]);
+        validateInput('skillSetID', skillsetsForRole[0].skillSetName)
     }
     // Handle remove more task
     const handleRemoveTask = (index: number) => {
-        setTasksValues(tasksValues.filter((_, i) => i !== index))
+        const updatedTasks = tasksValues.filter((_, i) => i !== index)
+        setTasksValues(updatedTasks)
+        // Check if duplicate task with same title after remove the task
+        const titles = updatedTasks.map((task) => task.title.toUpperCase().trim());
+        const isTaskDuplicated = titles.some((title, index) => 
+            titles.indexOf(title) !== index
+        )
+        if(isTaskDuplicated)
+            setError(duplicateTaskError)
+        else
+            setError('')
+
+        const skillsets = updatedTasks.map((task) => task.skillSetID);
+        const isSkillsetsDuplicated = skillsets.some((skillset, index) => 
+            skillsets.indexOf(skillset) !== index
+        )
+        if(isSkillsetsDuplicated)
+            setError(duplicateRoleSkillError)
+        else
+            setError('')
     }
 
     const handleInputChange = (
@@ -119,7 +143,7 @@ const CreateEditTask = ({
                 findNoOfEmpAvailable(index, role[0].roleID, skillset[0].skillSetID)
             }
         }
-        
+        validateInput(name, value)
         setTasksValues((prevData) => 
             prevData.map((task, i) => 
                 i === index 
@@ -161,6 +185,31 @@ const CreateEditTask = ({
             findNoOfEmpAvailable(index, role[0].roleID, skillset[0].skillSetID)
         }
     }, [tasksValues.length])
+    // Validate user input for the tasks
+    const validateInput = (name: string, value: string) => {
+        let isSameCreated = false
+        if(name === 'title') {
+            isSameCreated = tasksValues.some((task: any) => 
+                task.title.toUpperCase().trim() === value.toUpperCase().trim()
+            )
+            if(isSameCreated)
+                setError(duplicateTaskError)
+            else
+                setError('')
+        } else if (name === 'skillSetID') {
+            // console.log(tasksValues)
+            isSameCreated = tasksValues.some((task: any) => 
+                task.skillSetID === value
+            )
+            if(isSameCreated)
+                setError(duplicateRoleSkillError)
+            else 
+                setError('')
+        } else {
+            if(error === '')
+                setError('') // Clear error for other fields
+        }
+    }
 
     // Check if create/edit form all filled
     const isTaskIncomplete = () => {
@@ -597,11 +646,19 @@ const CreateEditTask = ({
                             )}
                         </div>
                     ))}
-                    <PrimaryButton 
-                        text="Create Task"
-                        onClick={() => toggleConfirmation()}
-                        disabled={isTaskIncomplete()}
-                    />
+                    <div className="create-n-edit-task-btns-grp">
+                        {error && (
+                            <span className='error-message'>
+                                <GoAlertFill className="error-message-icon"/> 
+                                <span className='error-message-text'>{error}&nbsp;</span>
+                            </span>
+                        )}
+                        <PrimaryButton 
+                            text="Create Task"
+                            onClick={() => toggleConfirmation()}
+                            disabled={isTaskIncomplete() || error !== ''}
+                        />
+                    </div>
                 </div>
                 {isTaskAssigned && tasksNAllocationValues && (
                     <div className="task-assignation-detail-container">
