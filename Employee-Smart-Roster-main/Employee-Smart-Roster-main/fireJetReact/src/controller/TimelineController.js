@@ -188,6 +188,51 @@ async function createTask (boID, values, timelineID) {
     }
 }
 
+// Edit Task
+async function editTask (values) {
+    // console.log(values)
+    // const start = new Date(values.startDate).toISOString();
+    // const end = new Date(values.endDate).toISOString()
+    const startDateTime = values.startDate.split("T")
+    const start = startDateTime.join(" ")
+    const endDateTime = values.endDate.split("T")
+    const end = endDateTime.join(" ")
+    // console.log("Start time: ", start)
+    // console.log("End time: ", end)
+    // console.log(values.noOfEmp)
+
+    const body = {
+        taskID: values.taskID,
+        title: values.title,
+        taskDescription: values.taskDescription,
+        roleID: values.roleID,
+        skillSetID: values.skillSetID,
+        startDate: start,
+        endDate: end, 
+        noOfEmp: values.noOfEmp
+    };
+    // console.log(body)
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/timeline/task/update', {
+            method: 'PATCH',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        console.error(`Network error for UID ${uid}: \n`, error);
+        throw new Error(`Failed to fetch company data: ${error.message}`);
+    }
+}
+
 // Auto tasks allocation
 async function handleTaskAutoAllocation(boUID) {
     const body = {
@@ -405,6 +450,7 @@ export default {
     getAllTasks, 
     boGetTaskDetail,
     createTask, 
+    editTask,
     handleTaskAutoAllocation,
     handleManualUpdateTaskAllocation,
     getAvailableEmployees,

@@ -1,3 +1,7 @@
+.edit-task-icon {
+    font-size: 25px !important;
+}
+
 .create-n-edit-task-header {
     display: flex;
     flex-direction: row;
@@ -178,6 +182,7 @@
     padding: 10px;
     border-radius: 10px;
     max-height: 80%;
+    margin-bottom: 10px;
 
     .odd-row {
         background-color: var(--light-color-text) !important;

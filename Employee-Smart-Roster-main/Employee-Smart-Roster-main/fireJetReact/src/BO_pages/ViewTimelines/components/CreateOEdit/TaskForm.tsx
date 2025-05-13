@@ -27,7 +27,7 @@ interface CreateOEditTaskProps {
 
 const { getRoleIdForEmp, getSkillIdForEmp } = BOEmployeeController;
 const { createTask, handleTaskAutoAllocation, handleManualUpdateTaskAllocation,
-        getAvailableEmployees } = TimelineController;
+        editTask, getAvailableEmployees } = TimelineController;
 const { getSkillsetsForARole } = CompanyController
 
 const CreateEditTask = ({ 
@@ -44,6 +44,7 @@ const CreateEditTask = ({
     const [ showConfirmation, setShowConfirmation ] = useState(false);
     const [ isHavingTimeline, setIsHavingTimeline ] = useState(false);
     const [ isTaskAssigned, setIsTaskAssigned ] = useState(false);
+    const [ originalTasks, setOriginalTasks ] = useState<any>([])
     const [ tasksNAllocationValues, setTasksNAllocationValues ] = useState<any>([]);
     const [ tasksValues, setTasksValues ] = useState([
         {
@@ -67,21 +68,33 @@ const CreateEditTask = ({
     })
     // Initialize default values
     useEffect(() => {
+        // console.log(defaultTaskValues)
         const role = getRoleIdForEmp(allRoles, defaultTaskValues.roleID)
         const skillsetsForRole = getSkillsetsForARole(role[0].roleID, allSkillsets)
         // console.log(role)
         // Find number of available employee for default value
         findNoOfEmpAvailable(0, role[0].roleID, skillsetsForRole[0].skillSetID)
         // Set default task value and skiset for select with default value
-        setTasksValues([{
+        let values = [{
             ...defaultTaskValues,
             isExpended: true,
-            skillsetForSelect: skillsetsForRole
-        }])
+            skillsetForSelect: skillsetsForRole,
+            availableEmp: tasksValues[0].availableEmp
+        }]
+        setTasksValues(values)
         // Set default timeline value
         setTimelineValues(defaultTimelineValues)
         // console.log(defaultTimelineValues)
-    }, [defaultTaskValues, defaultTimelineValues, isHavingTimeline])
+        
+        // If is edit task
+        if(!isCreate){
+            // console.log(values)
+            setOriginalTasks(values) // Store original value
+            if(defaultTimelineValues)
+                setIsHavingTimeline(true)
+        }
+    }, [defaultTaskValues, defaultTimelineValues])
+
     // Handle add more task
     const handleAddMoreTask = () => {
         // console.log(defaultTaskValues)
@@ -158,15 +171,28 @@ const CreateEditTask = ({
             availableEmp = availableEmp.availableEmployees || []
             availableEmp = availableEmp.length
             // Update number of available employee
-            setTasksValues((prevData) => 
-                prevData.map((task, i) => 
-                    i === index 
-                    ? { ...task, 
-                        availableEmp: availableEmp,
-                        noOfEmp: availableEmp
-                    } 
-                    : task
-            ));
+            // If is in edit
+            if(!isCreate) {
+                setTasksValues((prevData) => 
+                    prevData.map((task, i) => 
+                        i === index 
+                        ? { ...task, 
+                            availableEmp: availableEmp,
+                        } 
+                        : task
+                ));
+            } else {
+                setTasksValues((prevData) => 
+                    prevData.map((task, i) => 
+                        i === index 
+                        ? { ...task, 
+                            availableEmp: availableEmp,
+                            noOfEmp: availableEmp
+                        } 
+                        : task
+                ));
+            }
+            
             return availableEmp
         } catch(error) {
             showAlert(
@@ -230,13 +256,10 @@ const CreateEditTask = ({
             const hasEmptyField = requiredFields.some(
                 (field) => !task[field] || task[field].toString().trim() === ""
             );
-
             // Additional validation for start and end date
             const isDateInvalid = new Date(task.startDate) >= new Date(task.endDate);
-
             // Ensure number of employees is a positive integer
             const isNoOfEmpInvalid = Number(task.noOfEmp) < 1;
-
             return hasEmptyField || isDateInvalid || isNoOfEmpInvalid;
         });
     };
@@ -269,6 +292,7 @@ const CreateEditTask = ({
         }
     }
 
+    // Create Task
     const triggerCreateTask = async() => {
         for (const task of tasksValues) {
             const roleID = getRoleIdForEmp(allRoles, task.roleID)
@@ -344,6 +368,56 @@ const CreateEditTask = ({
                     { type: 'error' }
                 );
             }
+        }
+    }
+
+    // Update Task
+    const triggerEditTask = async() => {
+        // Reset not relevant input to default setup
+        const updatedValue = {
+            ...tasksValues[0],
+            skillsetForSelect: {},
+            isExpended: true,
+            availableEmp: 0
+        }
+        const originalValues = {
+            ...originalTasks[0],
+            skillsetForSelect: {},
+            isExpended: true,
+            availableEmp: 0
+        }
+        // console.log("Changed Input: ", updatedValue)
+        // console.log("Original Input: ", originalValues)
+        // Check if the User change the input
+        const isInputChange = (JSON.stringify(updatedValue) !== JSON.stringify(originalValues))
+        // console.log(isInputChange)
+        if(isInputChange) {
+            const roleID = getRoleIdForEmp(allRoles, tasksValues[0].roleID)
+            tasksValues[0].roleID = roleID[0].roleID
+
+            const skillSetID = getSkillIdForEmp(allSkillsets, tasksValues[0].skillSetID)
+            tasksValues[0].skillSetID = skillSetID[0].skillSetID
+
+            try {
+                const response = await editTask (tasksValues[0])
+                console.log(response)
+            } catch(error) {
+                showAlert(
+                    "triggerEditTask",
+                    `Failed to Update Task for "${tasksValues[0].title}"`,
+                    error instanceof Error ? error.message : String(error),
+                    { type: 'error' }
+                );
+            }
+        } else {
+            showAlert(
+                "No Value Update On Task",
+                `You have no changed any value for: `,
+                `"${tasksValues[0].title}"`,
+                { type: 'info' }
+            );
+            toggleConfirmation();
+            navigate(-1);
         }
     }
 
@@ -432,12 +506,13 @@ const CreateEditTask = ({
                     {isCreate ? ( // Create new task
                         <PrimaryButton 
                             text="Confirm" 
+                            disabled={isTaskAssigned}
                             onClick={() => triggerCreateTask()}
                         />
                     ):( // Update task
                         <PrimaryButton 
                             text="Confirm" 
-                            // onClick={() => triggerCreateEmpAcc()}
+                            onClick={() => triggerEditTask()}
                         />
                     )}
                     <SecondaryButton 
@@ -466,13 +541,14 @@ const CreateEditTask = ({
                             <input 
                                 type="checkbox" 
                                 checked={isHavingTimeline} 
-                                disabled={isTaskAssigned}
+                                disabled={isTaskAssigned || !isCreate}
                                 onChange={(e) => setIsHavingTimeline(e.target.checked)}/>
                             <span className="checkmark"></span>
                         </label>
-                        {isHavingTimeline && isCreate && (
+                        {isHavingTimeline && (
                             <TimelineForm 
-                                isCreateTask={true}
+                                isCreateTask={isCreate}
+                                isTaskCreated={isTaskAssigned}
                                 defaultValues={timelineValues}
                                 bo_UID={bo_UID}
                                 newTimelineValue={handleTimelineValueChange}
@@ -654,11 +730,19 @@ const CreateEditTask = ({
                                 <span className='error-message-text'>{error}&nbsp;</span>
                             </span>
                         )}
-                        <PrimaryButton 
-                            text="Create Task"
-                            onClick={() => toggleConfirmation()}
-                            disabled={isTaskIncomplete() || error !== ''}
-                        />
+                        {isCreate ? (
+                            <PrimaryButton 
+                                text="Create Task"
+                                onClick={() => toggleConfirmation()}
+                                disabled={isTaskIncomplete() || error !== ''}
+                            />
+                        ):(
+                            <PrimaryButton 
+                                text="Update Task"
+                                onClick={() => toggleConfirmation()}
+                                disabled={isTaskIncomplete() || error !== ''}
+                            />
+                        )}
                     </div>
                 </div>
                 {isTaskAssigned && tasksNAllocationValues && (

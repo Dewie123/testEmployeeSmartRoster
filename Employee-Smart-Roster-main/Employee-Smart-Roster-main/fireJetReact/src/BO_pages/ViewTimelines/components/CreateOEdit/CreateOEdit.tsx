@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAlert } from "../../../../components/PromptAlert/AlertContext";
 import { useAuth } from "../../../../AuthContext";
-import { generateSGDateTimeForDateTimeInput } from "../../../../controller/Variables";
+import { generateSGDateTimeForDateTimeInput, formatDateArrToDisplayInDateTimeInput } from "../../../../controller/Variables";
 import PrimaryButton from "../../../../components/PrimaryButton/PrimaryButton";
 import CreateEditTask from "./TaskForm";
 import CompanyController from "../../../../controller/CompanyController";
+import BOEmployeeController from "../../../../controller/BOEmployeeController";
 
 import { FaRegEdit } from '../../../../../public/Icons.js'
 import "./CreateNEditTask.css"
@@ -14,13 +15,16 @@ import "../../../../../public/styles/common.css"
 interface TaskProps {
     isCreate: boolean;
     selectedTask?: any;
+    allTasksAllocation?: any;
+    selectedTaskTimeline?: any;
     onTaskUpdate?: (updateTask: any) => void;
 }
 
 const { getCompanyRoles, getCompanySkillsets, getSkillsetsForARole  } = CompanyController;
+const { getRoleNameForEmp, getSkillNameForEmp } = BOEmployeeController;
 
 const CreateOEditTask = ({
-    isCreate, selectedTask, onTaskUpdate
+    isCreate, allTasksAllocation, selectedTaskTimeline, onTaskUpdate
 } : TaskProps) => {
     const { user } = useAuth();
     const { showAlert } = useAlert();
@@ -100,14 +104,37 @@ const CreateOEditTask = ({
                 }
             })
 
-        if(!isCreate)
-            navigate('/edit-task', {
-                state: {
-                    defaultValues: selectedTask,
-                    allRoles,
-                    allSkillsets
-                }
-            })
+        if(!isCreate) {
+            // console.log(selectedTaskTimeline, allTasksAllocation)
+            // Pre-processing for the task allocated to multiple employees
+            if(allTasksAllocation.length > 0) {
+                const formattedTasksAllocation = allTasksAllocation.map((task: any) => {
+                    const role = getRoleNameForEmp(allRoles, task.rolesNeeded);
+                    const roleID = role[0].roleName
+                    const skillset = getSkillNameForEmp(allSkillsets, task.skillSetNeeded);
+                    const skillSetID = skillset[0].skillSetName
+                    const startDate = formatDateArrToDisplayInDateTimeInput(task.startDate);
+                    const endDate = formatDateArrToDisplayInDateTimeInput(task.endDate);
+
+                    return {
+                        ...task,
+                        roleID: roleID,
+                        skillSetID: skillSetID,
+                        startDate: startDate,
+                        endDate: endDate,
+                    }
+                })
+                // console.log(formattedTasksAllocation)
+                navigate('/edit-task', {
+                    state: {
+                        defaultValues: formattedTasksAllocation[0],
+                        defaultTimelineValues: selectedTaskTimeline,
+                        allRoles,
+                        allSkillsets
+                    }
+                })
+            }
+        }
     }
 
     // Create new task
@@ -123,6 +150,20 @@ const CreateOEditTask = ({
             />
         );
     }
+    // Edit Task form
+    if (!isCreate && navState && allRoles && allSkillsets) {
+        return (
+            <CreateEditTask
+                isCreate={false}
+                bo_UID={user?.UID}
+                defaultTaskValues={navState.defaultValues}
+                defaultTimelineValues={navState.defaultTimelineValues}
+                allRoles={navState.allRoles}
+                allSkillsets={navState.allSkillsets}
+            />
+        );
+    }
+
     return (
         <>
         {isCreate ? (
@@ -131,7 +172,10 @@ const CreateOEditTask = ({
                 onClick={() => toggleShowTaskForm()}
             />
         ):(
-            <></>
+            <FaRegEdit
+                className="edit-task-icon icons"
+                onClick={() => toggleShowTaskForm()}
+            />
         )}
         </>
     )

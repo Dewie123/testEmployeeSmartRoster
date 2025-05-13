@@ -9,6 +9,7 @@ import '../../../../../public/styles/common.css'
 
 interface TimelineFormProps {
     isCreateTask: boolean;
+    isTaskCreated: boolean;
     defaultValues: any;
     bo_UID: any;
     newTimelineValue: (timelineValue: any) => void;
@@ -18,9 +19,9 @@ const { createNewTimeline, getTimelines, getTimelineSelected,
         isSameTimelineCreated } = TimelineController
 
 const TimelineForm = ({ 
-    isCreateTask, defaultValues, bo_UID, newTimelineValue
+    isCreateTask, isTaskCreated, defaultValues, bo_UID, newTimelineValue
 }: TimelineFormProps) => {
-    // console.log(bo_UID)
+    // console.log(defaultValues)
     const { showAlert } = useAlert()
     const [ isCreateTimeline, setIsCreateTimeline ] = useState(false)
     const [ allTimelines, setAllTimelines ] = useState<any>([])
@@ -211,11 +212,17 @@ const TimelineForm = ({
             {/* Available Timeline */}
             <div className='forms-input'>
                 <strong className="select-available-timeline-title">
-                    Select Available Timeline 
-                    <FaPlusCircle 
-                        className="create-new-timeline-icon"
-                        onClick={toggleisCreateTimeline}
-                    />
+                    {isCreateTask ? ( 
+                        <>
+                            Select Available Timeline
+                            <FaPlusCircle 
+                                className="create-new-timeline-icon"
+                                onClick={toggleisCreateTimeline}
+                            />
+                        </> 
+                    ) : ( <>Task Allocated In: </> )
+                    } 
+                    
                 </strong>
                 <div className="fields">
                     {/* Timeline dropdown */}
@@ -224,6 +231,7 @@ const TimelineForm = ({
                         name="timelineValue"
                         value={timelineValue.timeLineID}
                         onChange={(e) => handleSelectedTimeline(e.target.value)}
+                        disabled={!isCreateTask || isTaskCreated}
                     >
                         {allTimelines.map((timeline:any) => (
                         <option key={timeline.timeLineID} value={timeline.timeLineID}>
