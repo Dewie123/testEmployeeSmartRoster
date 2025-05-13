@@ -18,12 +18,12 @@ const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 interface ContinuousCalendarProps {
   tasks: any[];
-  onUpdate?: (updatedData: any) => void;
+  onTaskUpdate?: (updatedData: any) => void;
   onDelete?: (deletedTaskId: number) => void;
 }
 const MonthCalendar = ({ 
   tasks=[], 
-  onUpdate,
+  onTaskUpdate,
   onDelete, } : ContinuousCalendarProps) => {
   // console.log(tasks)
   const defaultDate = new Date();

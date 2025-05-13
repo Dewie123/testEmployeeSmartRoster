@@ -38,6 +38,7 @@ function getSkillIdForEmp (allSkills, skillName){
 } 
 
 function getRoleNameForEmp (allRoles, roleID){
+    console.log(allRoles, roleID)
     const role = allRoles.filter((role) => 
         role.roleID === roleID
     )

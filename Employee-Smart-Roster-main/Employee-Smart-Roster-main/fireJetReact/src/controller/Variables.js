@@ -87,6 +87,39 @@ export function generateSGDateTimeForDateTimeInput(date) {
 
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
+// Format [ "19/05/2025", "5:25PM" ] to `${year}-${monthMap[month]}-${day}T${hours}:${minutes}`
+export function formatDateArrToDisplayInDateTimeInput (dateArr) {
+    // Extract date and time from the array
+    const [datePart, timePart] = dateArr;
+
+    // Split date into day, month, and year
+    const [day, month, year] = datePart.split('/');
+
+    // Convert month abbreviation to numeric value
+    const monthMap = {
+        "01": "01", "02": "02", "03": "03", "04": "04", "05": "05", 
+        "06": "06", "07": "07", "08": "08", "09": "09", "10": "10", 
+        "11": "11", "12": "12"
+    };
+
+    // Split time and convert to 24-hour format
+    let [time, period] = timePart.split(/(AM|PM)/i);
+    let [hours, minutes] = time.trim().split(':');
+
+    // Convert hours based on AM/PM
+    if (period.toUpperCase() === "PM" && hours !== "12") {
+        hours = String(parseInt(hours) + 12);
+    } else if (period.toUpperCase() === "AM" && hours === "12") {
+        hours = "00";
+    }
+
+    // Pad single-digit hours and minutes with leading zeros
+    hours = hours.padStart(2, '0');
+    minutes = minutes.padStart(2, '0');
+
+    // Return the formatted datetime string
+    return `${year}-${monthMap[month]}-${day}T${hours}:${minutes}`;
+}
 
 export function generateSGDateTimeForPaymentRequestRef(date) {
     const sgDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));

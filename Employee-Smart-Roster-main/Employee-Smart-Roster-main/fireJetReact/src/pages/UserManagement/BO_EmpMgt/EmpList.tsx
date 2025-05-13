@@ -59,6 +59,8 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
       
       filtered = handleFilterNricOName(filtered, filterNameOnric)
 
+      if(filterRole === 'All')
+        filtered = allUsers
       // console.log("Filtered User: ", filtered)
       setFilteredUsers(filtered);
     } catch (err) {

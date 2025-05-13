@@ -196,7 +196,8 @@ const CreateEditTask = ({
                 setError(duplicateTaskError)
             else
                 setError('')
-        } else if (name === 'skillSetID') {
+        } 
+        else if (name === 'skillSetID') {
             // console.log(tasksValues)
             isSameCreated = tasksValues.some((task: any) => 
                 task.skillSetID === value
