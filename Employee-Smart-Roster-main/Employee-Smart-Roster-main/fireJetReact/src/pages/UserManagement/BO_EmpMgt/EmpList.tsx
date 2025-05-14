@@ -32,7 +32,7 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
   const [ filterRole, setFilterRole ] = useState<any>("All");
   const [ filterSkill, setFilterSkill ] = useState<any>("All");
   const [ filterNameOnric, setFilterNameOnric ] = useState<string>("");
-  const [ filterPassType, setFilterPassType ] = useState<any>("All");
+  const [ filterPassType, setFilterPassType ] = useState<any>(PASS_TYPE[0]);
 
   // Update filtering logic (this filters based on fullName).
   const triggerFilterUsers = () => {
@@ -54,7 +54,8 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
 
         // console.log("Filtered role", filtered)
       } else {
-        filtered = handleFilterEmpAccStatus(allUsers, filterAccStatus);
+        // filtered = handleFilterEmpAccStatus(allUsers, filterAccStatus);
+        // console.log(filterPassType)
         filtered = handleFilterPassType(filtered, filterPassType)
         filtered = handleFilterNricOName(filtered, filterNameOnric)
         setSkillsetForSelectedRole([]); // Clear skillsets if all roles selected
