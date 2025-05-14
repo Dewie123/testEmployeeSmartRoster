@@ -27,7 +27,8 @@ import { MdContactPhone,
          MdDeleteForever,
          MdViewTimeline,
          MdAttachMoney } from "react-icons/md";
-import { RiUserReceived2Fill } from "react-icons/ri";
+import { RiUserReceived2Fill,
+         RiSwap2Fill } from "react-icons/ri";
 import { IoIosWarning } from "react-icons/io";
 import { TiTick, TiTime } from "react-icons/ti";
 import { TbTarget, TbTargetArrow } from "react-icons/tb";
@@ -84,4 +85,5 @@ export {
     FaUpload, // Upload icon
     MdViewTimeline, // Timeline period (from x to y date)
     MdAttachMoney, // Dollar sign
+    RiSwap2Fill, // Swap icon
 };

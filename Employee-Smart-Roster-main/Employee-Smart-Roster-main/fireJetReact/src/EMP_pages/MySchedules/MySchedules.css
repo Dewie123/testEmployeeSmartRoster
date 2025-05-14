@@ -23,6 +23,10 @@
 .task-detail-description-icon {
     margin-top: 3px;
 }
+.emp-timeline-button-container {
+    width: fit-content;
+    margin-top: 10px;
+}
 
 /* Tablet (769px-1023px) */
 @media only screen and (min-width: 769px) and (max-width: 1023px) {

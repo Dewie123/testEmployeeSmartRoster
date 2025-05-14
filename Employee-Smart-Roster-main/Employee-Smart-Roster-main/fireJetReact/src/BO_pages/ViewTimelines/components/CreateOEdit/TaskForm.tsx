@@ -403,6 +403,68 @@ const CreateEditTask = ({
             try {
                 const response = await editTask (tasksValues[0])
                 console.log(response)
+                if(response?.message === 'Task details successfully updated') {
+                    showAlert(
+                        "Task Update Successfully",
+                        `You have make changed on: `,
+                        `"${tasksValues[0].title}"`,
+                        { type: 'success' }
+                    );
+                    toggleConfirmation()
+
+                    if(originalTasks.noOfEmp !== tasksValues[0].noOfEmp){
+                        // Start task allocation
+                        let allocationRes = await handleTaskAutoAllocation(bo_UID);
+                        allocationRes = JSON.parse(allocationRes.body)
+                        console.log("Tasks Allocation: ", allocationRes)
+                        if(allocationRes.message === "Auto-allocation process completed."){
+                            let allAllocatedTasks = allocationRes.assignedTasks || [];
+                            if(allAllocatedTasks) {
+                                allAllocatedTasks = allAllocatedTasks.filter((task: any) => {
+                                    return task.taskID === response.TaskIDCreated
+                                })
+                                console.log("Filtered task allocation: ", allAllocatedTasks)
+                                setTasksNAllocationValues({
+                                    ...tasksValues[0],
+                                    assignedEmployees: allAllocatedTasks.map((allocation: any) => ({
+                                        ...allocation,
+                                        fullName: allocation.fullName,
+                                        user_id: allocation.assignedTo,
+                                        roleID: allocation.roleID,
+                                        skillSetID: allocation.skillSetID
+                                    }))
+                                })
+                                setIsTaskAssigned(true) // Set assignation completed
+                                
+                                if(isMobile) {
+                                    setTasksValues((prev: any) => 
+                                        prev.map((task: any) => ({
+                                            ...task,
+                                            isExpended: false
+                                        }))
+                                    )
+                                }
+                            }
+                            else {
+                                setIsTaskAssigned(true) // Set assignation completed
+                                showAlert(
+                                    "Task Allocation Failed",
+                                    `No Employee Available Matched to The Need`,
+                                    ``,
+                                    { type: 'info' }
+                                )
+                            } 
+                        }
+                    }
+                } else {
+                    showAlert(
+                        "Task Update Failed",
+                        `Failed to update on: `,
+                        `"${tasksValues[0].title}"`,
+                        { type: 'error' }
+                    );
+                    navigate(-1)
+                }
             } catch(error) {
                 showAlert(
                     "triggerEditTask",
@@ -419,7 +481,7 @@ const CreateEditTask = ({
                 { type: 'info' }
             );
             toggleConfirmation();
-            navigate(-1);
+            // navigate(-1);
         }
     }
 
@@ -491,7 +553,7 @@ const CreateEditTask = ({
                             <div className="create-employee-confirmation-detail odd-row">
                                 <p className="title">End Date</p>
                                 <p className="main-data">
-                                    {formatDisplayDateTime(tasksValues[currentTask].startDate)}
+                                    {formatDisplayDateTime(tasksValues[currentTask].endDate)}
                                 </p>
                             </div>
                         </div>
@@ -771,7 +833,10 @@ const TaskAssignationInfo = ({
     const navigate = useNavigate()
     const { showAlert } = useAlert()
     const [ allTaskWithAvailableEmps, setAllTaskWithAvailableEmps ] = useState<any>([])
-
+    const [ originalTasksWithAvailableEmps, setOriginalTasksWithAvailableEmps ] = useState<any>([])
+    useEffect(() => {
+        setOriginalTasksWithAvailableEmps(allTaskWithAvailableEmps)
+    }, [allTaskWithAvailableEmps])
     const fetchAllEmployee = async() => {
         // Force task become array for single task created
         const arrayTasks = [tasksNAllocationValues]
@@ -814,7 +879,6 @@ const TaskAssignationInfo = ({
                         }
                     ])
                 }
-                
             } catch(error) {
                 showAlert(
                     "fetchAllEmployee",
@@ -876,7 +940,7 @@ const TaskAssignationInfo = ({
     };
     // Select all available employees for a task
     const selectAllMatched = (index: number) => {
-        console.log(index)
+        // console.log(index)
         setAllTaskWithAvailableEmps((prev: any) => 
             prev.map((task: any, i: number) => {
                 // console.log(task)
@@ -916,36 +980,40 @@ const TaskAssignationInfo = ({
     }
 
     const triggerSubmitConfirmAllocation = async() => {
-        for (const task of allTaskWithAvailableEmps) {
-            try {
-                task.selectedEmp.map(async(allocation: any, index: number) => {
-                    let response = await handleManualUpdateTaskAllocation(
-                        allocation.user_id, task.assignedEmployees[index].taskAllocationID, 
-                        task.title
-                    )
-                    // console.log(response)
-                    if(response.message === 'Employee has been reassigned successfully')
-                        showAlert(
-                            "Task Created Created",
-                            `${task.title} was created and allocated`,
-                            ``,
-                            { type: 'success' }
-                        );
-                    else
-                        showAlert(
-                            "Task Created Created",
-                            `${task.title} was created and allocated base on system allocation`,
-                            ``,
-                            { type: 'success' }
-                        );
-                })
-            } catch(error) {
-                showAlert(
-                    "triggerSubmitConfirmAllocation",
-                    `Failed to Update Allocation Confirmation`,
-                    error instanceof Error ? error.message : String(error),
-                    { type: 'error' }
-                );
+        const isEmpChange = (JSON.stringify(allTaskWithAvailableEmps) !== JSON.stringify(originalTasksWithAvailableEmps))
+        if(isEmpChange) {
+            console.log('allocation')
+            for (const task of allTaskWithAvailableEmps) {
+                try {
+                    task.selectedEmp.map(async(allocation: any, index: number) => {
+                        let response = await handleManualUpdateTaskAllocation(
+                            allocation.user_id, task.assignedEmployees[index].taskAllocationID, 
+                            task.title
+                        )
+                        // console.log(response)
+                        if(response.message === 'Employee has been reassigned successfully')
+                            showAlert(
+                                "Task Created Created",
+                                `${task.title} was created and allocated`,
+                                ``,
+                                { type: 'success' }
+                            );
+                        else
+                            showAlert(
+                                "Task Created Created",
+                                `${task.title} was created and allocated base on system allocation`,
+                                ``,
+                                { type: 'success' }
+                            );
+                    })
+                } catch(error) {
+                    showAlert(
+                        "triggerSubmitConfirmAllocation",
+                        `Failed to Update Allocation Confirmation`,
+                        error instanceof Error ? error.message : String(error),
+                        { type: 'error' }
+                    );
+                }
             }
         }
         navigate(-1)
