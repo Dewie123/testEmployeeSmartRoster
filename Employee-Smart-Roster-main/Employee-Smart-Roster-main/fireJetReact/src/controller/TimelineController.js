@@ -115,6 +115,7 @@ async function getAllTasks (boID) {
 
 // return task's detail for BO
 async function boGetTaskDetail (taskID) {
+    // console.log(taskID)
     const body = {
         taskID: taskID
     };

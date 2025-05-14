@@ -166,6 +166,7 @@ const MonthCalendar = ({
       {showTaskDetail && selectedTask && (
           <EventDetail 
               task={selectedTask}
+              allTasks={events}
               onDelete={onDelete}
               onClose={() => triggerCloseSelectedTask()}
           />

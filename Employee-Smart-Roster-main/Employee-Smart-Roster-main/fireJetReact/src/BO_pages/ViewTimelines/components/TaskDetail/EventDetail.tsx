@@ -18,6 +18,7 @@ import '../../../../../public/styles/common.css'
 
 interface EventDetailProps {
     task: any;
+    allTasks?: any
     onTaskUpdate?: (updatedData: any) => void;
     onDelete?: (deletedTaskId: number) => void;
     onClose?: () => void;
@@ -25,7 +26,7 @@ interface EventDetailProps {
 
 const { boGetTaskDetail, deleteTaskDetail, getTimelines, getTimelineSelected } = TimelineController;
 
-const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) => {
+const EventDetail = ({task, allTasks, onDelete, onClose}: EventDetailProps) => {
     // console.log(task)
     const { showAlert } = useAlert()
     const { user } = useAuth()
@@ -49,6 +50,7 @@ const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) 
             if(taskDetail.message === "Task details successfully retrieved"){
                 taskDetail = taskDetail.taskDetails || []
                 // console.log(taskDetail)
+                
                 if(taskDetail.length > 0) {
                     for(let i = 0; i < taskDetail.length; i++){
                         // Convert task start time to Singapore time
@@ -73,7 +75,14 @@ const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) 
             )
         }
     };
-    useEffect(() => { fetchTaskDetail() }, [task])
+    useEffect(() => { 
+        if (task && task.taskID) {
+            // console.log("Fetching Task Detail:", task.taskID);
+            fetchTaskDetail();
+        } else {
+            console.log("Task not available:", task);
+        }
+    }, [task])
 
     const fetchAllTimelines = async() => {
         try {
@@ -207,158 +216,164 @@ const EventDetail = ({task, onTaskUpdate, onDelete, onClose}: EventDetailProps) 
     function redirectToTimelineTasksDetail() {
         navigate('/timeline-tasks-list', {
             state: {
-                timeline: containedTimeline
+                timeline: containedTimeline, 
+                allTasks: allTasks,
             }
         })
     }
 
     return(
-        <div className="App-popup" onClick={onClose}>
-            <div className='App-popup-content' onClick={(e) => e.stopPropagation()}>
-                <div className="App-header">
-                    <h1>{taskDetail.title}</h1>
-                    <div className="event-detail-header-btns-grp">
-                        <CreateOEditTask 
-                            isCreate={false}
-                            selectedTask={taskDetail}
-                            selectedTaskTimeline={containedTimeline}
-                            allTasksAllocation={allTaskDetail}
-                        />
-                        <IoClose className='icons' onClick={onClose}/>
-                    </div>
-                </div>
-
-                {containedTimeline && (
-                    <button 
-                        className={`task-detail-contained-timeline
-                            ${isInTimeline ? 'disabled' : ''}
-                        `}
-                        onClick={redirectToTimelineTasksDetail}
-                        disabled={isInTimeline}
-                    >
-                        <p className='title'>Timeline: </p>
-                        <p className='main-data'>{containedTimeline.timelineTitle}</p>
-                    </button>
-                )}
-
-                <div className="task-allocation-detail">
-                    <h3>Task Allocation's Detail</h3>
-                    <div className={`allocated-staff-info ${showAllocatedDetail ? 'active' : ''}`}
-                        ref={triggerCloseAllocatedDetailOutsite}
-                    >
-                        <div className="allocated-staff-detail-title">
-                            <CgProfile className='App-popup-content-icon'/>
-                            {allTaskDetail.length > 1 ? (
-                                <div className='allocated-staff-container'>
-                                {allTaskDetail.map((detail: any, index: number) => (
-                                    <p key={index}
-                                        onClick={() => toggleShowAllocationDetail(
-                                            detail.email, detail.createdOn, 
-                                            detail.hpNo, detail.jobTitle
-                                        )}
-                                        className='allocated-staff-container-title'
-                                    >
-                                        {detail.fullName}
-                                        <FaCircle 
-                                            className={`task-allocated-status
-                                                        ${detail.status === TASK_STATUS[1] ? 'in-progress' : ''}
-                                                        ${detail.status === TASK_STATUS[2] ? 'completed' : ''}`}
-                                        />
-                                        {/* {index < allTaskDetail.length - 1 && ","} */}
-                                    </p>
-                                ))}
-                                </div>
-                                ) : (
-                                    <p onClick={() => toggleShowAllocationDetail(
-                                            taskDetail.email, taskDetail.createdOn, 
-                                            taskDetail.hpNo, taskDetail.jobTitle
-                                        )}
-                                        className='allocated-staff-container-title'
-                                    >
-                                        {taskDetail.fullName || "Unassigned"}
-                                        <FaCircle 
-                                            className={`task-allocated-status
-                                                        ${taskDetail.status === TASK_STATUS[1] ? 'in-progress' : ''}
-                                                        ${taskDetail.status === TASK_STATUS[2] ? 'completed' : ''}`}
-                                        />
-                                    </p>
-                                )}
-                            
-                        </div>
-                        <div className="allocated-staff-detail-content">
-                            <AllocatedStaffDetail
-                                allocatedStaff = {allocatedStaff}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="task-detail-information">
-                    <div className="task-detail-info-title">
-                        <h3>Task's Detail</h3>
-                        {/* See More Detail */}
-                        <div className={`see-more-task-detail ${showSeeMoreDetail ? 'active' : ''}`}
-                                ref={triggerCloseSeeMoreDetailOutsite}
-                        >
-                            <SecondaryButton 
-                                text='See More'
-                                onClick={() => toggleShowMoreTaskDetail()}
-                            />
-                            <div className="see-more-task-detail-content">
-                                <MoreDetail
-                                    roleID = {taskDetail.rolesNeeded}
-                                    skillID = {taskDetail.skillSetNeeded}
+        <>
+        {allTaskDetail.length > 0 && (
+            <div className="App-popup" onClick={onClose}>
+                <div className='App-popup-content' onClick={(e) => e.stopPropagation()}>
+                    <div className="App-header">
+                        <h1>{taskDetail.title}</h1>
+                        <div className="event-detail-header-btns-grp">
+                            {allTaskDetail.length > 0 && (
+                                <CreateOEditTask 
+                                    isCreate={false}
+                                    selectedTaskTimeline={containedTimeline}
+                                    allTasksAllocation={allTaskDetail}
                                 />
-                            </div>
+                            )}
+                            <IoClose className='icons' onClick={onClose}/>
                         </div>
                     </div>
-                    {/* Task description */}
-                    <div className="task-detail-description">
-                        <FaClipboardList className='App-popup-content-icon'/>
-                        <p className="main-data"
-                            dangerouslySetInnerHTML={{ __html: formatTextForDisplay(taskDetail.taskDescription) }}
+
+                    {containedTimeline && (
+                        <button 
+                            className={`task-detail-contained-timeline
+                                ${isInTimeline ? 'disabled' : ''}
+                            `}
+                            onClick={redirectToTimelineTasksDetail}
+                            disabled={isInTimeline}
+                        >
+                            <p className='title'>Timeline: </p>
+                            <p className='main-data'>{containedTimeline.timelineTitle}</p>
+                        </button>
+                    )}
+
+                    <div className="task-allocation-detail">
+                        <h3>Task Allocation's Detail</h3>
+                        <div className={`allocated-staff-info ${showAllocatedDetail ? 'active' : ''}`}
+                            ref={triggerCloseAllocatedDetailOutsite}
+                        >
+                            <div className="allocated-staff-detail-title">
+                                <CgProfile className='App-popup-content-icon'/>
+                                {allTaskDetail.length > 1 ? (
+                                    <div className='allocated-staff-container'>
+                                    {allTaskDetail.map((detail: any, index: number) => (
+                                        <p key={index}
+                                            onClick={() => toggleShowAllocationDetail(
+                                                detail.email, detail.createdOn, 
+                                                detail.hpNo, detail.jobTitle
+                                            )}
+                                            className='allocated-staff-container-title'
+                                        >
+                                            {detail.fullName}
+                                            <FaCircle 
+                                                className={`task-allocated-status
+                                                            ${detail.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                                            ${detail.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                                            />
+                                            {/* {index < allTaskDetail.length - 1 && ","} */}
+                                        </p>
+                                    ))}
+                                    </div>
+                                    ) : (
+                                        <p onClick={() => toggleShowAllocationDetail(
+                                                taskDetail.email, taskDetail.createdOn, 
+                                                taskDetail.hpNo, taskDetail.jobTitle
+                                            )}
+                                            className='allocated-staff-container-title'
+                                        >
+                                            {taskDetail.fullName || "Unassigned"}
+                                            <FaCircle 
+                                                className={`task-allocated-status
+                                                            ${taskDetail.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                                            ${taskDetail.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                                            />
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="allocated-staff-detail-content">
+                                    <AllocatedStaffDetail
+                                        allocatedStaff = {allocatedStaff}
+                                    />
+                                </div>
+                        </div>
+                    </div>
+
+                    <div className="task-detail-information">
+                        <div className="task-detail-info-title">
+                            <h3>Task's Detail</h3>
+                            {/* See More Detail */}
+                            <div className={`see-more-task-detail ${showSeeMoreDetail ? 'active' : ''}`}
+                                    ref={triggerCloseSeeMoreDetailOutsite}
+                            >
+                                <SecondaryButton 
+                                    text='See More'
+                                    onClick={() => toggleShowMoreTaskDetail()}
+                                />
+                                <div className="see-more-task-detail-content">
+                                    <MoreDetail
+                                        roleID = {taskDetail.rolesNeeded}
+                                        skillID = {taskDetail.skillSetNeeded}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        {/* Task description */}
+                        <div className="task-detail-description">
+                            <FaClipboardList className='App-popup-content-icon task-detail-description-icon'/>
+                            <p className="main-data"
+                                dangerouslySetInnerHTML={{ __html: formatTextForDisplay(taskDetail.taskDescription) }}
+                            />
+                        </div>
+                        {taskDetail?.startDate?.length === 2 && (
+                        <div className="start-date-detail">
+                            <p className="title">Start Date:</p>
+                            <div className="start-date-detail-data">
+                                <div className="event-detail-date-display">
+                                    <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
+                                    <p className="main-data">{taskDetail.startDate[0]}</p>
+                                </div>
+                                <div className="event-detail-time-display">
+                                    <TiTime className='App-popup-content-icon task-detail-description-icon'/>
+                                    <p className="main-data">{taskDetail.startDate[1].split('.')[0]}</p>
+                                </div>
+                            </div>
+                        </div>
+                        )}
+                        {taskDetail?.endDate?.length === 2 && (
+                        <div className="end-date-detail">
+                            <p className="title">End Date:</p>
+                            <div className="end-date-detail-data">
+                                <div className="event-detail-date-display">
+                                    <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
+                                    <p className="main-data">{taskDetail.endDate[0]}</p>
+                                </div>
+                                <div className="event-detail-time-display">
+                                    <TiTime className='App-popup-content-icon task-detail-description-icon'/>
+                                    <p className="main-data">{taskDetail.endDate[1].split('.')[0]}</p>
+                                </div>
+                            </div>
+                        </div>
+                        )}
+                    </div>
+                    
+                    <div className="event-button-group">
+                        <SecondaryButton 
+                            text='Delete Task'
+                            onClick={() => toggleShowDelete()}
                         />
                     </div>
-                    {taskDetail?.startDate?.length === 2 && (
-                    <div className="start-date-detail">
-                        <p className="title">Start Date:</p>
-                        <div className="start-date-detail-data">
-                            <div className="event-detail-date-display">
-                                <TbTarget className='App-popup-content-icon'/>
-                                <p className="main-data">{taskDetail.startDate[0]}</p>
-                            </div>
-                            <div className="event-detail-time-display">
-                                <TiTime className='App-popup-content-icon'/>
-                                <p className="main-data">{taskDetail.startDate[1].split('.')[0]}</p>
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                    {taskDetail?.endDate?.length === 2 && (
-                    <div className="end-date-detail">
-                        <p className="title">End Date:</p>
-                        <div className="end-date-detail-data">
-                            <div className="event-detail-date-display">
-                                <TbTargetArrow className='App-popup-content-icon'/>
-                                <p className="main-data">{taskDetail.endDate[0]}</p>
-                            </div>
-                            <div className="event-detail-time-display">
-                                <TiTime className='App-popup-content-icon'/>
-                                <p className="main-data">{taskDetail.endDate[1].split('.')[0]}</p>
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                </div>
-                
-                <div className="event-button-group">
-                    <SecondaryButton 
-                        text='Delete Task'
-                        onClick={() => toggleShowDelete()}
-                    />
                 </div>
             </div>
-        </div>
+        )}
+        </>
+        
     )
 }
 

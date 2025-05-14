@@ -115,7 +115,7 @@ const TaskDetail = ({task, onClose, onUpdate}: TaskDetailProps) => {
                 </div>
                 <div className="emp-task-detail-content">
                     <div className="task-detail-description">
-                        <FaClipboardList className='App-popup-content-icon'/>
+                        <FaClipboardList className='App-popup-content-icon task-detail-description-icon'/>
                         <p 
                             className="main-data"
                             dangerouslySetInnerHTML={{ __html: formatTextForDisplay(task.taskDescription) }}
@@ -132,11 +132,11 @@ const TaskDetail = ({task, onClose, onUpdate}: TaskDetailProps) => {
                         </div>
                         <div className="start-date-detail-data">    
                             <div className="event-detail-date-display">
-                                <HiMiniViewfinderCircle className='App-popup-content-icon'/>
+                                <HiMiniViewfinderCircle className='App-popup-content-icon task-detail-description-icon'/>
                                 <p className="main-data">{taskDetail.createdOn[0]}</p>
                             </div>
                             <div className="event-detail-time-display">
-                                <TiTime className='App-popup-content-icon'/>
+                                <TiTime className='App-popup-content-icon task-detail-description-icon'/>
                                 <p className="main-data">{taskDetail.createdOn[1]}</p>
                             </div>
                         </div>
@@ -146,11 +146,11 @@ const TaskDetail = ({task, onClose, onUpdate}: TaskDetailProps) => {
                             <p className="title">Start Date:</p>
                             <div className="start-date-detail-data">
                                 <div className="event-detail-date-display">
-                                    <TbTarget className='App-popup-content-icon'/>
+                                    <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
                                     <p className="main-data">{taskDetail.startDate[0]}</p>
                                 </div>
                                 <div className="event-detail-time-display">
-                                    <TiTime className='App-popup-content-icon'/>
+                                    <TiTime className='App-popup-content-icon task-detail-description-icon'/>
                                     <p className="main-data">{taskDetail.startDate[1]}</p>
                                 </div>
                             </div>
@@ -159,11 +159,11 @@ const TaskDetail = ({task, onClose, onUpdate}: TaskDetailProps) => {
                             <p className="title">End Date:</p>
                             <div className="end-date-detail-data">
                                 <div className="event-detail-date-display">
-                                    <TbTargetArrow className='App-popup-content-icon'/>
+                                    <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
                                     <p className="main-data">{taskDetail.endDate[0]}</p>
                                 </div>
                                 <div className="event-detail-time-display">
-                                    <TiTime className='App-popup-content-icon'/>
+                                    <TiTime className='App-popup-content-icon task-detail-description-icon'/>
                                     <p className="main-data">{taskDetail.endDate[1]}</p>
                                 </div>
                             </div>
