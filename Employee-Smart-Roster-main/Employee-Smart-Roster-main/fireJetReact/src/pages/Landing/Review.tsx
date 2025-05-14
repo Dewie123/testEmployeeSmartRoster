@@ -26,10 +26,10 @@ const Reviews = () => {
 
   const filteredReviews = reviews.filter((review) => {
     const reviewYear = new Date(review.createdOn).getFullYear();
-    return review.rating >= 4 && reviewYear === currentYear; //to return our current year only (2025)
+    return review.rating >= 4; //to return our current year only (2025)
   });
 
-  const shouldScroll = filteredReviews.length > 5;
+  const shouldScroll = filteredReviews.length > 3;
 
   return (
     <div className="reviews-section">
