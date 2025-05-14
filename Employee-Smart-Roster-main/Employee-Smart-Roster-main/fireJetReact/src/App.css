@@ -843,6 +843,10 @@ option:checked {
     font-size: var(--secondary-text-m);
   }
 
+    .App-content {
+      flex-direction: column;
+    }
+
   .App-popup-content  {
     .App-popup-main-content {
       .App-popup-content-icon {

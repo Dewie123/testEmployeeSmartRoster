@@ -1,5 +1,7 @@
 .primary-button {
     display: flex;
+    flex-direction: row;
+    gap: 10px;
     align-items: center;
     justify-content: center;
     border-style: solid;
@@ -19,6 +21,10 @@
     border-radius: 15px;
     padding: 8px 20px;
     max-height: fit-content;
+  }
+
+  .primary-button-icon {
+    font-size: 17px;
   }
   
   .primary-button:hover {

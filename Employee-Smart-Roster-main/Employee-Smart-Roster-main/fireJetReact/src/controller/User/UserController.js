@@ -121,10 +121,6 @@ function getUserOwnesCompany (users, companyID) {
     return userOwnes
 }
 
-function setUser(updatedData){
-    console.log(updatedData)
-}
-
 function handleUserAccStatusFilter(companies, accStatus) {
     const filteredData = companies.filter((company) => {
         const dataAccStatus = company.owner.isSuspended
@@ -285,7 +281,6 @@ export default {
     validatePhoneNo,
     handleFilterRole,
     getUserOwnesCompany,
-    setUser,
     handleUserAccStatusFilter,
     getBOUsers,
     handleSuspendUser,

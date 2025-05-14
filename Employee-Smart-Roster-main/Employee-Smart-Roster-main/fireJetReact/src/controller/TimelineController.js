@@ -203,14 +203,14 @@ async function editTask (values) {
     // console.log(values.noOfEmp)
 
     const body = {
-        taskID: values.taskID,
+        taskID: Number(values.taskID),
         title: values.title,
         taskDescription: values.taskDescription,
-        roleID: values.roleID,
-        skillSetID: values.skillSetID,
+        roleID: Number(values.roleID),
+        skillSetID: Number(values.skillSetID),
         startDate: start,
         endDate: end, 
-        noOfEmp: values.noOfEmp
+        noOfEmp: Number(values.noOfEmp)
     };
     // console.log(body)
 
@@ -230,7 +230,7 @@ async function editTask (values) {
         return await data;
     } catch(error) {
         console.error(`Network error for UID ${uid}: \n`, error);
-        throw new Error(`Failed to fetch company data: ${error.message}`);
+        throw new Error(`Failed to edit task: ${error.message}`);
     }
 }
 
@@ -443,6 +443,123 @@ async function empUpdateTaskProgress (uid, taskID, status) {
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+// Swap Time Management
+/////////////////////////////////////////////////////////////////////////////////////
+// Fetch other tasks for showing to swap
+async function viewOtherTasksToSwap (boUID, roleID, skillSetID, empUID) {
+    
+    const body = {
+        business_owner_id: boUID,
+        roleID: roleID,
+        skillsetID: skillSetID,
+        employee_user_id: empUID
+    };
+    // console.log(body)
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/task/view/sameroleandskillset', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to update the task progress: ${error.message}`);
+    }
+}
+
+async function viewAllSwapTime (uid) {
+    const body = {
+        employee_user_id: uid,
+    };
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/swaprequest/view', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to update the task progress: ${error.message}`);
+    }
+}
+
+async function submitSwapTime (uid, requestTo, taskID, reason) {
+    const body = {
+        employee_user_id: uid,
+        target_employee_user_id: requestTo,
+        employee_task_id: taskID,
+        swapReason: reason
+    };
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/swaprequest/add', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to update the task progress: ${error.message}`);
+    }
+}
+
+async function updateSwapTimeStatus (uid, swapID, status, reason, taskID, target_taskID) {
+    const body = {
+        swapReqID: swapID,
+        status: status,
+        user_id: uid,
+        target_swap_user_id: reason,
+        taskID: taskID,
+        target_taskID: target_taskID
+    };
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/swaprequest/status/update', {
+            method: 'PATCH',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to update the task progress: ${error.message}`);
+    }
+}
+
 export default {
     createNewTimeline, 
     getTimelines,
@@ -462,4 +579,8 @@ export default {
     empGetAllTask,
     empUpdateTaskProgress,
     isSameTimelineCreated,
+    viewOtherTasksToSwap,
+    viewAllSwapTime,
+    submitSwapTime,
+    updateSwapTimeStatus
 }
