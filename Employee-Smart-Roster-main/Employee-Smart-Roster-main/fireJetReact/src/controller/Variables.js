@@ -23,6 +23,8 @@ export const PASS_TYPE = ['Singapore Citizen/PR', 'Employment Pass', 'S Pass', '
 export const IS_ACC_SUSPENDED = ['Activated', 'Suspended'];
 export const ISSUES_CATEGORY = ['Schedule Management', 'Attendance', 'Resources Allocation', 'Employee Management', 'Company Profile', 'Leave and MC Management']
 export const ISSUES_LOG_STATUS = ['Pending Response', 'In Progress', 'Pending User', 'Response Resolved'];
+export const LEAVE_TYPE = ['Vacation Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave', 'MC'];
+export const LEAVE_STATUS = ['Pending', 'Approved', 'Rejected', 'Cancelled']
 
 // SG MOM Rules: last update on 20 Apr 2025
 // MC: https://www.mom.gov.sg/employment-practices/leave/sick-leave/eligibility-and-entitlement
@@ -155,20 +157,6 @@ export async function encodeFileContent(file) {
             // reader.result looks like: "data:application/pdf;base64,..."
             const base64String = reader.result.split(',')[1]; // remove prefix
             resolve(base64String);
-        };
-
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
-export async function encodeVideoFileContent(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            // reader.result looks like: "data:application/pdf;base64,..."
-            resolve(reader.result);
         };
 
         reader.onerror = reject;

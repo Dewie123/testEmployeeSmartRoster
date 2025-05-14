@@ -1,6 +1,3 @@
-import { encodeVideoFileContent } from '../controller/Variables.js'
-import fs from 'fs';
-
 async function uploadLandingVideo(video, videoName) {
     const fileName = video.name
     // console.log(fileName)
