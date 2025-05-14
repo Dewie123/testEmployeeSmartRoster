@@ -14,7 +14,6 @@ import "../../../../../public/styles/common.css"
 
 interface TaskProps {
     isCreate: boolean;
-    selectedTask?: any;
     allTasksAllocation?: any;
     selectedTaskTimeline?: any;
     onTaskUpdate?: (updateTask: any) => void;
@@ -26,17 +25,20 @@ const { getRoleNameForEmp, getSkillNameForEmp } = BOEmployeeController;
 const CreateOEditTask = ({
     isCreate, allTasksAllocation, selectedTaskTimeline, onTaskUpdate
 } : TaskProps) => {
+    // console.log(allTasksAllocation)
     const { user } = useAuth();
     const { showAlert } = useAlert();
     const navigate = useNavigate();
     const [ allRoles, setAllRoles ] = useState<any>([]);
     const [ allSkillsets, setAllSkillsets ] = useState<any>([]);
     const location = useLocation();
+    const isInTimeline = location.pathname.includes('timeline-tasks-list')
+    
     const navState = location.state as {
         defaultValues?: any;
         defaultTimelineValues?: any;
-        allRoles?: any[];
-        allSkillsets?: any[];
+        allRoles?: any;
+        allSkillsets?: any;
     };
     const initialStartDate = new Date();
     const initialEndDate = new Date();
@@ -60,15 +62,15 @@ const CreateOEditTask = ({
         try {
             // Fetch Roles
             let roles = await getCompanyRoles(user?.UID);
-            roles = roles.roleName
+            roles = roles.roleName || []
             // console.log(roles)
-            setAllRoles(Array.isArray(roles) ? roles : [])
+            setAllRoles(roles)
 
             // Fetch Skillsets
             let skillsets = await getCompanySkillsets(user?.UID);
-            skillsets = skillsets.skillSets
+            skillsets = skillsets.skillSets || []
             // console.log(skillsets)
-            setAllSkillsets(Array.isArray(skillsets) ? skillsets : [])
+            setAllSkillsets(skillsets)
         } catch (error) {
             showAlert(
                 "fetchRolesNSkillsets",
@@ -107,76 +109,66 @@ const CreateOEditTask = ({
         if(!isCreate) {
             // console.log(selectedTaskTimeline, allTasksAllocation)
             // Pre-processing for the task allocated to multiple employees
-            if(allTasksAllocation.length > 0) {
-                const formattedTasksAllocation = allTasksAllocation.map((task: any) => {
-                    const role = getRoleNameForEmp(allRoles, task.rolesNeeded);
-                    const roleID = role[0].roleName
-                    const skillset = getSkillNameForEmp(allSkillsets, task.skillSetNeeded);
-                    const skillSetID = skillset[0].skillSetName
-                    const startDate = formatDateArrToDisplayInDateTimeInput(task.startDate);
-                    const endDate = formatDateArrToDisplayInDateTimeInput(task.endDate);
+            const formattedTasksAllocation = allTasksAllocation.map((task: any) => {
+                const role = getRoleNameForEmp(allRoles, task.rolesNeeded);
+                const roleID = role[0].roleName
+                const skillset = getSkillNameForEmp(allSkillsets, task.skillSetNeeded);
+                const skillSetID = skillset[0].skillSetName
+                const startDate = formatDateArrToDisplayInDateTimeInput(task.startDate);
+                const endDate = formatDateArrToDisplayInDateTimeInput(task.endDate);
 
-                    return {
-                        ...task,
-                        roleID: roleID,
-                        skillSetID: skillSetID,
-                        startDate: startDate,
-                        endDate: endDate,
-                    }
-                })
-                // console.log(formattedTasksAllocation)
-                navigate('/edit-task', {
-                    state: {
-                        defaultValues: formattedTasksAllocation[0],
-                        defaultTimelineValues: selectedTaskTimeline,
-                        allRoles,
-                        allSkillsets
-                    }
-                })
-            }
+                return {
+                    ...task,
+                    roleID: roleID,
+                    skillSetID: skillSetID,
+                    startDate: startDate,
+                    endDate: endDate,
+                }
+            })
+            // console.log(formattedTasksAllocation)
+            navigate('/edit-task', {
+                state: {
+                    defaultValues: formattedTasksAllocation[0],
+                    defaultTimelineValues: selectedTaskTimeline,
+                    allRoles,
+                    allSkillsets
+                }
+            })
         }
     }
 
-    // Create new task
-    if (isCreate && navState && allRoles && allSkillsets) {
+    // Direct Form Rendering when Creating or Editing
+    if (!isInTimeline && navState && allRoles.length > 0 && allSkillsets.length > 0) {
         return (
             <CreateEditTask
-                isCreate={true}
+                isCreate={isCreate}
                 bo_UID={user?.UID}
-                defaultTaskValues={navState.defaultValues}
-                defaultTimelineValues={navState.defaultTimelineValues}
-                allRoles={navState.allRoles}
-                allSkillsets={navState.allSkillsets}
-            />
-        );
-    }
-    // Edit Task form
-    if (!isCreate && navState && allRoles && allSkillsets) {
-        return (
-            <CreateEditTask
-                isCreate={false}
-                bo_UID={user?.UID}
-                defaultTaskValues={navState.defaultValues}
-                defaultTimelineValues={navState.defaultTimelineValues}
-                allRoles={navState.allRoles}
-                allSkillsets={navState.allSkillsets}
+                defaultTaskValues={navState.defaultValues || {}}
+                defaultTimelineValues={navState.defaultTimelineValues || {}}
+                allRoles={navState.allRoles || []}
+                allSkillsets={navState.allSkillsets || []}
             />
         );
     }
 
     return (
         <>
-        {isCreate ? (
-            <PrimaryButton 
-                text='Create New Task'
-                onClick={() => toggleShowTaskForm()}
-            />
-        ):(
-            <FaRegEdit
-                className="edit-task-icon icons"
-                onClick={() => toggleShowTaskForm()}
-            />
+        {allRoles.length > 0  && allSkillsets.length > 0 && (
+            <>
+            {isCreate ? (
+                <PrimaryButton 
+                    text='Create New Task'
+                    onClick={() => toggleShowTaskForm()}
+                />
+            ):(
+                <FaRegEdit
+                    className="edit-task-icon icons"
+                    onClick={() => toggleShowTaskForm()}
+                />
+            )}
+            </>
         )}
+        
         </>
     )
 }

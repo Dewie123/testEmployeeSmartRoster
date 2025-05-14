@@ -22,10 +22,9 @@ const AllTasksInTimeline = () => {
     // console.log(state)
     const [ allTasks, setAllTasks ] = useState<any>([])
     const [ showTaskDetail, setShowTaskDetail ] = useState(false)
+    const [ taskAllocationDetail, setTaskAllocationDetail ] = useState<any>([])
     const [ selectedTask, setSelectedTask ] = useState({})
-
-    // If no timeline
-    if(!state?.timeline) return (<div>No Timeline Data Provided</div>)
+    // console.log(state.allTasks)
 
     const fetchTasksInTimeline = async () => {
         try {
@@ -33,6 +32,7 @@ const AllTasksInTimeline = () => {
             if(tasks.message === 'Tasks retrieved successfully.') {
                 tasks = tasks.timelineTasks || []
                 // console.log(tasks)
+                // console.log(mergedTasks)
                 setAllTasks(tasks)
             }
         } catch (error) {
@@ -46,11 +46,27 @@ const AllTasksInTimeline = () => {
     };
     useEffect(() => { fetchTasksInTimeline() }, [state?.timeline])
 
-    function toggleShowTaskDetail(task: any) {
-        // console.log(task)
-        setSelectedTask(task)
-        setShowTaskDetail(!showTaskDetail)
+    function triggerSelectedTask(task: any) {
+        const selected = state.allTasks.filter((item: any) => {
+            return item.taskID === task.taskID
+        })
+        if(selected.length > 0) {
+            setSelectedTask(selected[0]);
+            setShowTaskDetail(true);
+        }  
     }
+
+    function triggerCloseSelectedTask() {
+        setSelectedTask([]);
+        setShowTaskDetail(false);
+    }
+
+    // If no timeline
+    if(!state?.timeline || !state?.allTasks) return (
+        <div>
+            No Timeline Data Provided
+        </div>
+    )
 
     return(
         <div className="App-content">
@@ -73,7 +89,7 @@ const AllTasksInTimeline = () => {
                         <div 
                             key={task.taskID} 
                             className="App-timeline-item"
-                            onClick={() => toggleShowTaskDetail(task)}
+                            onClick={() => triggerSelectedTask(task)}
                         >
                             {/* Timeline Point (Icon) */}
                             <div className="App-timeline-point">
@@ -85,7 +101,7 @@ const AllTasksInTimeline = () => {
                                 <div className='App-timeline-task-title-container'>
                                     <div className='App-timeline-task-title'>
                                         <FaCircle 
-                                            className={`task-status
+                                            className={`task-status 
                                                         ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
                                                         ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
                                             style={{ fontSize: '12px', minWidth: '12px', minHeight: '12px' }}
@@ -93,7 +109,7 @@ const AllTasksInTimeline = () => {
                                         <h3 className="App-timeline-task-title">{task.title}</h3>
                                     </div>
                                     <p className="App-timeline-time">
-                                        <FaClock></FaClock>
+                                        <FaClock/>
                                         {formatDisplayDateTime(task.startDate)}
                                     </p>
 
@@ -110,8 +126,7 @@ const AllTasksInTimeline = () => {
                 {showTaskDetail && selectedTask && (
                     <EventDetail 
                         task={selectedTask}
-                        onClose={() => toggleShowTaskDetail({})}
-                        // onUpdate={handleUpdateTask}
+                        onClose={triggerCloseSelectedTask}
                     />
                 )}
                 </>  

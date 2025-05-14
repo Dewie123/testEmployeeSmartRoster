@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAlert } from "../../../../components/PromptAlert/AlertContext";
 import { formatDisplayDateTime, formatTextForDisplay, generateSGDateTimeForDateTimeInput } from "../../../../controller/Variables";
 import TimelineForm from "./TimelineForm";
@@ -68,32 +68,34 @@ const CreateEditTask = ({
     })
     // Initialize default values
     useEffect(() => {
-        // console.log(defaultTaskValues)
-        const role = getRoleIdForEmp(allRoles, defaultTaskValues.roleID)
-        const skillsetsForRole = getSkillsetsForARole(role[0].roleID, allSkillsets)
-        // console.log(role)
-        // Find number of available employee for default value
-        findNoOfEmpAvailable(0, role[0].roleID, skillsetsForRole[0].skillSetID)
-        // Set default task value and skiset for select with default value
-        let values = [{
-            ...defaultTaskValues,
-            isExpended: true,
-            skillsetForSelect: skillsetsForRole,
-            availableEmp: tasksValues[0].availableEmp
-        }]
-        setTasksValues(values)
-        // Set default timeline value
-        setTimelineValues(defaultTimelineValues)
-        // console.log(defaultTimelineValues)
-        
-        // If is edit task
-        if(!isCreate){
-            // console.log(values)
-            setOriginalTasks(values) // Store original value
-            if(defaultTimelineValues)
-                setIsHavingTimeline(true)
+        if(allRoles.length > 0 && allSkillsets.length > 0) {
+            // console.log(location.state.defaultTaskValues)
+            const role = getRoleIdForEmp(allRoles, defaultTaskValues.roleID)
+            const skillsetsForRole = getSkillsetsForARole(role[0].roleID, allSkillsets)
+            // console.log(role)
+            // Find number of available employee for default value
+            findNoOfEmpAvailable(0, role[0].roleID, skillsetsForRole[0].skillSetID)
+            // Set default task value and skiset for select with default value
+            let values = [{
+                ...defaultTaskValues,
+                isExpended: true,
+                skillsetForSelect: skillsetsForRole,
+                availableEmp: tasksValues[0].availableEmp
+            }]
+            setTasksValues(values)
+            // Set default timeline value
+            setTimelineValues(defaultTimelineValues)
+            // console.log(defaultTimelineValues)
+            
+            // If is edit task
+            if(!isCreate){
+                // console.log(values)
+                setOriginalTasks(values) // Store original value
+                if(defaultTimelineValues)
+                    setIsHavingTimeline(true)
+            }
         }
-    }, [defaultTaskValues, defaultTimelineValues])
+    }, [defaultTaskValues, defaultTimelineValues, allRoles, allSkillsets])
 
     // Handle add more task
     const handleAddMoreTask = () => {

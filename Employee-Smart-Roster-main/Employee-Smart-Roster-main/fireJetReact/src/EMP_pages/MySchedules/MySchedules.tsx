@@ -89,7 +89,7 @@ const EmpViewSchedule = () => {
                                         <h3 className="App-timeline-task-title">{task.title}</h3>
                                     </div>
                                     <p className="App-timeline-time">
-                                        <FaClock></FaClock>
+                                        <FaClock />
                                         {formatDisplayDateTime(task.startDate)}
                                     </p>
 
@@ -102,6 +102,12 @@ const EmpViewSchedule = () => {
                             </div>
                         </div>
                     ))}
+                </div>
+            </div>
+            <div className="content">
+                <h1>Swap Time Management</h1>
+                <div className="submitted-time-swap">
+                    
                 </div>
             </div>
         </div>
