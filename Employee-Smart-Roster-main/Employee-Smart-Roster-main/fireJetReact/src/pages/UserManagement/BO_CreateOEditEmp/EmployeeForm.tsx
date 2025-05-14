@@ -552,7 +552,7 @@ const CreateEditAccount = ({
                             </label>
                         ))}
                     </div>
-                    {/* Input Employee Name */}
+                    {/* Input Employee Date */}
                     <div className='forms-input'>
                         <strong>
                             Date Joined <span style={{ color: 'red' }}>*</span>
@@ -562,6 +562,7 @@ const CreateEditAccount = ({
                                 name='dateJoined' 
                                 value={employeeData.dateJoined}
                                 onChange={(e) => handleInputChange(e)}
+                                disabled={!isCreate}
                                 required
                             />
                         </div>

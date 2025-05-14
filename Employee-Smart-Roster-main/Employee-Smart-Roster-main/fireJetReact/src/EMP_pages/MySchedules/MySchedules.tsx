@@ -94,9 +94,18 @@ const EmpViewSchedule = () => {
                 response = response.employeeProfile || []
                 const filteredTaskAllocatedToSameEmp = response.filter((task: any) => {
                     return task.user_id !== user?.UID
-                })
-                setTasksAvailableForSwap(response)
-                setShowTasksForSwap(true)
+                }) || []
+                // console.log(filteredTaskAllocatedToSameEmp)
+                setTasksAvailableForSwap(filteredTaskAllocatedToSameEmp)
+                if(filteredTaskAllocatedToSameEmp.length > 0)
+                    setShowTasksForSwap(true)
+                else
+                    showAlert(
+                        'triggerAvailableTasksForSwap',
+                        '',
+                        `No other task(s) available for swap`,
+                        { type: 'info' }
+                    );
             }
         } catch (error) {
             showAlert(

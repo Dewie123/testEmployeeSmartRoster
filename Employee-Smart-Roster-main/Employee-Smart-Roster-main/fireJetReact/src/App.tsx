@@ -16,7 +16,8 @@ import SideMenu_t from "./components/SideMenu/SideMenu_t";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import ReportIssues from "./pages/ReportIssues/ReportIssues";
 import UserMgts from "./pages/UserManagement/UserMgts";
-import IssueDetail from './pages/ReportIssues/IssuesDetail'
+import IssueDetail from './pages/ReportIssues/IssuesDetail';
+import LeaveManagement from "./pages/LeaveManagement/LeaveManagement";
 
 // Pages for System Admin
 import SADash from "./SA_pages/Dashboard/SADash";
@@ -29,7 +30,7 @@ import FAQManagement from "./SA_pages/FAQ/FAQMgt";
 
 // Pages for Busines Owner
 import RequiredCompleteProfile from "./BO_pages/FirstLogin/RequiredCompleteProfile";
-import RoleNSkillset from "./BO_pages/Not Used/RoleNSkillsets/RoleNSkillset";
+// import RoleNSkillset from "./BO_pages/Not Used/RoleNSkillsets/RoleNSkillset";
 import BODashboard from "./BO_pages/Dashboard/Dashboard";
 import CreateOEditTask from "./BO_pages/ViewTimelines/components/CreateOEdit/CreateOEdit";
 import BOCompanyProfile from "./BO_pages/CompanyProfile/CompanyProfile";
@@ -364,7 +365,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
+              <Route
+                path="/my-leave-management"
+                element={
+                  <ProtectedRoute>
+                    <SideMenu_t />
+                    <LeaveManagement />
+                  </ProtectedRoute>
+                }
+              />
+          
               <Route
                 path="/view-rating"
                 element={

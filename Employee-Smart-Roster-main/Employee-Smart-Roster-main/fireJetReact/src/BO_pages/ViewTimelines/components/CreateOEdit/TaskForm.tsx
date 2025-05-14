@@ -89,13 +89,14 @@ const CreateEditTask = ({
             
             // If is edit task
             if(!isCreate){
-                // console.log(values)
+                // console.log(defaultTimelineValues)
                 setOriginalTasks(values) // Store original value
                 if(defaultTimelineValues)
                     setIsHavingTimeline(true)
             }
         }
     }, [defaultTaskValues, defaultTimelineValues, allRoles, allSkillsets])
+    // useEffect(() => {console.log(timelineValues)}, [defaultTimelineValues])
 
     // Handle add more task
     const handleAddMoreTask = () => {
@@ -412,18 +413,21 @@ const CreateEditTask = ({
                     );
                     toggleConfirmation()
 
-                    if(originalTasks.noOfEmp !== tasksValues[0].noOfEmp){
+                    if(originalTasks.noOfEmp !== tasksValues[0].noOfEmp
+                        || originalTasks.rolesNeeded !== roleID[0].roleName
+                        || originalTasks.skillSetNeeded !== skillSetID[0].skillSetName
+                    ){
                         // Start task allocation
                         let allocationRes = await handleTaskAutoAllocation(bo_UID);
                         allocationRes = JSON.parse(allocationRes.body)
-                        console.log("Tasks Allocation: ", allocationRes)
+                        // console.log("Tasks Allocation: ", allocationRes)
                         if(allocationRes.message === "Auto-allocation process completed."){
                             let allAllocatedTasks = allocationRes.assignedTasks || [];
-                            if(allAllocatedTasks) {
+                            if(allAllocatedTasks.length > 0) {
                                 allAllocatedTasks = allAllocatedTasks.filter((task: any) => {
-                                    return task.taskID === response.TaskIDCreated
+                                    return task.taskID === tasksValues[0].taskID
                                 })
-                                console.log("Filtered task allocation: ", allAllocatedTasks)
+                                // console.log("Filtered task allocation: ", allAllocatedTasks)
                                 setTasksNAllocationValues({
                                     ...tasksValues[0],
                                     assignedEmployees: allAllocatedTasks.map((allocation: any) => ({
@@ -446,24 +450,18 @@ const CreateEditTask = ({
                                 }
                             }
                             else {
-                                setIsTaskAssigned(true) // Set assignation completed
+                                // setIsTaskAssigned(true) // Set assignation completed
                                 showAlert(
-                                    "Task Allocation Failed",
-                                    `No Employee Available Matched to The Need`,
-                                    ``,
+                                    "Task Allocation Updated",
+                                    `You have make changed on: `,
+                                    `"${tasksValues[0].title}"`,
                                     { type: 'info' }
                                 )
+                                navigate(-1)
+
                             } 
                         }
                     }
-                } else {
-                    showAlert(
-                        "Task Update Failed",
-                        `Failed to update on: `,
-                        `"${tasksValues[0].title}"`,
-                        { type: 'error' }
-                    );
-                    navigate(-1)
                 }
             } catch(error) {
                 showAlert(
@@ -599,26 +597,28 @@ const CreateEditTask = ({
             </div>
             <div className="create-n-edit-task-form-container">
                 <div className="create-n-edit-task-form-content">
-                    <div className="create-or-view-timeline-info">
-                        <label className="checkbox-container">
-                            Include in project timeline
-                            <input 
-                                type="checkbox" 
-                                checked={isHavingTimeline} 
-                                disabled={isTaskAssigned || !isCreate}
-                                onChange={(e) => setIsHavingTimeline(e.target.checked)}/>
-                            <span className="checkmark"></span>
-                        </label>
-                        {isHavingTimeline && (
-                            <TimelineForm 
-                                isCreateTask={isCreate}
-                                isTaskCreated={isTaskAssigned}
-                                defaultValues={timelineValues}
-                                bo_UID={bo_UID}
-                                newTimelineValue={handleTimelineValueChange}
-                            />
-                        )}
-                    </div>
+                    {(timelineValues.timeLineID || isCreate) && (
+                        <div className="create-or-view-timeline-info">
+                            <label className="checkbox-container">
+                                Include in project timeline
+                                <input 
+                                    type="checkbox" 
+                                    checked={isHavingTimeline} 
+                                    disabled={isTaskAssigned || !isCreate}
+                                    onChange={(e) => setIsHavingTimeline(e.target.checked)}/>
+                                <span className="checkmark"></span>
+                            </label>
+                            {isHavingTimeline && (
+                                <TimelineForm 
+                                    isCreateTask={isCreate}
+                                    isTaskCreated={isTaskAssigned}
+                                    defaultValues={timelineValues}
+                                    bo_UID={bo_UID}
+                                    newTimelineValue={handleTimelineValueChange}
+                                />
+                            )}
+                        </div>
+                    )}
 
                     {tasksValues.map((task, index) => (
                         <div key={index}>
@@ -814,6 +814,7 @@ const CreateEditTask = ({
                         <TaskAssignationInfo 
                             bo_UID={bo_UID} 
                             tasksNAllocationValues={tasksNAllocationValues}
+                            isCreate={isCreate}
                         />
                     </div>
                 )}
@@ -825,9 +826,10 @@ const CreateEditTask = ({
 interface TaskAssignationInfoProps {
     bo_UID: number;
     tasksNAllocationValues: any;
+    isCreate: boolean;
 }
 const TaskAssignationInfo = ({
-    bo_UID, tasksNAllocationValues
+    bo_UID, tasksNAllocationValues, isCreate
 } : TaskAssignationInfoProps) => {
     // console.log(tasksNAllocationValues)
     const navigate = useNavigate()
@@ -850,12 +852,13 @@ const TaskAssignationInfo = ({
 
                 if(task.assignedEmployees.length > 0){
                     // Set allocated task detail to same data returned in employees
-                    const initialSelection = task.assignedEmployees.map((emp:any) => ({
+                    let initialSelection = task.assignedEmployees.map((emp:any) => ({
                         fullName: emp.fullName,
                         user_id: emp.assignedTo,
                         roleID: emp.roleID,
                         skillSetID: emp.skillSetID
                     }))
+
                     // console.log("Initial selection: ", initialSelection)
                     // Merging if available employees are not empty
                     employees = [
@@ -974,46 +977,46 @@ const TaskAssignationInfo = ({
     };
     // Check if all the task selected correct number of employee
     function isAllTaskSelectedTrueNoOfEmp() {
+        if(isCreate)
+            return allTaskWithAvailableEmps.some((task: any) => 
+                task.selectedEmp.length < task.noOfEmp
+            );
         return allTaskWithAvailableEmps.some((task: any) => 
-            task.selectedEmp.length < task.noOfEmp
+            task.selectedEmp.length < task.noOfEmp - 1
         );
     }
 
     const triggerSubmitConfirmAllocation = async() => {
-        const isEmpChange = (JSON.stringify(allTaskWithAvailableEmps) !== JSON.stringify(originalTasksWithAvailableEmps))
-        if(isEmpChange) {
-            console.log('allocation')
-            for (const task of allTaskWithAvailableEmps) {
-                try {
-                    task.selectedEmp.map(async(allocation: any, index: number) => {
-                        let response = await handleManualUpdateTaskAllocation(
-                            allocation.user_id, task.assignedEmployees[index].taskAllocationID, 
-                            task.title
-                        )
-                        // console.log(response)
-                        if(response.message === 'Employee has been reassigned successfully')
-                            showAlert(
-                                "Task Created Created",
-                                `${task.title} was created and allocated`,
-                                ``,
-                                { type: 'success' }
-                            );
-                        else
-                            showAlert(
-                                "Task Created Created",
-                                `${task.title} was created and allocated base on system allocation`,
-                                ``,
-                                { type: 'success' }
-                            );
-                    })
-                } catch(error) {
-                    showAlert(
-                        "triggerSubmitConfirmAllocation",
-                        `Failed to Update Allocation Confirmation`,
-                        error instanceof Error ? error.message : String(error),
-                        { type: 'error' }
-                    );
-                }
+        for (const task of allTaskWithAvailableEmps) {
+            try {
+                task.selectedEmp.map(async(allocation: any, index: number) => {
+                    let response = await handleManualUpdateTaskAllocation(
+                        allocation.user_id, task.assignedEmployees[index].taskAllocationID, 
+                        task.title
+                    )
+                    // console.log(response)
+                    if(response.message === 'Employee has been reassigned successfully')
+                        showAlert(
+                            "Task Created Created",
+                            `${task.title} was created and allocated`,
+                            ``,
+                            { type: 'success' }
+                        );
+                    else
+                        showAlert(
+                            "Task Created Created",
+                            `${task.title} was created and allocated base on system allocation`,
+                            ``,
+                            { type: 'success' }
+                        );
+                })
+            } catch(error) {
+                showAlert(
+                    "triggerSubmitConfirmAllocation",
+                    `Failed to Update Allocation Confirmation`,
+                    error instanceof Error ? error.message : String(error),
+                    { type: 'error' }
+                );
             }
         }
         navigate(-1)
@@ -1097,11 +1100,20 @@ const TaskAssignationInfo = ({
             ))}
             <div className="btn-grp">
                 <span>The auto allocation is auto saved even you exit this page</span>
-                <PrimaryButton 
-                    text="Confirm Allocation"
-                    disabled={isAllTaskSelectedTrueNoOfEmp()}
-                    onClick={() => triggerSubmitConfirmAllocation()}
-                />
+                {isCreate ? (
+                    <PrimaryButton 
+                        text="Confirm Allocation"
+                        disabled={isAllTaskSelectedTrueNoOfEmp()}
+                        onClick={() => triggerSubmitConfirmAllocation()}
+                    />
+                ) : (
+                    <PrimaryButton 
+                        text="Confirm Allocation"
+                        disabled={isAllTaskSelectedTrueNoOfEmp()}
+                        onClick={() => triggerSubmitConfirmAllocation()}
+                    />
+                )}
+                
             </div>
             </>
         ) : (

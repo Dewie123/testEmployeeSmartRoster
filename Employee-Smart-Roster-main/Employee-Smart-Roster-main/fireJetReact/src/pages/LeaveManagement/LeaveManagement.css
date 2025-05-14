@@ -1,0 +1,39 @@
+.leave-mgt-page-title {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: start;
+    align-items: center;
+}
+
+.leave-request-confirmation {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    gap: 10px;
+
+    .leave-request-confirmation-detail {
+        display: flex;
+        justify-content: start;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        
+        .title {
+            min-width: 130px;
+        }
+    }
+    .odd-row {
+        background-color: var(--light-color-text);
+    }
+}
+
+/* Mobile (all screens below 768px) */
+@media only screen and (max-width: 768px) {
+    .leave-request-confirmation-detail {
+        flex-direction: column;
+    }
+}
