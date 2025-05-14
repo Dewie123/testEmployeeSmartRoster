@@ -351,4 +351,3 @@ const getDummySubscriptionPlans = () => {
 
 
 export default { getHeading, getVideo, getReview, getFAQ, getSubscriptionPlan};
-

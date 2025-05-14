@@ -44,23 +44,21 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
         const skillsets = handleFindSkillToSelectedRole(filterRole)
         setSkillsetForSelectedRole(skillsets)
         filtered = handleFilterRole(filtered, Number(filterRole))
+
+        if(filterSkill !== 'All') {
+          filtered = handleFilterSkill(filtered, Number(filterSkill))
+          // console.log("Filtered role", skillsets)
+        }
+        filtered = handleFilterPassType(filtered, filterPassType)
+        filtered = handleFilterNricOName(filtered, filterNameOnric)
+
         // console.log("Filtered role", filtered)
       } else {
+        filtered = handleFilterEmpAccStatus(allUsers, filterAccStatus);
+        filtered = handleFilterPassType(filtered, filterPassType)
+        filtered = handleFilterNricOName(filtered, filterNameOnric)
         setSkillsetForSelectedRole([]); // Clear skillsets if all roles selected
       }
-
-      if(filterSkill !== 'All') {
-        filtered = handleFilterSkill(filtered, Number(filterSkill))
-        // console.log("Filtered role", skillsets)
-      }
-
-      if(filterPassType !== 'All')
-        filtered = handleFilterPassType(filtered, filterPassType)
-      
-      filtered = handleFilterNricOName(filtered, filterNameOnric)
-
-      if(filterRole === 'All')
-        filtered = allUsers
       // console.log("Filtered User: ", filtered)
       setFilteredUsers(filtered);
     } catch (err) {
@@ -144,8 +142,8 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
               <select 
                   value={filterSkill}
                   onChange={(e) => setFilterSkill(e.target.value)}
+                  disabled = {skillsetForSelectedRole.length === 0}
               >
-                {skillsetForSelectedRole.length === 0 && <option value="All">ALL</option>}
                 {skillsetForSelectedRole.map((skill:any) => (
                   <option key={skill.skillSetID} value={skill.skillSetID}>
                     {skill.skillSetName}
@@ -160,7 +158,6 @@ const EmpList = ({empUsers, roles, skillsets}: EMPListProps) => {
                   value={filterPassType}
                   onChange={(e) => setFilterPassType(e.target.value)}
               >
-                <option value="All">ALL</option>
                 {PASS_TYPE.map((pass:any) => (
                   <option key={pass} value={pass}>
                     {pass}

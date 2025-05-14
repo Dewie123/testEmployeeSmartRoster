@@ -5,6 +5,7 @@ import { AlertProvider } from "./components/PromptAlert/AlertContext";
 import Alert from "./components/PromptAlert/Alert";
 
 // Pages or Component for general use
+import LandingPage from "./pages/LandingPage/LandingPage";
 import EmpRosterChat from "./components/chatBox/ChatBox";
 import Login from "./pages/RegistrationNLogin/Login";  // Import Login component
 import Register from "./pages/RegistrationNLogin/Registration";
@@ -62,6 +63,7 @@ function App() {
           <div className="App-content" >
             <Routes>
               {/* Route for General pages */}
+              <Route path="/home1" element={<LandingPage />} />
               <Route path="/home" element={<GuestLanding />} />
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/register" element={<Register />} />

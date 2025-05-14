@@ -41,8 +41,25 @@ const Navbar = () => {
         }
     };
 
+    const handleLoginClick = () => navigate("/login");
+    const handleRegisterClick = () => navigate("/register");
+
+    const handleScrollToSection = (e: React.MouseEvent, targetId: string) => {
+        e.preventDefault();
+        const element = document.getElementById(targetId);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // Update URL
+            // window.history.pushState(null, '', `#${targetId}`);
+        }
+    };
+
     return (
-        <div>
+        <>
             {isLoggedIn 
              && !isOnLanding
              && !isOnLogin
@@ -88,7 +105,54 @@ const Navbar = () => {
                     </div>
                 </div>
             )}
-        </div>
+            
+            {isOnLanding && (
+                <div className="navbar">
+                    <div className="nav-button hamburger-menu-icon">
+                        <SideMenu_m />
+                    </div>
+                    <div className="front">
+                        {user?.role === USER_ROLE[0] && (
+                            <Link to="/admin-dashboard" className="nav-link">
+                                <img src={appLogo} alt="Dashboard"></img>
+                            </Link>
+                        )}
+                        {user?.role === USER_ROLE[1] && (
+                            <Link to="/business-dashboard" className="nav-link">
+                                <img src={appLogo} alt="Dashboard"></img>
+                            </Link>
+                        )}
+                        {user?.role === USER_ROLE[2] && (
+                            <Link to="/employee-dashboard" className="nav-link">
+                                <img src={appLogo} alt="Dashboard"></img>
+                            </Link>
+                        )}
+                    </div>
+                    <div className="btn-group">
+                        <div className="landing-navbar-menu-wrapper">
+                            <a href="#subscription" className="landing-navbar-nav-link"onClick={(e) => handleScrollToSection(e, "subscription")}>Plans</a>
+                            <a href="#reviews" className="landing-navbar-nav-link" onClick={(e) => handleScrollToSection(e, "reviews")}>Reviews</a>
+                            <a href="#faq" className="landing-navbar-nav-link"  onClick={(e) => handleScrollToSection(e, "faq")}>FAQ</a>
+                            <button
+                                className="landing-navbar-nav-button"
+                                onClick={handleLoginClick}
+                                disabled={isOnPreviewLanding}
+                            >
+                                Login
+                            </button>
+                            <button
+                                className="landing-navbar-nav-button"
+                                onClick={handleRegisterClick}
+                                disabled={isOnPreviewLanding}
+                            >
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+        
     );
 };
 

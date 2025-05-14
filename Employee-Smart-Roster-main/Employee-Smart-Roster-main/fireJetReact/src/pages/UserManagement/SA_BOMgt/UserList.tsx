@@ -85,6 +85,7 @@ const BOUserList = ({boUsers = []}: BOListProps) => {
             let filtered = handleFilterSubsStatus(allCompanies, filterSubsStatus);
             // Filter with Business Owner Acc Status
             filtered = handleUserAccStatusFilter(filtered, filterAccStatus);
+            
             // Filter with UEN or BizName
             filtered = handleFilterUENBizName(filtered, filterUENOBizName);
             setCompanies(filtered);
@@ -97,6 +98,8 @@ const BOUserList = ({boUsers = []}: BOListProps) => {
             );
         }
     }
+
+
     // Auto trigger when filter subscription status, account status, and all companies data change
     useEffect(() => { triggerFilterBOData(); }, [
         filterSubsStatus, 
