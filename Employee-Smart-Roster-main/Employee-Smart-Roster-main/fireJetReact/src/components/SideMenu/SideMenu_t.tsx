@@ -1,7 +1,7 @@
 import { useAuth } from "../../AuthContext";
 import { USER_ROLE } from "../../controller/Variables";
 import { BsShopWindow } from "react-icons/bs";
-import { MdOutlineBugReport } from "react-icons/md";
+import { MdOutlineBugReport, MdFiberSmartRecord } from "react-icons/md";
 import { LuUserCog } from "react-icons/lu";
 import { GrSchedules } from "react-icons/gr";
 import { FaHeartCircleExclamation, FaUsersViewfinder } from "react-icons/fa6";
@@ -33,12 +33,12 @@ export const SA_Items = [
             }
         ]
     },
-    {
-        name: 'issue',
-        label: 'ISSUES REPORTED',
-        navHref: '/issues-reported',
-        src: <MdOutlineBugReport className="menu-icon"/>,
-    },
+    // {
+    //     name: 'issue',
+    //     label: 'ISSUES REPORTED',
+    //     navHref: '/issues-reported',
+    //     src: <MdOutlineBugReport className="menu-icon"/>,
+    // },
     {
         name: 'landing',
         label: 'LANDING PAGE MANAGEMENT',
@@ -114,12 +114,12 @@ export const BO_Items = [
                 },
             ]
         },
-        {
-            name: 'reportIssues',
-            label: 'REPORT ISSUES',
-            navHref: '/report-issues',
-            src: <MdOutlineBugReport className="menu-icon"/>,
-        },
+        // {
+        //     name: 'reportIssues',
+        //     label: 'REPORT ISSUES',
+        //     navHref: '/report-issues',
+        //     src: <MdOutlineBugReport className="menu-icon"/>,
+        // },
         {
             name: 'reviwRating',
             label: 'REVIEW & RATING MANAGEMENT',
@@ -130,26 +130,33 @@ export const BO_Items = [
 
 export const EMP_Items = [
     {
-        name: 'timelineManagement',
-        label: 'TIMELINE MANAGEMENT',
+        name: 'mySchedule',
+        label: 'MY SCHEDULES',
+        navHref: '/my-schedule',
         src: <GrSchedules className="menu-icon"/>,
-        items: [
-            {
-                name: 'mySchedule',
-                label: 'My Schedules',
-                navHref: '/my-schedule',
-            },
-            {
-            name: 'attendanceRecord',
-            label: 'Attendance Record',
-            navHref: '/view-attendance-record',
-            },
-            {
-            name: 'swapTime',
-            label: 'Swap Time Management',
-            navHref: '/swap-time-management',
-            },
-        ]
+    },
+    {
+        name: 'attendanceRecord',
+        label: 'ATTENDANCE RECORD',
+        navHref: '/view-attendance-record',
+        src: <MdFiberSmartRecord className="menu-icon"/>,
+        // items: [
+        //     // {
+        //     //     name: 'mySchedule',
+        //     //     label: 'My Schedules',
+        //     //     navHref: '/my-schedule',
+        //     // },
+        //     {
+        //     name: 'attendanceRecord',
+        //     label: 'Attendance Record',
+        //     navHref: '/view-attendance-record',
+        //     },
+        //     // {
+        //     // name: 'swapTime',
+        //     // label: 'Swap Time Management',
+        //     // navHref: '/swap-time-management',
+        //     // },
+        // ]
     },
     {
         name: 'leaveManagement',
@@ -157,12 +164,12 @@ export const EMP_Items = [
         navHref: '/my-leave-management',
         src: <FaHeartCircleExclamation className="menu-icon"/>,
     },
-    {
-        name: 'reportIssues',
-        label: 'REPORT ISSUES',
-        navHref: '/report-issues',
-        src: <MdOutlineBugReport className="menu-icon"/>,
-    },
+    // {
+    //     name: 'reportIssues',
+    //     label: 'REPORT ISSUES',
+    //     navHref: '/report-issues',
+    //     src: <MdOutlineBugReport className="menu-icon"/>,
+    // },
 ]
 
 const SideMenu_t = () => {

@@ -37,3 +37,9 @@
     border: none;
     cursor: default;
   }
+  .primary-button:disabled:hover {
+    background-color: var(--secondary-background);
+    border: none;
+    color: white;
+    cursor: default;
+  }
