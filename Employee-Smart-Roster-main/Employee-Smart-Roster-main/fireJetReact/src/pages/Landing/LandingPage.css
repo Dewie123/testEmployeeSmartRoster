@@ -7,8 +7,9 @@
 html {
   scroll-behavior: smooth;
 }
-#subscription,
+/* #subscription,
 #reviews,
 #faq {
-  scroll-margin-top: 55px; /* Adjust this value to match your header's height */
-}
+  scroll-margin-top: 55px;  */
+  /* Adjust this value to match your header's height */
+/* } */

@@ -63,8 +63,8 @@ function App() {
           <div className="App-content" >
             <Routes>
               {/* Route for General pages */}
-              <Route path="/home1" element={<LandingPage />} />
-              <Route path="/home" element={<GuestLanding />} />
+              <Route path="/home" element={<LandingPage />} />
+              <Route path="/home1" element={<GuestLanding />} />
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/register" element={<Register />} />
               <Route path="/reset-pw/:email" element={<ResetPassword />} />

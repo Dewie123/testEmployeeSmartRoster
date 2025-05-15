@@ -1,7 +1,7 @@
 import { encodeVideoFileContent } from '../controller/Variables.js'
 import fs from 'fs';
 
-async function uploadLandingVideo(video, videoName) {
+async function uploadLandingVideo(video, videoName, videoDescription) {
     const fileName = video.name
     // console.log(fileName)
     const videoTitle = videoName
@@ -10,7 +10,8 @@ async function uploadLandingVideo(video, videoName) {
     const body = {
         fileName,
         fileType,
-        videoTitle
+        videoTitle,
+        videoDescription
     }
 
     try {
@@ -57,7 +58,6 @@ async function getDemoVideo(fileName) {
         const body = {
             fileName
         };
-
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/s3/video/download', {
             method: 'GET',
             // body: JSON.stringify(body),
@@ -83,7 +83,6 @@ async function getDemoVideo(fileName) {
 async function getAllUploadedVideos() {
     try{
         const body = {
-            
         };
 
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/systemadmin/video/view', {
@@ -140,11 +139,36 @@ async function setVideoDisplayOnLanding(videoID) {
     }
 }
 
+async function setVideoDelete(videoID) {
+    try{
+        const body = {
+            videoID: videoID
+        };
+
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/s3/video/delete', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+        return await data;
+
+    } catch(error) {
+        // console.error(`Failed to register: \n`, error);
+        throw new Error(`Failed to delete videos: ${error.message}`);
+    }
+}
 
 export default { 
     uploadLandingVideo,
     getDemoVideo,
     getAllUploadedVideos,
     filterIsShownVideo,
-    setVideoDisplayOnLanding
+    setVideoDisplayOnLanding,
+    setVideoDelete
 }

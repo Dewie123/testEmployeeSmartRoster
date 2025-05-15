@@ -9,11 +9,12 @@ import './VideoMgt.css'
 import '../../../public/styles/common.css'
 
 const { uploadLandingVideo, getDemoVideo, getAllUploadedVideos,
-        filterIsShownVideo, setVideoDisplayOnLanding } = SA_LandingMgtController
+        setVideoDelete, filterIsShownVideo, setVideoDisplayOnLanding } = SA_LandingMgtController
 
 const VideoMgt: React.FC = () => {
     const { showAlert } = useAlert();
     const [ newVideoTitle, setNewVideoTitle ] = useState<string>('')
+    const [ newVideoDescription, setNewVideoDescription ] = useState<string>('')
     const [ uploadedDemoVideo, setUploadedDemoVideo ] = useState<File | null>(null);
     const [ videoPreview, setVideoPreview ] = useState<string>('')
     const [ fileStatus, setFileStatus ] = useState<
@@ -21,6 +22,7 @@ const VideoMgt: React.FC = () => {
     >('initial');
     const [ allVideos, setAllVideos ] = useState<any>([]);
     const [uploading, setUploading] = useState<boolean>(false)
+
 
     const fetchVideos = async() => {
         try {
@@ -32,10 +34,10 @@ const VideoMgt: React.FC = () => {
                 .sort((a: any, b: any) => b.id - a.id); // Sort by descending order of ID
 
                 setAllVideos(response)
-                // Get video shown in landing page as default preview video
-                const defaultPreview = filterIsShownVideo(response, 1)
+                // Get video shown in = 0 landing page as default preview video
+                const defaultPreview = filterIsShownVideo(response,0)
                 // console.log(defaultPreview.url)
-                if (defaultPreview) {
+                if (defaultPreview && response.length > 0) {
                     setVideoPreview(defaultPreview[0].url); // Use the existing URL
                 }
             }
@@ -59,17 +61,27 @@ const VideoMgt: React.FC = () => {
         }
     };
 
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
     // UPLOAD NEW VIDEO
     const triggerUploadVideo = async() => {
         if (uploadedDemoVideo) {
             try {
                 setUploading(true)
                 setFileStatus('uploading')
-                await uploadLandingVideo(uploadedDemoVideo, newVideoTitle)
+                await uploadLandingVideo(uploadedDemoVideo, newVideoTitle, newVideoDescription)
+
                 setUploading(false)
                 setFileStatus('success');
                 setUploadedDemoVideo(null);
                 setNewVideoTitle('');
+                setNewVideoDescription('');
+                setVideoPreview('');
+                
+                if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+
                 fetchVideos(); // re-fetch video
             } catch(error) {
                 setUploading(false)
@@ -101,8 +113,8 @@ const VideoMgt: React.FC = () => {
         }
     }
 
-    // console.log(videoPreview)
 
+    // console.log(videoPreview)
     // Trigger selected video
     const triggerChangeVideoDisplayOnLanding = async(id: number, url: string) => {
         try {
@@ -134,6 +146,32 @@ const VideoMgt: React.FC = () => {
 
     // console.log(uploading)
 
+    // Trigger selected video
+    const triggerDeleteVideo = async(id: number) => {
+        try {
+            let response = await setVideoDelete(id)
+            // console.log("Delete Video: ", response)
+            // updateDisplayStatus(id)
+            if(response.message === 'Successfully deleted Demo Video'){
+                deleteVideo(id)
+            }
+        } catch(error) {
+            showAlert(
+                'triggerDeleteVideo',
+                'Failed to Delete Selected Video',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            )
+        }
+    }
+    // Update delete video locally
+    function deleteVideo(id: number) {
+        const videos = allVideos.filter((video: any) => {
+            video.id !== id
+        })
+        setAllVideos(videos)
+    }
+
     return(
         <div className="App-content">
             <div className="content">
@@ -149,12 +187,14 @@ const VideoMgt: React.FC = () => {
                                 (
                                     !uploadedDemoVideo 
                                     || !newVideoTitle 
+                                    || !newVideoDescription
                                     || uploading
                                 ) ? 'disabled' : ''
                             }`}
                             disabled={
                                 !uploadedDemoVideo 
                                 || !newVideoTitle 
+                                || !newVideoDescription
                                 || uploading
                             }
                             onClick={triggerUploadVideo}
@@ -168,13 +208,23 @@ const VideoMgt: React.FC = () => {
                             className='video-title-input'
                             name='videoTitle'
                             placeholder='Video Name'
+                            value={newVideoTitle}
                             onChange={(e) => setNewVideoTitle(e.target.value)}
+                            required
+                        />
+                        <input type='text' 
+                            className='video-title-input'
+                            name='videoDescription'
+                            placeholder='Video Description'
+                            value={newVideoDescription}
+                            onChange={(e) => setNewVideoDescription(e.target.value)}
                             required
                         />
                         <input type='file' 
                             name='uploadVideo'
                             accept=".mp4"
                             onChange={handleFileChange}
+                            ref={fileInputRef}
                             required
                         />
                     </div>
@@ -204,9 +254,9 @@ const VideoMgt: React.FC = () => {
                             videos={allVideos}
                             updatePreviewVideo={triggerSelectVideo}
                             updateLandingVideo={triggerChangeVideoDisplayOnLanding}
+                            deleteVideo={triggerDeleteVideo}                  
                         /> 
                     </div>
-                    
                 ):(
                     <p>No Uploaded Video(s)</p>
                 )}

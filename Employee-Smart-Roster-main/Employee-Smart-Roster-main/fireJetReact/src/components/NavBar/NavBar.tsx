@@ -112,36 +112,28 @@ const Navbar = () => {
                         <SideMenu_m />
                     </div>
                     <div className="front">
-                        {user?.role === USER_ROLE[0] && (
-                            <Link to="/admin-dashboard" className="nav-link">
-                                <img src={appLogo} alt="Dashboard"></img>
-                            </Link>
-                        )}
-                        {user?.role === USER_ROLE[1] && (
-                            <Link to="/business-dashboard" className="nav-link">
-                                <img src={appLogo} alt="Dashboard"></img>
-                            </Link>
-                        )}
-                        {user?.role === USER_ROLE[2] && (
-                            <Link to="/employee-dashboard" className="nav-link">
-                                <img src={appLogo} alt="Dashboard"></img>
-                            </Link>
-                        )}
+                        <a href="#faq" className="nav-link" onClick={(e) => handleScrollToSection(e, "top")}> 
+                            <img src={appLogo} alt="Dashboard"></img>
+                        </a>
                     </div>
+
+                    <div className="landing-navbar-navlink-group"> 
+                       {/* <a href="#subscription" className="landing-navbar-navlink"onClick={(e) => handleScrollToSection(e, "subscription")}>Plans</a> */}
+                        <a href="#reviews" className="landing-navbar-navlink" onClick={(e) => handleScrollToSection(e, "reviews")}>Reviews</a>
+                        <a href="#faq" className="landing-navbar-navlink"  onClick={(e) => handleScrollToSection(e, "faq")}>FAQ</a>
+                    </div>
+
                     <div className="btn-group">
-                        <div className="landing-navbar-menu-wrapper">
-                            <a href="#subscription" className="landing-navbar-nav-link"onClick={(e) => handleScrollToSection(e, "subscription")}>Plans</a>
-                            <a href="#reviews" className="landing-navbar-nav-link" onClick={(e) => handleScrollToSection(e, "reviews")}>Reviews</a>
-                            <a href="#faq" className="landing-navbar-nav-link"  onClick={(e) => handleScrollToSection(e, "faq")}>FAQ</a>
+                        <div className="landing-navbar-LR">
                             <button
-                                className="landing-navbar-nav-button"
+                                className="landing-navbar-button-LR"
                                 onClick={handleLoginClick}
                                 disabled={isOnPreviewLanding}
                             >
                                 Login
                             </button>
                             <button
-                                className="landing-navbar-nav-button"
+                                className="landing-navbar-button-LR"
                                 onClick={handleRegisterClick}
                                 disabled={isOnPreviewLanding}
                             >
