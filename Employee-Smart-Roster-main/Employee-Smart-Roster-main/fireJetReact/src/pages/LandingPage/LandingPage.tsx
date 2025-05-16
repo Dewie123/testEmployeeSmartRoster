@@ -216,33 +216,32 @@ const LandingPage = () => {
         </div>
 
         <div className="video-tabs-container">
-          <button 
-            className="dropdown" 
-            onClick={() => setShowTabs(!showTabs)}
-            aria-label="Toggle video tabs"
-          >
-            <span className="active-video-title">
-              {activeVideo?.title || "Select Video"}
-            </span>
-            <BsChevronDown className="dropdown-icon"/>
-          </button>
-          
-          <div className={`video-tabs ${showTabs ? 'show' : ''}`}>
-            {videos.map((video, index) => (
-              <button
-                key={video.videoID}
-                className={`video-tab ${activeVideo?.videoID === video.videoID ? 'active' : ''}`}
-                onClick={() => {
-                  handleVideoSelect(video, index);
-                  setShowTabs(false);
-                }}
-                aria-current={activeVideo?.videoID === video.videoID}
-              >
-                <span className="tab-title">{video.title}</span>
-              </button>
-            ))}
+            <button 
+              className="dropdown" 
+              onClick={() => setShowTabs(!showTabs)}
+              aria-expanded={showTabs}
+            >
+              <span className="active-video-title">
+                {activeVideo?.title || "Select Video"}
+              </span>
+              <BsChevronDown className={`dropdown-icon ${showTabs ? 'rotated' : ''}`} />
+            </button>
+            
+            <div className={`video-tabs ${showTabs ? 'show' : ''}`}>
+              {videos.map((video,index) => (
+                <button
+                  key={video.videoID}
+                  className={`video-tab ${activeVideo?.videoID === video.videoID ? 'active' : ''}`}
+                  onClick={() => {
+                    handleVideoSelect(video,index);
+                    setShowTabs(false);
+                  }}
+                >
+                  {video.title}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
         <div className={`video-description ${descriptionClass}`}>
           {activeVideo && <p>{activeVideo.video_description}</p>}
