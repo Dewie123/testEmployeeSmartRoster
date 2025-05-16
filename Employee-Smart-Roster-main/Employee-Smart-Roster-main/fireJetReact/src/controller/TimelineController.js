@@ -580,8 +580,8 @@ async function googleCalendarGetAuth(){
 
 async function googleCalendarSync(code,business_owner_id){
     const body = {
-        business_owner_id:business_owner_id,
-        code : code
+        code,
+        business_owner_id
     }
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/googlecalendar/sync', {
