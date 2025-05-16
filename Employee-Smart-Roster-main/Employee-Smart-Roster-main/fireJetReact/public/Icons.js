@@ -28,7 +28,7 @@ import { MdContactPhone,
          MdViewTimeline,
          MdAttachMoney } from "react-icons/md";
 import { RiUserReceived2Fill,
-         RiSwap2Fill } from "react-icons/ri";
+         RiSwap2Fill} from "react-icons/ri";
 import { IoIosWarning } from "react-icons/io";
 import { TiTick, TiTime } from "react-icons/ti";
 import { TbTarget, TbTargetArrow } from "react-icons/tb";
@@ -39,6 +39,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { HiOutlineIdentification } from "react-icons/hi";
 import { FiRefreshCw } from "react-icons/fi";
 import { FaUpload, FaClock } from "react-icons/fa6";
+import { BsChevronDown } from "react-icons/bs";
 import { SiGooglecalendar } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 
@@ -88,6 +89,7 @@ export {
     MdViewTimeline, // Timeline period (from x to y date)
     MdAttachMoney, // Dollar sign
     RiSwap2Fill, // Swap icon
+    BsChevronDown , // Dropdown
     SiGooglecalendar, // Google Icon
     FcGoogle,
 };

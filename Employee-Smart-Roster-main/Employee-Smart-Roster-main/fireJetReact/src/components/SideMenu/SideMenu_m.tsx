@@ -73,6 +73,16 @@ const SideMenu_m: React.FC = () => {
                         
                         {isOnLanding ? (
                             <div className="mobile-landing-navlinks">
+                                <a href="#demo" 
+                                   className="mobile-landing-navlink" 
+                                   onClick={(e) => handleScrollToSection(e, "demo")}>
+                                    Demo
+                                </a>
+                                <a href="#subscription" 
+                                   className="mobile-landing-navlink" 
+                                   onClick={(e) => handleScrollToSection(e, "subscription")}>
+                                    Subscription                                   
+                                </a>
                                 <a href="#reviews" 
                                    className="mobile-landing-navlink" 
                                    onClick={(e) => handleScrollToSection(e, "reviews")}>

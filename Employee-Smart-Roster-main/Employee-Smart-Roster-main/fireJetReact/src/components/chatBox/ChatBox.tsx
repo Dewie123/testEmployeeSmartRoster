@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useAlert } from "../../components/PromptAlert/AlertContext";
 import ChatBot from 'react-simple-chatbot';
@@ -11,6 +11,7 @@ import '../../../public/styles/common.css'
 
 // API call handler
 const { handleSubmitQuesToChatBox } = SAFAQController;
+
 
 // Custom component to fetch and display API answer
 const ApiResponse = ({ previousStep, triggerNextStep }: any) => {
@@ -71,6 +72,84 @@ const EmpRosterChat = () => {
     const isOnResetPw = location.pathname.includes('reset-pw');
     const isOnPreviewLanding = location.pathname.includes('preview-landing-page');
 
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const [position, setPosition] = useState({ 
+    x: window.innerWidth - 82,
+    y: window.innerHeight - 82
+});
+    const isDraggingRef = useRef(false);
+    const initialMouseXRef = useRef(0);
+    const initialMouseYRef = useRef(0);
+    const initialPosXRef = useRef(0);
+    const initialPosYRef = useRef(0);
+    const isDragRef = useRef(false);
+
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (!isDraggingRef.current) return;
+
+        const deltaX = e.clientX - initialMouseXRef.current;
+        const deltaY = e.clientY - initialMouseYRef.current;
+
+        let newX = initialPosXRef.current + deltaX;
+        let newY = initialPosYRef.current + deltaY;
+
+        // Boundary checks
+        const buttonWidth = buttonRef.current?.offsetWidth || 50;
+        const buttonHeight = buttonRef.current?.offsetHeight || 50;
+        
+        // Restrict to left edge
+        newX = Math.max(0, newX);
+        // Restrict to top edge
+        newY = Math.max(0, newY);
+        // Restrict to right edge (window width - button width)
+        newX = Math.min(window.innerWidth - buttonWidth, newX);
+        // Restrict to bottom edge (window height - button height)
+        newY = Math.min(window.innerHeight - buttonHeight, newY);
+
+        setPosition({ x: newX, y: newY });
+
+        if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+            isDragRef.current = true;
+        }
+    }, []);
+
+    // Set initial position when button mounts
+    useEffect(() => {
+        if (buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setPosition({ x: rect.left, y: rect.top });
+        }
+    }, [buttonRef.current]);
+
+    const handleMouseUp = useCallback(() => {
+        isDraggingRef.current = false;
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+    }, [handleMouseMove]);
+
+    const handleClick = useCallback(() => {
+        if (isDragRef.current) {
+            isDragRef.current = false;
+            return;
+        }
+        toggleShowChatBox();
+    }, []);
+    
+    const handleMouseDown = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (!buttonRef.current) return;
+
+        const rect = buttonRef.current.getBoundingClientRect();
+        initialPosXRef.current = rect.left;
+        initialPosYRef.current = rect.top;
+        initialMouseXRef.current = e.clientX;
+        initialMouseYRef.current = e.clientY;
+        isDraggingRef.current = true;
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    }, [handleMouseMove, handleMouseUp]);
+    
 
     const steps = [
         {
@@ -128,7 +207,14 @@ const EmpRosterChat = () => {
         return (
             <button 
                 className={`chatbot-toggle ${showChat ? 'open' : ''}`}
-                onClick={toggleShowChatBox}
+                onClick={handleClick}
+                onMouseDown={handleMouseDown}
+                ref={buttonRef}
+                style={{
+                    position: 'fixed',
+                    left: `${position.x}px`,
+                    top: `${position.y}px`,
+                }}
             >
                 {!showChat  
                     ? <BsChatLeftDotsFill className="chatbot-toggle-icon"/> 

@@ -1,8 +1,19 @@
 import { useState, useEffect } from 'react';
 import { formatDateTime } from '../../controller/Variables.js'
+import { formatTextForDisplay } from '../../controller/Variables.js'
 import './LandingPage.css';
 import LandingController from '../../controller/LandingController';
 import appLogo from "../../../public/assets/Logo.png";
+import {TiTick,BsChevronDown} from "../../../public/Icons.js"
+
+interface Subscription {
+  subsPlanID: number,
+  subscription_name: string,
+  subscription_plan_description: string,
+  price:string,
+  noOfEmps: number,
+  createdAt: string
+}
 
 interface Review {
   reviewID: number;
@@ -29,9 +40,12 @@ type VideoItem = {
   video_description: string;
 };
 
-const { getAllUploadedVideos, getAllReviews, getAllFaqs } = LandingController;
+
+
+const { getAllUploadedVideos, getAllReviews, getAllFaqs, getAllsubscriptions } = LandingController;
 
 const LandingPage = () => {
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [videos, setVideos] = useState<VideoItem[]>([]);
@@ -45,6 +59,7 @@ const LandingPage = () => {
     fetchVideos();
     fetchReviews();
     fetchFaqs();
+    fetchSubscriptions();
   }, []);
 
   const fetchVideos = async () => {
@@ -81,6 +96,29 @@ const LandingPage = () => {
       setFaqs(filteredSortedfaqsList);
     } catch {
       setError("Failed to load FAQs.");
+    }
+  };
+
+  const features: string[] = [
+    "AI ChatBot",
+    "Customisation",
+    "Export Schedules",
+    "Clock in & out",
+    "Generate timesheet",
+    "Shift swapping request",
+    "Auto task assignation",
+    "Leave management",
+    "Task tracking",
+  ];
+
+  const fetchSubscriptions = async () => {
+    try {
+      const response = await getAllsubscriptions();
+      const subscriptionsList = response?.SubscriptionPlan ?? [];
+      setSubscriptions(subscriptionsList);
+      // console.log(subscriptionsList)
+    } catch {
+      setError("Failed to load SubscriptionsList.");
     }
   };
 
@@ -138,6 +176,8 @@ const LandingPage = () => {
     const nextIndex = (currentIndex + 1) % videos.length;
     handleVideoSelect(videos[nextIndex], nextIndex);
   };
+  
+  
 
   return (
     <div className="landing-container">
@@ -154,10 +194,10 @@ const LandingPage = () => {
                 <video
                   autoPlay
                   muted
-                  loop={false}
                   playsInline
                   onLoadStart={() => setVideoLoading(true)}
                   onLoadedData={() => setVideoLoading(false)}
+                  onEnded={() => handleNextVideo()}
                   key={activeVideo.videoID}
                 >
                   <source
@@ -177,14 +217,14 @@ const LandingPage = () => {
 
         <div className="video-tabs-container">
           <button 
-            className="hamburger" 
+            className="dropdown" 
             onClick={() => setShowTabs(!showTabs)}
             aria-label="Toggle video tabs"
           >
-            <span className="hamburger-icon">☰    </span>
             <span className="active-video-title">
               {activeVideo?.title || "Select Video"}
             </span>
+            <BsChevronDown className="dropdown-icon"/>
           </button>
           
           <div className={`video-tabs ${showTabs ? 'show' : ''}`}>
@@ -192,7 +232,10 @@ const LandingPage = () => {
               <button
                 key={video.videoID}
                 className={`video-tab ${activeVideo?.videoID === video.videoID ? 'active' : ''}`}
-                onClick={() => handleVideoSelect(video, index)}
+                onClick={() => {
+                  handleVideoSelect(video, index);
+                  setShowTabs(false);
+                }}
                 aria-current={activeVideo?.videoID === video.videoID}
               >
                 <span className="tab-title">{video.title}</span>
@@ -202,9 +245,33 @@ const LandingPage = () => {
         </div>
 
         <div className={`video-description ${descriptionClass}`}>
-          {activeVideo && <p>"{activeVideo.video_description}"</p>}
+          {activeVideo && <p>{activeVideo.video_description}</p>}
         </div>
+      </section>
+            
 
+      <section className="landing-subscription" id="subscription">
+        <h2>Our Subscription Plans</h2>
+        <div className="subscription-plans-container">
+          {subscriptions.map((subscription) => (
+            <div className="subscription-plan-card" key={subscription.subsPlanID}>
+              <p className="plan">{subscription.subscription_name}</p>
+              <p className="price">${subscription.price} / month</p>
+              <p className="emp-limit heart-beat">{subscription.subscription_plan_description}</p>
+              <ul className="features-list">
+                {features.map((feature, index) => (
+                  <li key={index}>
+                    <TiTick className="feature-tick"/> 
+                    <span className="feature-text">{feature}</span>
+                  </li>
+                ))}
+                </ul>
+              </div>
+            ))}
+        </div>
+        <p className="subscription-disclaimer">
+          *Disclaimer: All users start on the Free Plan by default. To unlock the unlimited employee feature, subscribe for $20/month.
+        </p>
       </section>
 
 
@@ -238,21 +305,16 @@ const LandingPage = () => {
           <div className="landing-faq-list">
             {faqs.map((faq) => (
               <div className="landing-faq-item" key={faq.faqID} aria-expanded={expandedFaqs[faq.faqID] || false}>
-                <div
-                  className="landing-faq-question"
-                  onClick={() => toggleFaq(faq.faqID)}
-                  style={{ cursor: "pointer" }}
-                >
+                <div className="landing-faq-question" onClick={() => toggleFaq(faq.faqID)}>
                   {faq.question_desc}
                   <span>{expandedFaqs[faq.faqID] ? '−' : '+'}</span>
                 </div>
-                <div 
-                  className="landing-faq-answer" 
-                  aria-hidden={!expandedFaqs[faq.faqID]}
-                >
-                  {faq.answer.split("\n").map((line, index) => (
-                    <p key={index}>{line.trim()}</p>
-                  ))}
+                <div className="landing-faq-answer" aria-hidden={!expandedFaqs[faq.faqID]}>
+                  {faq.answer ? (
+                    <p dangerouslySetInnerHTML={{__html: formatTextForDisplay(faq.answer)}}/>
+                  ) : (
+                    <p>No answer available.</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -261,6 +323,7 @@ const LandingPage = () => {
           <p>No FAQs available.</p>
         )}
       </section>
+
 
       <footer className="footer">
         <p>© 2025 EmpRoster. All rights reserved.</p>
