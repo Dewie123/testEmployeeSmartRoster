@@ -109,7 +109,7 @@ const Navbar = () => {
             {isOnLanding && (
                 <div className="navbar">
                     <div className="nav-button hamburger-menu-icon">
-                        <SideMenu_m />
+                        <SideMenu_m/>
                     </div>
                     <div className="front">
                         <a href="#faq" className="nav-link" onClick={(e) => handleScrollToSection(e, "top")}> 

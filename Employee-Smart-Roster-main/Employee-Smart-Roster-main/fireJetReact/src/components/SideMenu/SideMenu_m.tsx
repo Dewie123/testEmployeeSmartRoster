@@ -13,6 +13,8 @@ const SideMenu_m: React.FC = () => {
     const { user } = useAuth();
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const isOnLanding = location.pathname.includes('home') || 
+                       location.pathname.includes('preview-landing-page');
 
     // Close menu when clicking outside or when route changes
     useEffect(() => {
@@ -39,34 +41,66 @@ const SideMenu_m: React.FC = () => {
     const toggleMenu = () => {
         setShowMenu(prev => !prev);
     };
+    
+    const handleScrollToSection = (e: React.MouseEvent, targetId: string) => {
+            e.preventDefault();
+            const element = document.getElementById(targetId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                setShowMenu(false);
+            }
+        };
 
     return (
-        <div className="mobile-menu-container">
-            <RxHamburgerMenu 
-                className="nav-button"
-                onClick={toggleMenu} 
-            />
-            
-            <div className={`mobile-menu-overlay ${showMenu ? 'active' : ''}`}>
-                <div className="mobile-menu-content" ref={menuRef}>
-                    <button 
-                        className="mobile-menu-close" 
-                        onClick={toggleMenu}
-                    >
-                        <RxHamburgerMenu className="nav-button" />
-                    </button>
-                    {user?.role === USER_ROLE[0] && (
-                        <Menu menuItems={SA_Items} responsive="mobile" />
-                    )}
-                    {user?.role === USER_ROLE[1] && (
-                        <Menu menuItems={BO_Items} responsive="mobile" />
-                    )}
-                    {user?.role === USER_ROLE[2] && (
-                        <Menu menuItems={EMP_Items} responsive="mobile" />
-                    )}
+        <>
+            <div className="mobile-menu-container">
+                <RxHamburgerMenu 
+                    className="nav-button"
+                    onClick={toggleMenu} 
+                />
+                
+                <div className={`mobile-menu-overlay ${showMenu ? 'active' : ''}`}>
+                    <div className="mobile-menu-content" ref={menuRef}>
+                        <button 
+                            className="mobile-menu-close" 
+                            onClick={toggleMenu}
+                        >
+                            <RxHamburgerMenu className="nav-button" />
+                        </button>
+                        
+                        {isOnLanding ? (
+                            <div className="mobile-landing-navlinks">
+                                <a href="#reviews" 
+                                   className="mobile-landing-navlink" 
+                                   onClick={(e) => handleScrollToSection(e, "reviews")}>
+                                    Reviews
+                                </a>
+                                <a href="#faq" 
+                                   className="mobile-landing-navlink" 
+                                   onClick={(e) => handleScrollToSection(e, "faq")}>
+                                    FAQ
+                                </a>
+                            </div>
+                        ) : (
+                            <>
+                                {user?.role === USER_ROLE[0] && (
+                                    <Menu menuItems={SA_Items} responsive="mobile" />
+                                )}
+                                {user?.role === USER_ROLE[1] && (
+                                    <Menu menuItems={BO_Items} responsive="mobile" />
+                                )}
+                                {user?.role === USER_ROLE[2] && (
+                                    <Menu menuItems={EMP_Items} responsive="mobile" />
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

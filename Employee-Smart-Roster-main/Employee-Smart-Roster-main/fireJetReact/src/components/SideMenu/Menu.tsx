@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaChevronCircleDown, FaChevronCircleUp } from '../../../public/Icons.js';
+import { FaChevronCircleDown, FaChevronCircleUp, RxHamburgerMenu } from '../../../public/Icons.js';
 import "./menu.css";
 
 interface MenuItem {
@@ -26,6 +26,8 @@ const Menu = ({ menuItems, responsive = 'desktop' }: MenuProps) => {
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const navigate = useNavigate();
     const location = useLocation();
+    const [showMenu, setShowMenu] = useState<boolean>(false);
+    const menuRef = useRef<HTMLDivElement>(null);
     const isOnPreviewLanding = location.pathname.includes('preview-landing-page');
 
     // Initialize expanded state based on current location
@@ -55,9 +57,44 @@ const Menu = ({ menuItems, responsive = 'desktop' }: MenuProps) => {
         }));
     };
 
+    // Close menu when clicking outside or when route changes
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowMenu(false);
+            }
+        };
+
+        if (showMenu) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showMenu]);
+
+    const toggleMenu = () => {
+        setShowMenu(prev => !prev);
+    };
+
+    const handleScrollToSection = (e: React.MouseEvent, targetId: string) => {
+        e.preventDefault();
+        const element = document.getElementById(targetId);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // Update URL
+            // window.history.pushState(null, '', `#${targetId}`);
+        }
+    };
+
     return (
         <>
-        {!isOnPreviewLanding && (
+        {!isOnPreviewLanding ? (
             <div className={`side-menu ${responsive === 'mobile' ? 'mobile' : ''}`}>
                 {menuItems.map(({label, name, navHref, src, items: subItems}) => (
                     <div key={name}>
@@ -109,6 +146,12 @@ const Menu = ({ menuItems, responsive = 'desktop' }: MenuProps) => {
                     </div>
                 ))}
             </div>
+        ):(
+        <div className="landing-navbar-navlink-group"> 
+            {/* <a href="#subscription" className="landing-navbar-navlink"onClick={(e) => handleScrollToSection(e, "subscription")}>Plans</a> */}
+            <a href="#reviews" className="landing-navbar-navlink" onClick={(e) => handleScrollToSection(e, "reviews")}>Reviews</a>
+            <a href="#faq" className="landing-navbar-navlink"  onClick={(e) => handleScrollToSection(e, "faq")}>FAQ</a>
+        </div>    
         )}
         </>
         

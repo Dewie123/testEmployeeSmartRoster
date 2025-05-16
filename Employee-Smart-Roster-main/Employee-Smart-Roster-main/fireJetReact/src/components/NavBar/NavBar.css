@@ -120,4 +120,8 @@ div{
   .hamburger-menu-icon {
     display: flex;
   }
+
+  .landing-navbar-navlink-group {
+    display: none; /* Hide navbar links on mobile */
+  }
 }

@@ -38,6 +38,8 @@ const LandingPage = () => {
   const [activeVideo, setActiveVideo] = useState<VideoItem | null>(null);
   const [expandedFaqs, setExpandedFaqs] = useState<Record<number, boolean>>({});
   const [error, setError] = useState<string>("");
+  const [descriptionClass, setDescriptionClass] = useState<string>('visible');
+
 
   useEffect(() => {
     fetchVideos();
@@ -74,7 +76,9 @@ const LandingPage = () => {
     try {
       const response = await getAllFaqs();
       const faqsList = response?.FAQList ?? [];
-      setFaqs(faqsList);
+      const filteredSortedfaqsList = faqsList
+        .filter((FAQs: any) => FAQs.isShown === 1)
+      setFaqs(filteredSortedfaqsList);
     } catch {
       setError("Failed to load FAQs.");
     }
@@ -83,7 +87,7 @@ const LandingPage = () => {
   const toggleFaq = (faqID: number) => {
     setExpandedFaqs((prev) => ({
       ...prev,
-      [faqID]: !prev[faqID],
+      [faqID]: !prev[faqID]
     }));
   };
 
@@ -96,21 +100,26 @@ const LandingPage = () => {
   const handleVideoSelect = async (video: VideoItem, index: number) => {
     setVideoLoading(true);
     setTransitionClass('video-exit');
-    
-    // Wait for transition out to complete
+    setDescriptionClass('hidden'); // Hide description immediately
+
     await new Promise(resolve => setTimeout(resolve, 200));
     
     setActiveVideo(video);
     setCurrentIndex(index);
     setTransitionClass('video-enter');
     
-    // Wait for transition in to complete
     await new Promise(resolve => setTimeout(resolve, 200));
     
     setTransitionClass('');
     setVideoLoading(false);
-    setShowTabs(false); // Hide tabs on mobile
+    setShowTabs(false);
+
+    // Small delay to ensure DOM update
+    setTimeout(() => {
+      setDescriptionClass('visible');
+    }, 50);
   };
+
 
   // Auto-play next video on video end
   useEffect(() => {
@@ -134,56 +143,68 @@ const LandingPage = () => {
     <div className="landing-container">
       <section className="landing-words-container" id="top">
         <p className='landing-company-name'>EmpRoster</p>
-        <p className='landing-company-description'>hello world 2</p>
+        <p className='landing-company-description'>EmpRoster simplifies employee scheduling with smart rostering, shift management, and time swapping tools — making workforce coordination effortless and efficient.</p>
       </section>
 
       <section className="video-selector-section" id="demo">
-        <div className="video-container">
-          {activeVideo && (
-            <div className={`video-wrapper ${transitionClass}`}>
-              <video
-                autoPlay
-                muted
-                loop={false} // Do not loop the current video, auto-play next instead
-                playsInline
-                onLoadStart={() => setVideoLoading(true)}
-                onLoadedData={() => setVideoLoading(false)}
-                key={activeVideo.videoID}
-              >
-                <source
-                  src={`https://emproster.s3.ap-southeast-2.amazonaws.com/video/${activeVideo.video_link}`}
-                  type="video/mp4"
-                />
-              </video>
-              {videoLoading && (
-                <div className="video-loading">
-                  {/* <div className="loading-spinner"></div> */}
-                </div>
-              )}
-            </div>
-          )}
+        <div className="video-container-wrapper">
+          <div className="video-container">
+            {activeVideo && (
+              <div className={`video-wrapper ${transitionClass}`}>
+                <video
+                  autoPlay
+                  muted
+                  loop={false}
+                  playsInline
+                  onLoadStart={() => setVideoLoading(true)}
+                  onLoadedData={() => setVideoLoading(false)}
+                  key={activeVideo.videoID}
+                >
+                  <source
+                    src={`https://emproster.s3.ap-southeast-2.amazonaws.com/video/${activeVideo.video_link}`}
+                    type="video/mp4"
+                  />
+                </video>
+                {videoLoading && (
+                  <div className="video-loading">
+                    <div className="loading-spinner"></div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="video-tabs-container">
-          <button className="hamburger" onClick={() => setShowTabs(!showTabs)}>
-            ☰
+          <button 
+            className="hamburger" 
+            onClick={() => setShowTabs(!showTabs)}
+            aria-label="Toggle video tabs"
+          >
+            <span className="hamburger-icon">☰    </span>
+            <span className="active-video-title">
+              {activeVideo?.title || "Select Video"}
+            </span>
           </button>
+          
           <div className={`video-tabs ${showTabs ? 'show' : ''}`}>
             {videos.map((video, index) => (
               <button
                 key={video.videoID}
                 className={`video-tab ${activeVideo?.videoID === video.videoID ? 'active' : ''}`}
                 onClick={() => handleVideoSelect(video, index)}
+                aria-current={activeVideo?.videoID === video.videoID}
               >
-                {video.title}
+                <span className="tab-title">{video.title}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="video-description">
-          {activeVideo && <p>{activeVideo.video_description}</p>}
+        <div className={`video-description ${descriptionClass}`}>
+          {activeVideo && <p>"{activeVideo.video_description}"</p>}
         </div>
+
       </section>
 
 
@@ -216,23 +237,23 @@ const LandingPage = () => {
         ) : faqs.length > 0 ? (
           <div className="landing-faq-list">
             {faqs.map((faq) => (
-              <div className="landing-faq-item" key={faq.faqID}>
+              <div className="landing-faq-item" key={faq.faqID} aria-expanded={expandedFaqs[faq.faqID] || false}>
                 <div
                   className="landing-faq-question"
                   onClick={() => toggleFaq(faq.faqID)}
                   style={{ cursor: "pointer" }}
-                  aria-expanded={expandedFaqs[faq.faqID] || false}
                 >
-                  <h3>{faq.question_desc}</h3>
+                  {faq.question_desc}
                   <span>{expandedFaqs[faq.faqID] ? '−' : '+'}</span>
                 </div>
-                {expandedFaqs[faq.faqID] && (
-                  <div className="landing-faq-answer">
-                      {faq.answer.split("\n").map((line, index) => (
-                        <p key={index}>{line.trim()}</p>
-                      ))}
-                  </div>
-                )}
+                <div 
+                  className="landing-faq-answer" 
+                  aria-hidden={!expandedFaqs[faq.faqID]}
+                >
+                  {faq.answer.split("\n").map((line, index) => (
+                    <p key={index}>{line.trim()}</p>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
