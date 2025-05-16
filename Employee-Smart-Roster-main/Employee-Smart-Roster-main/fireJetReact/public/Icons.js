@@ -39,6 +39,8 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { HiOutlineIdentification } from "react-icons/hi";
 import { FiRefreshCw } from "react-icons/fi";
 import { FaUpload, FaClock } from "react-icons/fa6";
+import { SiGooglecalendar } from "react-icons/si";
+import { FcGoogle } from "react-icons/fc";
 
 export {
     LuLogOut,   // Logout icon
@@ -86,4 +88,6 @@ export {
     MdViewTimeline, // Timeline period (from x to y date)
     MdAttachMoney, // Dollar sign
     RiSwap2Fill, // Swap icon
+    SiGooglecalendar, // Google Icon
+    FcGoogle,
 };

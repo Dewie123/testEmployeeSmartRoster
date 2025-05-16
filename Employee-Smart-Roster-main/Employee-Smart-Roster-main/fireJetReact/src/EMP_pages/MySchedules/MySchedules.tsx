@@ -2,20 +2,24 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
 import { formatDisplayDateTime, formatTextForDisplay,
-         TASK_STATUS } from '../../controller/Variables.js'
+         TASK_STATUS, SWAP_REQ_STATUS } from '../../controller/Variables.js'
 import { GrSchedules } from "react-icons/gr";
 import TaskDetail from './components/TaskDetail';
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
+import SecondaryButton from '../../components/SecondaryButton/SecondaryButton';
+import SwapMgt from './components/SwapMgt';
 import TimelineController from '../../controller/TimelineController';
 import UserController from '../../controller/User/UserController';
 
-import { FaCircle, FaClock } from '../../../public/Icons.js'
+import { FaCircle, FaClock, IoClose, FcGoogle,
+         TbTarget, TbTargetArrow, CgProfile } from '../../../public/Icons.js'
 import { RiSwap2Fill } from "react-icons/ri";
 import './MySchedules.css'
 import '../../../public/styles/common.css'
 
 const { empGetUserProfile } = UserController
-const { empGetAllTask, viewOtherTasksToSwap, viewAllSwapTime, 
-        submitSwapTime, updateSwapTimeStatus, getAllTasks , googleCalendarSyncEmployee, googleCalendarGetAuth,googleCalendarGetAuthEmployee} = TimelineController
+const { empGetAllTask, viewOtherTasksToSwap, submitSwapTime, 
+        googleCalendarSyncEmployee, googleCalendarGetAuth, googleCalendarGetAuthEmployee} = TimelineController
 
 const EmpViewSchedule = () => {
     const { showAlert } = useAlert()
@@ -23,6 +27,10 @@ const EmpViewSchedule = () => {
     const [ userProfile, setUserProfile ] = useState<any>([])
     const [ allTasks, setAllTasks ] = useState<any>([])
     const [ tasksAvailableForSwap, setTasksAvailableForSwap ] = useState<any>([])
+    const [ taskSelectedForSwap, setTaskSelectedForSwap ] = useState<any>({})
+    const [ taskTargetedForSwapRequest, setTaskTargetedForSwapRequest ] = useState<any>({})
+    const [ reasonOfSwap, setReasonOfSwap ] = useState<string>('')
+    const [ showPopupSwapReason, setShowPopupSwapReason ] = useState(false)
     const [ showTasksForSwap, setShowTasksForSwap ] = useState(false)
     const [ selectedTasks, setSelectedTasks ] = useState<any>({})
     const [ showTaskDetail, setShowTaskDetail ] = useState(false)
@@ -82,23 +90,25 @@ const EmpViewSchedule = () => {
         )
         setAllTasks(newTask)
     }
+
     // Fetch all other task for swap
-    const triggerAvailableTasksForSwap = async() => {
+    const triggerAvailableTasksForSwap = async(task: any) => {
         try {
+            setTaskSelectedForSwap(task)
             const empData = userProfile.employeeProfile[0] || {}
             let response = await viewOtherTasksToSwap(empData.business_owner_id,
                 empData.roleID, empData.skillSetID, empData.user_id
             )
+            // console.log(response)
             if(response?.message === 'Employee Tasks with similar skillset and role required successfully retrieved'){
-                // console.log(response)
-                response = response.employeeProfile || []
+                response = response.EmployeeTaskListWithSameRequirements || []
                 const filteredTaskAllocatedToSameEmp = response.filter((task: any) => {
                     return task.user_id !== user?.UID
                 }) || []
                 // console.log(filteredTaskAllocatedToSameEmp)
                 setTasksAvailableForSwap(filteredTaskAllocatedToSameEmp)
                 if(filteredTaskAllocatedToSameEmp.length > 0)
-                    setShowTasksForSwap(true)
+                    toggleShowTaskForSwap()
                 else
                     showAlert(
                         'triggerAvailableTasksForSwap',
@@ -116,19 +126,32 @@ const EmpViewSchedule = () => {
             );
         }
     }
+    
+    // Open or hide popup for other task for swap
+    function toggleShowTaskForSwap() {
+        setShowTasksForSwap(!showTasksForSwap)
+    }
 
     const triggerCreateNewSwapRequest = async() => {
         try {
             const empData = userProfile.employeeProfile || {}
-            let response = await submitSwapTime(empData.business_owner_id,
-                empData.roleID, empData.skillSetID, empData.user_id
+            // console.log(empData)
+            let response = await submitSwapTime(empData[0].user_id,
+                taskTargetedForSwapRequest.user_id, taskSelectedForSwap.taskID, 
+                taskTargetedForSwapRequest.taskID, reasonOfSwap
             )
-            console.log(response)
-            // if(response.message === 'Task  successfully retrieved') {
-            //     response = response.EmployeeTasks || []
-            //     // console.log(response)
-            //     setAllTasks(response)
-            // }
+            // console.log(response)
+            if(response.message === 'Swap Request successfully added') {
+                toggleShowTaskSwapReason({})
+                showAlert(
+                    'Swap Time Request Submitted Successfully',
+                    '',
+                    `${taskSelectedForSwap.title} → ${taskTargetedForSwapRequest.title}`,
+                    { type: 'info' }
+                );
+                toggleShowTaskForSwap()
+                // setAllTasks(response)
+            }
         } catch (error) {
             showAlert(
                 'fetchAllTasks',
@@ -146,12 +169,12 @@ const EmpViewSchedule = () => {
     const code = urlParams.get('code');
 
         if (code) {
-            console.log("OAuth Code detected in URL:", code);
+            // console.log("OAuth Code detected in URL:", code);
 
             const syncGoogleCalendar = async () => {
                 try {
                     const result = await googleCalendarSyncEmployee({ code, user_id: user?.UID });
-                    console.log("Google Calendar Synced:", result);
+                    // console.log("Google Calendar Synced:", result);
 
                     showAlert(
                         "Google Calendar",
@@ -194,21 +217,176 @@ const EmpViewSchedule = () => {
         }
     };
 
+    function toggleShowTaskSwapReason(task: any) {
+        setShowPopupSwapReason(!showPopupSwapReason)
+        setTaskTargetedForSwapRequest(task)
+    }
+
+    if(showPopupSwapReason) return (
+            <div className="App-popup" onClick={() => toggleShowTaskSwapReason({})}>
+                <div className="App-popup-prompt-content confirm-user-profile-completion" onClick={(e) => e.stopPropagation()}>
+                    <p className="App-prompt-confirmation-title App-header">
+                        Confirm to Swap Request 
+                    </p>
+                    <div className="confirmation-detail">
+                        <div className="swap-task-reason-popup-content">
+                            <div className="leave-info-data leave-info-data-type-header-text">
+                                <p className="title">Swapping Task</p>
+                                <p className="main-data">{taskSelectedForSwap.title}&#8594;{taskTargetedForSwapRequest.title}</p>
+                            </div>
+                            <div className="orginal-start-end-vs-swapped-start-end">
+                                <div className="swapped-start-end card">
+                                    <h4>Current Task Duration:</h4>
+                                    <div className="start-date-detail">
+                                        <p className="title">Start Date:</p>
+                                        <div className="start-date-detail-data">
+                                            <div className="event-detail-date-display">
+                                                <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
+                                                <p className="main-data">{formatDisplayDateTime(taskSelectedForSwap.startDate)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="end-date-detail">
+                                        <p className="title">End Date:</p>
+                                        <div className="end-date-detail-data">
+                                            <div className="event-detail-date-display">
+                                                <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
+                                                <p className="main-data">{formatDisplayDateTime(taskSelectedForSwap.endDate)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="swapped-start-end card">
+                                    <h4>Selected Swap Task Duration:</h4>
+                                    <div className="start-date-detail">
+                                        <p className="title">Start Date:</p>
+                                        <div className="start-date-detail-data">
+                                            <div className="event-detail-date-display">
+                                                <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
+                                                <p className="main-data">{formatDisplayDateTime(taskTargetedForSwapRequest.startDate)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="end-date-detail">
+                                        <p className="title">End Date:</p>
+                                        <div className="end-date-detail-data">
+                                            <div className="event-detail-date-display">
+                                                <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
+                                                <p className="main-data">{formatDisplayDateTime(taskTargetedForSwapRequest.endDate)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="App-filter-container uen-company-name">
+                                <input type='text' 
+                                    className='reason-input'
+                                    placeholder='Reason of Reject' 
+                                    onChange={(e) => setReasonOfSwap(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="btns-grp">
+                        <PrimaryButton 
+                            text="Confirm" 
+                            onClick={() => triggerCreateNewSwapRequest()}
+                        />
+                        <SecondaryButton 
+                            text="Cancel" 
+                            onClick={() => toggleShowTaskSwapReason({})}
+                        />
+                    </div>
+                </div>
+            </div>
+        )
+
+    if(showTasksForSwap) return (
+        <div className="App-popup" onClick={toggleShowTaskForSwap}>
+            <div className="App-popup-content" onClick={(e) => e.stopPropagation()}>
+                <div className="App-header">
+                    <h1>Other Available Tasks for Swap</h1>
+                    <IoClose className='icons' onClick={toggleShowTaskForSwap}/>
+                </div>
+                <div className="other-tasks-for-swap-container">
+                    <div className="App-timeline">
+                        {/* Timeline Line (Vertical) */}
+                        <div className="App-timeline-line"></div>
+                        {tasksAvailableForSwap.map((task: any) => (
+                            <div key={task.taskID} className="App-timeline-item">
+                                {/* Timeline Point (Icon) */}
+                                <div className="App-timeline-point">
+                                    <GrSchedules className="App-timeline-icon" />
+                                </div>
+
+                                {/* Timeline Content */}
+                                <div className="App-timeline-content">
+                                    <div className='App-timeline-task-title-container'>
+                                        <div className='App-timeline-task-title'>
+                                            <FaCircle 
+                                                className={`task-status
+                                                            ${task.status === TASK_STATUS[1] ? 'in-progress' : ''}
+                                                            ${task.status === TASK_STATUS[2] ? 'completed' : ''}`}
+                                                style={{ fontSize: '12px', minWidth: '12px', minHeight: '12px' }}
+                                            />
+                                            <h3 className="App-timeline-task-title">{task.title}</h3>
+                                        </div>
+                                        <p className="App-timeline-time">
+                                            <FaClock />
+                                            {formatDisplayDateTime(task.startDate)}
+                                        </p>
+
+                                    </div>
+                                    <hr className="App-timeline-divider" />
+                                    <p className="App-timeline-task-description task-for-swap-allocated-to">
+                                        <CgProfile />{task.fullName}
+                                    </p>
+                                    <p
+                                        className="App-timeline-task-description"
+                                        dangerouslySetInnerHTML={{ __html: formatTextForDisplay(task.taskDescription) }}
+                                    />
+                                    <div 
+                                        className='emp-timeline-button-container'
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <button 
+                                            className="primary-button"
+                                            onClick={() => toggleShowTaskSwapReason(task)}
+                                        >
+                                            <RiSwap2Fill className='primary-button-icon'/>
+                                            Swap
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+
     return(
         <>
         <div className="App-content">
             <div className="content">
-                <h1>My Schedules</h1>
-                <button onClick={handleConnectGoogleCalendar} style={{ marginRight: '1rem' }}>
-                    google calendar button 
-                </button>
+                <div className="my-schedule-page-header">
+                    <h1>My Schedules</h1>
+                    <button 
+                        className='sync-google-calendar-button primary-button'
+                        onClick={handleConnectGoogleCalendar} 
+                        style={{ marginRight: '1rem' }}
+                    >
+                        <FcGoogle className='google-calenar-icon'/>Sync My Schedule 
+                    </button>
+                </div>
                 <div className="App-timeline">
                     {/* Timeline Line (Vertical) */}
                     <div className="App-timeline-line"></div>
                     {/* Timeline Items */}
                     {allTasks.length > 0 && allTasks.map((task: any) => (
                         <div key={task.taskID} className="App-timeline-item">
-
                             {/* Timeline Point (Icon) */}
                             <div className="App-timeline-point">
                                 <GrSchedules className="App-timeline-icon" />
@@ -246,7 +424,7 @@ const EmpViewSchedule = () => {
                                 >
                                     <button 
                                         className="primary-button"
-                                        onClick={triggerAvailableTasksForSwap}
+                                        onClick={() => triggerAvailableTasksForSwap(task)}
                                     >
                                         <RiSwap2Fill className='primary-button-icon'/>
                                         Request Swap
@@ -257,12 +435,7 @@ const EmpViewSchedule = () => {
                     ))}
                 </div>
             </div>
-            <div className="content">
-                <h1>Swap Time Management</h1>
-                <div className="submitted-time-swap">
-
-                </div>
-            </div>
+            <SwapMgt />
         </div>
         {showTaskDetail && selectedTasks && (
             <TaskDetail 

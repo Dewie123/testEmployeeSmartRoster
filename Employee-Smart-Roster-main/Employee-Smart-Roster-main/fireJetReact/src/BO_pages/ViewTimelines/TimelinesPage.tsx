@@ -6,6 +6,7 @@ import CreateOEditTask from './components/CreateOEdit/CreateOEdit'
 // import MonthCalendar from '../../components/Timelines/NotUsed/MonthCalendar'
 import MonthCalendar from './components/BigCalendar'
 
+import { FcGoogle } from '../../../public/Icons.js'
 import './TimelinesPage.css'
 import '../../../public/styles/common.css'
 
@@ -107,10 +108,14 @@ const BOTimelinesPage = () => {
                     <CreateOEditTask 
                         isCreate={true}
                     />
+                    <button 
+                        className='sync-google-calendar-button primary-button'
+                        onClick={handleConnectGoogleCalendar} 
+                        style={{ marginRight: '1rem' }}
+                    >
+                        <FcGoogle className='google-calenar-icon'/>Sync My Schedule 
+                    </button>
                 </div>
-                <button onClick={handleConnectGoogleCalendar} style={{ marginRight: '1rem' }}>
-                    google calendar button 
-                </button>
                 <MonthCalendar 
                     tasks={allTasks} 
                     onDelete={handleDeleteTask}

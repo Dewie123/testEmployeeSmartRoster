@@ -476,7 +476,32 @@ async function viewOtherTasksToSwap (boUID, roleID, skillSetID, empUID) {
         throw new Error(`Failed to update the task progress: ${error.message}`);
     }
 }
+// All received swap time
+async function viewAllIncomingSwapTime (uid) {
+    const body = {
+        employee_user_id: uid,
+    };
 
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/swaprequest/incoming/view', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to update the task progress: ${error.message}`);
+    }
+}
+// All submitted swap time
 async function viewAllSwapTime (uid) {
     const body = {
         employee_user_id: uid,
@@ -502,13 +527,15 @@ async function viewAllSwapTime (uid) {
     }
 }
 
-async function submitSwapTime (uid, requestTo, taskID, reason) {
+async function submitSwapTime (uid, requestTo, taskID, target_taskID, reason) {
     const body = {
         employee_user_id: uid,
         target_employee_user_id: requestTo,
         employee_task_id: taskID,
+        target_employee_task_id: target_taskID,
         swapReason: reason
     };
+    // console.log(body)
 
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/swaprequest/add', {
@@ -658,6 +685,7 @@ export default {
     empUpdateTaskProgress,
     isSameTimelineCreated,
     viewOtherTasksToSwap,
+    viewAllIncomingSwapTime,
     viewAllSwapTime,
     submitSwapTime,
     updateSwapTimeStatus,

@@ -25,6 +25,7 @@ export const ISSUES_CATEGORY = ['Schedule Management', 'Attendance', 'Resources 
 export const ISSUES_LOG_STATUS = ['Pending Response', 'In Progress', 'Pending User', 'Response Resolved'];
 export const LEAVE_TYPE = ['Vacation Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave', 'MC'];
 export const LEAVE_STATUS = ['Pending', 'Approved', 'Rejected', 'Cancelled']
+export const SWAP_REQ_STATUS = ['Pending', 'Approved', 'Rejected', 'Cancelled']
 
 // SG MOM Rules: last update on 20 Apr 2025
 // MC: https://www.mom.gov.sg/employment-practices/leave/sick-leave/eligibility-and-entitlement
