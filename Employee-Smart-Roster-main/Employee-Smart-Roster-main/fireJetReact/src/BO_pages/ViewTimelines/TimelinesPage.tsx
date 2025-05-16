@@ -9,7 +9,7 @@ import MonthCalendar from './components/BigCalendar'
 import './TimelinesPage.css'
 import '../../../public/styles/common.css'
 
-const { getAllTasks } = TimelineController
+const { getAllTasks,googleCalendarGetAuth,googleCalendarSync } = TimelineController
 
 const BOTimelinesPage = () => {
     const { user } = useAuth();
@@ -36,6 +36,44 @@ const BOTimelinesPage = () => {
     useEffect(() => { 
         fetchTasksData();
     }, [allTasks.length]); 
+    
+    //check url everytime timeline-management is loaded for code 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+            console.log("OAuth Code detected in URL:", code);
+
+            const syncGoogleCalendar = async () => {
+                try {
+                    const result = await googleCalendarSync({ code, business_owner_id: 2 });
+                    console.log("Google Calendar Synced:", result);
+
+                    showAlert(
+                        "Google Calendar",
+                        "Sync Successful",
+                        "Your calendar has been connected!",
+                        { type: 'success' }
+                    );
+                } catch (error) {
+                    console.error("Google Calendar sync failed", error);
+                    showAlert(
+                        "Google Calendar",
+                        "Sync Failed",
+                        error instanceof Error ? error.message : "An unknown error occurred.",
+                        { type: 'error' }
+                    );
+                } finally {
+                    // ✅ Clean URL to prevent resync on refresh
+                    const cleanUrl = window.location.origin + window.location.pathname;
+                    window.history.replaceState({}, document.title, cleanUrl);
+                }
+            };
+
+            syncGoogleCalendar();
+        }
+    }, []);
 
     const handleDeleteTask = async (taskID: number) => {
         // console.log(taskID)
@@ -44,16 +82,35 @@ const BOTimelinesPage = () => {
                 task.taskID !== taskID
         ));
     }
+    const handleConnectGoogleCalendar = async () => {
+        try {
+            const { authUrl } = await googleCalendarGetAuth();
+            console.log("authURL:",authUrl);
+            window.location.href = authUrl;
+
+        } catch (error) {
+            showAlert(
+                "Google Calendar Auth",
+                "Failed to get auth URL",
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    };
     
     return (
         <div className="App-content">
             <div className="content">
                 <div className="timeline-header">
                     <h1>Timeline Management</h1>
+                    
                     <CreateOEditTask 
                         isCreate={true}
                     />
                 </div>
+                <button onClick={handleConnectGoogleCalendar} style={{ marginRight: '1rem' }}>
+                    google calendar button 
+                </button>
                 <MonthCalendar 
                     tasks={allTasks} 
                     onDelete={handleDeleteTask}

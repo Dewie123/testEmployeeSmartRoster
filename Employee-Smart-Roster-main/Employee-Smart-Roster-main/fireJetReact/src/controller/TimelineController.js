@@ -560,6 +560,45 @@ async function updateSwapTimeStatus (uid, swapID, status, reason, taskID, target
     }
 }
 
+async function googleCalendarGetAuth(){
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/googlecalendar/auth-url', {
+            method: 'GET',
+            //body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        
+        const URL = data.URL;
+        console.log(URL);
+        return  {authUrl: URL};
+    }catch(error){
+        throw new Error ('Failed to oAuth')
+    }
+}
+
+async function googleCalendarSync(code,business_owner_id){
+    const body = {
+        business_owner_id:business_owner_id,
+        code : code
+    }
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/googlecalendar/sync', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        
+        //console.log(data);
+        return data;
+    }catch(error){
+        throw new Error ('Failed to oAuth')
+    }
+}
+
 export default {
     createNewTimeline, 
     getTimelines,
@@ -582,5 +621,7 @@ export default {
     viewOtherTasksToSwap,
     viewAllSwapTime,
     submitSwapTime,
-    updateSwapTimeStatus
+    updateSwapTimeStatus,
+    googleCalendarGetAuth,
+    googleCalendarSync
 }
