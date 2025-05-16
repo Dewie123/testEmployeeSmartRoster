@@ -25,13 +25,14 @@ async function empGetAllLeave(user_id) {
 }
 
 async function empSubmitLeave(empUID, boUID, values) {
+    // console.log(empUID, boUID)
     const body = {
-        employee_user_id: Number(empUID),
+        employee_user_id: empUID,
         type: values.type,
         description: values.description,
         leaveStart: values.leaveStart,
         leaveEnd: values.leaveEnd,
-        business_owner_id: Number(boUID)
+        business_owner_id: boUID
     };
     // console.log(body)
     try{
