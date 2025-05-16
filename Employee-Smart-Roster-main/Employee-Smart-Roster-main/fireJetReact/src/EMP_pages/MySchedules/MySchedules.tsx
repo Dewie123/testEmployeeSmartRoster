@@ -15,7 +15,7 @@ import '../../../public/styles/common.css'
 
 const { empGetUserProfile } = UserController
 const { empGetAllTask, viewOtherTasksToSwap, viewAllSwapTime, 
-        submitSwapTime, updateSwapTimeStatus, getAllTasks , googleCalendarSyncEmployee, googleCalendarGetAuth} = TimelineController
+        submitSwapTime, updateSwapTimeStatus, getAllTasks , googleCalendarSyncEmployee, googleCalendarGetAuth,googleCalendarGetAuthEmployee} = TimelineController
 
 const EmpViewSchedule = () => {
     const { showAlert } = useAlert()
@@ -180,7 +180,7 @@ const EmpViewSchedule = () => {
 
     const handleConnectGoogleCalendar = async () => {
         try {
-            const { authUrl } = await googleCalendarGetAuth();
+            const { authUrl } = await googleCalendarGetAuthEmployee();
             console.log("authURL:",authUrl);
             window.location.href = authUrl;
 
