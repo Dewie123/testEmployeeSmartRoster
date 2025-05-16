@@ -557,12 +557,12 @@ async function submitSwapTime (uid, requestTo, taskID, target_taskID, reason) {
     }
 }
 
-async function updateSwapTimeStatus (uid, swapID, status, reason, taskID, target_taskID) {
+async function updateSwapTimeStatus (uid, swapID, status, targetUID, taskID, target_taskID) {
     const body = {
         swapReqID: swapID,
         status: status,
         user_id: uid,
-        target_swap_user_id: reason,
+        target_swap_user_id: targetUID,
         taskID: taskID,
         target_taskID: target_taskID
     };

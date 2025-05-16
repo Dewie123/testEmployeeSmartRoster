@@ -36,7 +36,7 @@ import BODashboard from "./BO_pages/Dashboard/Dashboard";
 import CreateOEditTask from "./BO_pages/ViewTimelines/components/CreateOEdit/CreateOEdit";
 import BOCompanyProfile from "./BO_pages/CompanyProfile/CompanyProfile";
 import SubsMgts from "./BO_pages/SubsManagement/SubsMgts";
-import BOLeaveManagement from "./BO_pages/LeaveManagement/LeaveManagement";
+// import BOLeaveManagement from "./BO_pages/LeaveManagement/LeaveManagement";
 import CreateOEditEmp from "./pages/UserManagement/BO_CreateOEditEmp/CreateOEdit";
 import BOTimelinesPage from "./BO_pages/ViewTimelines/TimelinesPage";
 import AllTasksInTimeline from "./BO_pages/ViewTimelines/AllTasksInTimeline";
