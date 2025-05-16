@@ -87,18 +87,29 @@ const LeaveForm = ({
 
         if(values.type !== LEAVE_TYPE[4]){
             if(diffInDays > empInfo.noOfLeaveAvailable) {
-                showAlert(
-                    "Leave Request Failed to Submit",
-                    `"${values.type}" is unable to submit`,
-                    `You left with ${empInfo.noOfLeaveAvailable} annual leave(s)`,
-                    { type: 'info' }
-                );
-            } else {
-                triggerSubmitLeaveRequest(empInfo)
+                // Prompt alert to inform user on insuffiecient leave in 3 second
+                setTimeout(() => {
+                    showAlert(
+                        "Insufficient Leave Available",
+                        `Your annual leave for "${values.type}" is insufficient`,
+                        `You left with ${empInfo.noOfLeaveAvailable} annual leave(s)`,
+                        { type: 'info' }
+                    );
+                }, 3000) 
             }
-        }
-
-        if(values.type === LEAVE_TYPE[4]){
+            triggerSubmitLeaveRequest(empInfo)
+        } else {
+            if(diffInDays > empInfo.noOfLeaveAvailable) {
+                // Prompt alert to inform user on insuffiecient mc in 3 second
+                setTimeout(() => {
+                    showAlert(
+                        "Insufficient MC Available",
+                        `Your MC for "${values.type}" is insufficient`,
+                        `You left with ${empInfo.noOfLeaveAvailable} MC(s)`,
+                        { type: 'info' }
+                    );
+                }, 3000) 
+            }
             triggerSubmitMCRequest(empInfo)
         }  
 
