@@ -39,16 +39,15 @@ const BOTimelinesPage = () => {
     
     //check url everytime timeline-management is loaded for code 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
 
         if (code) {
             console.log("OAuth Code detected in URL:", code);
-            console.log("user uid " , user?.UID);
+
             const syncGoogleCalendar = async () => {
                 try {
-                    console.log("user uid in try catch" , user?.UID);
-                    const result = await googleCalendarSync({ code, business_owner_id: user?.UID });
+                    const result = await googleCalendarSync({ code, business_owner_id: 2 });
                     console.log("Google Calendar Synced:", result);
 
                     showAlert(
@@ -66,7 +65,7 @@ const BOTimelinesPage = () => {
                         { type: 'error' }
                     );
                 } finally {
-                    // ✅ Clean URL to prevent resync on refresh
+                    
                     const cleanUrl = window.location.origin + window.location.pathname;
                     window.history.replaceState({}, document.title, cleanUrl);
                 }
@@ -74,7 +73,7 @@ const BOTimelinesPage = () => {
 
             syncGoogleCalendar();
         }
-    }, [user]);
+    }, []);
 
     const handleDeleteTask = async (taskID: number) => {
         // console.log(taskID)
