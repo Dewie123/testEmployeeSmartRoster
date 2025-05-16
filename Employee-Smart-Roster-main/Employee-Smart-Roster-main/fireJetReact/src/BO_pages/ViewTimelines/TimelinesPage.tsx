@@ -47,6 +47,7 @@ const BOTimelinesPage = () => {
             console.log("user uid " , user?.UID);
             const syncGoogleCalendar = async () => {
                 try {
+                    console.log("user uid in try catch" , user?.UID);
                     const result = await googleCalendarSync({ code, business_owner_id: user?.UID });
                     console.log("Google Calendar Synced:", result);
 
