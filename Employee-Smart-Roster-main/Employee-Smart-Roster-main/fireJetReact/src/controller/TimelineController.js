@@ -599,6 +599,27 @@ async function googleCalendarSync({code,business_owner_id}){
     }
 }
 
+async function googleCalendarSyncEmployee({code,user_id}){
+    const body = {
+        code,
+        user_id
+    }
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/googlecalendar/employee-sync', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        
+        //console.log(data);
+        return data;
+    }catch(error){
+        throw new Error ('Failed to oAuth')
+    }
+}
+
 export default {
     createNewTimeline, 
     getTimelines,
@@ -623,5 +644,6 @@ export default {
     submitSwapTime,
     updateSwapTimeStatus,
     googleCalendarGetAuth,
-    googleCalendarSync
+    googleCalendarSync,
+    googleCalendarSyncEmployee
 }
