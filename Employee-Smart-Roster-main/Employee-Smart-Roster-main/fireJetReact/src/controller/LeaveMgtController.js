@@ -149,10 +149,40 @@ async function getMCFile(mcID) {
     }
 }
 
+function handleFilterStatus(allLeaves, filterStatus) {
+    const filteredData = allLeaves.filter((leave) => {
+        return leave.status === filterStatus
+    })
+    return filteredData
+}
+
+function handleFilterType(allLeaves, filterType) {
+    // console.log(filterType)
+    const filteredData = allLeaves.filter((leave) => {
+        return leave.type === filterType
+    })
+    return filteredData
+}
+
+function handleFilterString(allLeaves, filterString) {
+  const filteredData = allLeaves.filter((leave) => {
+    const search = filterString.trim().toLowerCase();
+    if (!search) return true;
+
+    const nameMatch = leave.fullName.toLowerCase().includes(search);
+
+    return nameMatch
+  })
+  return filteredData
+}
+
 export default {
     empGetAllLeave,
     empSubmitLeave,
     empCancelLeaveRequest,
     empSubmitMC,
-    getMCFile
+    getMCFile,
+    handleFilterStatus,
+    handleFilterType,
+    handleFilterString
 }

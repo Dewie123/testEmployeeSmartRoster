@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
-import { USER_ROLE, NO_DATA_MATCHED, LEAVE_STATUS } from '../../controller/Variables'
+import { USER_ROLE, NO_DATA_MATCHED, LEAVE_STATUS, LEAVE_TYPE } from '../../controller/Variables'
 import CreateOEditLeave from './components/CreateOEditLeave'
 import LeaveMgtController from '../../controller/LeaveMgtController'
 import LeaveMgt_t from './components/LeaveMgt_t'
@@ -10,12 +10,16 @@ import LeaveMgt_m from './components/LeaveMgt_m'
 import './LeaveManagement.css'
 import '../../../public/styles/common.css'
 
-const { empGetAllLeave } = LeaveMgtController;
+const { empGetAllLeave, handleFilterStatus, handleFilterString,
+        handleFilterType } = LeaveMgtController;
 
 const LeaveManagement = () => {
     const { showAlert } = useAlert();
     const { user } = useAuth();
     const [ allLeaves, setAllLeave ] = useState<any>([])
+    const [ filterStatus, setFilterStatus ] = useState<string>('All')
+    const [ filterType, setFilterType ] = useState<string>(LEAVE_TYPE[0])
+    const [ filterName, setFilterName ] = useState<string>('')
     const [ filteredLeaves, setFilteredLeaves ] = useState<any>([])
 
     const fetchEmpSubmittedLeave = async () => {
@@ -39,10 +43,22 @@ const LeaveManagement = () => {
     }, [user])
 
     const handleFilterLeaves = async () => {
-        let filtered = allLeaves 
+        let filtered = allLeaves
+
+        if(filterStatus !== 'All') {
+            filtered = handleFilterStatus(filtered, filterStatus)
+            filtered = handleFilterType(filtered, filterType)
+            filtered = handleFilterString(filtered, filterName)
+        } else {
+            filtered = handleFilterType(filtered, filterType)
+            filtered = handleFilterString(filtered, filterName)
+        }
         setFilteredLeaves(filtered)
     }
-    useEffect(() => { handleFilterLeaves() }, [allLeaves])
+    // Filter when all leaves, status, type and name changed
+    useEffect(() => { 
+        handleFilterLeaves() 
+    }, [allLeaves, filterStatus, filterType, filterName])
 
     // Update create locally
     function onLeaveCreate(newData: any) {
@@ -79,6 +95,46 @@ const LeaveManagement = () => {
                         isCreate={true}
                         onCreate={onLeaveCreate}
                     />
+                </div>
+
+                <div className="App-filter-search-component">
+                    <div className="App-filter-container subscription-status">
+                        <p className='App-filter-title'>Status</p>
+                        {/* Status dropdown */}
+                        <select 
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value)}
+                        >
+                            <option value="All">ALL</option>
+                            {LEAVE_STATUS.map((leave:any) => (
+                            <option key={leave} value={leave}>
+                                {leave}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="App-filter-container subscription-status">
+                        <p className='App-filter-title'>Leave Type</p>
+                        {/* Status dropdown */}
+                        <select 
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                        >
+                            {LEAVE_TYPE.map((type:any) => (
+                            <option key={type} value={type}>
+                                {type}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    {user?.role === USER_ROLE[1] && (<div className="App-filter-container uen-company-name">
+                        <p className='App-filter-title'>Employee Name</p>
+                        <input type='text' 
+                            className='search-input'
+                            placeholder='Search Employee Name' 
+                            onChange={(e) => setFilterName(e.target.value)}
+                        />
+                    </div>)}
                 </div>
 
                 {filteredLeaves.length > 0 ? (
