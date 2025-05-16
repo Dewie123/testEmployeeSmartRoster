@@ -73,7 +73,7 @@ const BOTimelinesPage = () => {
 
             syncGoogleCalendar();
         }
-    }, []);
+    }, [user]);
 
     const handleDeleteTask = async (taskID: number) => {
         // console.log(taskID)
