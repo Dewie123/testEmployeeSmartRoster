@@ -108,7 +108,7 @@ const LeaveForm = ({
         try {
             // console.log(empInfo)
             // If current user still having available leave
-            const submitLeave = await empSubmitLeave(empInfo.user_id, empInfo.business_owner_id, values)
+            const submitLeave = await empSubmitLeave(empInfo[0].user_id, empInfo[0].business_owner_id, values)
             // console.log(submitLeave)
             if(submitLeave.message === 'Leave Request successfully added') {
                 showAlert(
@@ -146,30 +146,30 @@ const LeaveForm = ({
         try {
             // console.log(empInfo)
             // If current user still having available leave
-            const submitMC = await empSubmitMC(mcFile, empInfo.user_id, empInfo.business_owner_id, values)
-            console.log(submitMC)
-            // if(submitMC.message === 'Leave Request successfully added') {
-            //     showAlert(
-            //         "Leave Request Submitted",
-            //         `"${values.type}" had submitted for approval `,
-            //         ``,
-            //         { type: 'success' }
-            //     );
-            //     toggleConfirmation()
+            const submitMC = await empSubmitMC(mcFile, empInfo[0].user_id, empInfo[0].business_owner_id, values)
+            // console.log(submitMC)
+            if(submitMC.message === 'File uploaded successfully') {
+                showAlert(
+                    "Leave Request Submitted",
+                    `"${values.type}" had submitted for approval `,
+                    ``,
+                    { type: 'success' }
+                );
+                toggleConfirmation()
 
-            //     if(onCreate)
-            //         onCreate(values)
+                if(onCreate)
+                    onCreate(values)
 
-            //     if(onClose)
-            //         onClose()
-            // } else {
-            //     showAlert(
-            //         "Leave Request Failed Submitted",
-            //         `"${values.type}" is unable to submit`,
-            //         ``,
-            //         { type: 'error' }
-            //     );
-            // }
+                if(onClose)
+                    onClose()
+            } else {
+                showAlert(
+                    "Leave Request Failed Submitted",
+                    `"${values.type}" is unable to submit`,
+                    ``,
+                    { type: 'error' }
+                );
+            }
         } catch(error) {
             showAlert(
                 "triggerSubmitLeaveRequest",
@@ -252,7 +252,7 @@ const LeaveForm = ({
                         onClick={onClose}
                     />
                 </div>
-                <div className="App-popup-main-content">
+                <div className="App-popup-main-content leave-create-edit-form">
                     <div className='forms-input'>
                         <strong>
                             Leave Category <span style={{ color: 'red' }}>*</span>
@@ -271,68 +271,68 @@ const LeaveForm = ({
                                 ))}
                             </select>
                         </div>
-                        {/* Input Leave Description */}
+                    </div>
+                    {/* Input Leave Description */}
+                    <div className='forms-input'>
+                        <strong>
+                            Task Description <span style={{ color: 'red' }}>*</span>
+                        </strong>
+                        <textarea name='description'
+                            maxLength={500}
+                            rows={4}
+                            placeholder='Leave Description' 
+                            value={values.description}
+                            onChange={(e) => handleInputChange(e)}
+                            required
+                        />
+                    </div>
+                    {/* MC File */}
+                    {values.type === LEAVE_TYPE[4] && (
                         <div className='forms-input'>
                             <strong>
-                                Task Description <span style={{ color: 'red' }}>*</span>
+                                Upload MC File <span style={{ color: 'red' }}>*</span>
                             </strong>
-                            <textarea name='description'
-                                maxLength={500}
-                                rows={4}
-                                placeholder='Leave Description' 
-                                value={values.description}
-                                onChange={(e) => handleInputChange(e)}
-                                required
-                            />
+                            <div className="fields">
+                                <input type='file' 
+                                    name='mcFile'
+                                    accept=".pdf"
+                                    onChange={handleFileChange}
+                                    required
+                                />
+                            </div>
                         </div>
-                        {/* MC File */}
-                        {values.type === LEAVE_TYPE[4] && (
-                            <div className='forms-input'>
-                                <strong>
-                                    Upload MC File <span style={{ color: 'red' }}>*</span>
-                                </strong>
-                                <div className="fields">
-                                    <input type='file' 
-                                        name='mcFile'
-                                        accept=".pdf"
-                                        onChange={handleFileChange}
-                                        required
-                                    />
-                                </div>
+                    )}
+                    {/* Select start and end date */}
+                    <div className="leave-create-n-edit-start-n-end">
+                        {/* Input Leave Start */}
+                        <div className='forms-input'>
+                            <strong>
+                                {values.type === LEAVE_TYPE[4] ? <>Leave</> : <>MC</>}
+                                &nbsp;Start <span style={{ color: 'red' }}>*</span>
+                            </strong>
+                            <div className="fields">
+                                <input type='date' 
+                                    name='leaveStart' 
+                                    value={values.leaveStart}
+                                    onChange={(e) => handleInputChange(e)}
+                                    required
+                                />
                             </div>
-                        )}
-                        {/* Select start and end date */}
-                        <div className="leave-create-n-edit-start-n-end">
-                            {/* Input Leave Start */}
-                            <div className='forms-input'>
-                                <strong>
-                                    {values.type === LEAVE_TYPE[4] ? <>Leave</> : <>MC</>}
-                                    &nbsp;Start <span style={{ color: 'red' }}>*</span>
-                                </strong>
-                                <div className="fields">
-                                    <input type='date' 
-                                        name='leaveStart' 
-                                        value={values.leaveStart}
-                                        onChange={(e) => handleInputChange(e)}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            {/* Input Leave End */}
-                            <div className='forms-input'>
-                                <strong>
-                                    {values.type === LEAVE_TYPE[4] ? <>Leave</> : <>MC</>}
-                                    &nbsp;Start <span style={{ color: 'red' }}>*</span>
-                                </strong>
-                                <div className="fields">
-                                    <input type='date' 
-                                        name='leaveEnd' 
-                                        min={values.leaveStart}
-                                        value={values.leaveEnd}
-                                        onChange={(e) => handleInputChange(e)}
-                                        required
-                                    />
-                                </div>
+                        </div>
+                        {/* Input Leave End */}
+                        <div className='forms-input'>
+                            <strong>
+                                {values.type === LEAVE_TYPE[4] ? <>Leave</> : <>MC</>}
+                                &nbsp;End <span style={{ color: 'red' }}>*</span>
+                            </strong>
+                            <div className="fields">
+                                <input type='date' 
+                                    name='leaveEnd' 
+                                    min={values.leaveStart}
+                                    value={values.leaveEnd}
+                                    onChange={(e) => handleInputChange(e)}
+                                    required
+                                />
                             </div>
                         </div>
                     </div>

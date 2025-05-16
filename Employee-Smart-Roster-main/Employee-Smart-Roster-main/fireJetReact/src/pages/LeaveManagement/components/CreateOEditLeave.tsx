@@ -58,7 +58,7 @@ const CreateOEditLeave = ({
         <>
         {isCreate ? (
             <PrimaryButton 
-                text='Create Management'
+                text='Submit Leave/MC'
                 onClick={toggleShowLeaveForm}
             />
         ):(
@@ -70,6 +70,7 @@ const CreateOEditLeave = ({
             <LeaveForm 
                 isCreate={isCreate}
                 user={userProfile}
+                onCreate={onCreate}
                 onClose={toggleShowLeaveForm}
             />
         )}
