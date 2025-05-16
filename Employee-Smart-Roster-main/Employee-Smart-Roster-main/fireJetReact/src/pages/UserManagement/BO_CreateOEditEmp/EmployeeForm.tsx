@@ -95,13 +95,17 @@ const CreateEditAccount = ({
                 [name]: formattedNRIC,
             }));
         } else if (name === 'roleID' || name === 'skillSetID'){
+            if(name === 'roleID') {
+                const skillsetsToRole = handleFindSkillToSelectedRole(value)
+                setEmployeeData((prevData) => ({
+                    ...prevData,
+                    skillSetID: String(skillsetsToRole[0].skillSetName),
+                }));
+            }
             setEmployeeData((prevData) => ({
                 ...prevData,
                 [name]: String(value),
             }));
-            if(name === 'roleID') {
-                handleFindSkillToSelectedRole(value)
-            }
         } else {
             setEmployeeData((prevData) => ({
                 ...prevData,
@@ -120,6 +124,7 @@ const CreateEditAccount = ({
         })
         // console.log(filteredSkillsets)
         setSelectedRoleSkillset(filteredSkillsets)
+        return filteredSkillsets
     }
 
     const triggerEmailValidation = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
