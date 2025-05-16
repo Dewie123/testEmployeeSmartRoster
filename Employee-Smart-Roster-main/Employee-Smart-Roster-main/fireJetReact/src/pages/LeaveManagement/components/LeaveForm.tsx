@@ -15,7 +15,7 @@ interface LeaveFormProps {
     leaveValue?: any;
     onClose?: () => void;
     onUpdate?: (value: any) => void;
-    onCreate?: (value: any) => void;
+    onCreate?: (value: any, status: string) => void;
 }
 
 const { empSubmitLeave, empSubmitMC } = LeaveMgtController;
@@ -131,7 +131,7 @@ const LeaveForm = ({
                 toggleConfirmation()
 
                 if(onCreate)
-                    onCreate(values)
+                    onCreate(values, LEAVE_STATUS[0])
 
                 if(onClose)
                     onClose()
@@ -169,7 +169,7 @@ const LeaveForm = ({
                 toggleConfirmation()
 
                 if(onCreate)
-                    onCreate(values)
+                    onCreate(values, LEAVE_STATUS[1])
 
                 if(onClose)
                     onClose()

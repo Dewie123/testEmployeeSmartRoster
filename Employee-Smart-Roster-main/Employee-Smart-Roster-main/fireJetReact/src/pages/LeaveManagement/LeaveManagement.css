@@ -35,8 +35,6 @@
     display: flex;
     flex-direction: column;
     gap: 15px !important;
-    max-height: 380px;
-    overflow-y: auto;
 
     .leave-create-n-edit-start-n-end {
         display: flex;
