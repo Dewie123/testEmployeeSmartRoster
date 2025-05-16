@@ -149,6 +149,60 @@ async function getMCFile(mcID) {
     }
 }
 
+// BO leave management controller
+async function boGetAllLeave(user_id) {
+    // console.log(user_id)
+    const body = {
+        business_owner_id: user_id,
+    };
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/leaveormc/view', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Failed to re-allocate employee to task ${taskName}: \n`, error);
+        throw new Error(`Failed to fetch all submitted leave management: ${error.message}`);
+    }
+}
+
+async function boApproveORejectLeave(leaveID, status, description) {
+    // console.log(user_id)
+    const body = {
+        leaveID: leaveID,
+        status: status,
+        description: description
+    };
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/leaveormc/update', {
+            method: 'PATCH',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Failed to re-allocate employee to task ${taskName}: \n`, error);
+        throw new Error(`Failed to update leave management: ${error.message}`);
+    }
+}
+
+// Filtering functions
 function handleFilterStatus(allLeaves, filterStatus) {
     const filteredData = allLeaves.filter((leave) => {
         return leave.status === filterStatus
@@ -182,6 +236,8 @@ export default {
     empCancelLeaveRequest,
     empSubmitMC,
     getMCFile,
+    boGetAllLeave,
+    boApproveORejectLeave,
     handleFilterStatus,
     handleFilterType,
     handleFilterString

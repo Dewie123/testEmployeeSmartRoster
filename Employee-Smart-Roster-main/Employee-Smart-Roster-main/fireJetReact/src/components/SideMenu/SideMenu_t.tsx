@@ -110,7 +110,7 @@ export const BO_Items = [
                 {
                     name: 'leaveManagement',
                     label: 'Leave Management',
-                    navHref: '/mc-management'
+                    navHref: '/leave-n-mc-management'
                 },
             ]
         },

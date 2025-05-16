@@ -289,11 +289,11 @@ function App() {
                 />
 
                 <Route
-                  path="/mc-management"
+                  path="/leave-n-mc-management"
                   element={
                     <ProtectedRoute>
                       <SideMenu_t />
-                      <BOLeaveManagement />
+                      <LeaveManagement />
                     </ProtectedRoute>
                   }
                 />

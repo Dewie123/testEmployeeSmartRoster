@@ -17,7 +17,7 @@ interface CreateOEditLeaveProps {
     leaveValue?: any;
     onClose?: () => void;
     onUpdate?: (value: any) => void;
-    onCreate?: (value: any) => void;
+    onCreate?: (value: any, status: string) => void;
 }
 const { empGetUserProfile } = UserController;
 

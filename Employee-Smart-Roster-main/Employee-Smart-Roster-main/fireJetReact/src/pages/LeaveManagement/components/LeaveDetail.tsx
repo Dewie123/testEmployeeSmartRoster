@@ -17,13 +17,17 @@ interface LeaveMgtTableProps {
     onClose: (value: any) => void;
 }
 
-const { empCancelLeaveRequest, getMCFile } = LeaveMgtController
+const { empCancelLeaveRequest, getMCFile, boApproveORejectLeave } = LeaveMgtController
 
 const LeaveDetail = ({leave = {}, user, onUpdate, onClose}: LeaveMgtTableProps) => {
+    // console.log(user)
     const { showAlert } = useAlert()
     const [ showConfirmCancelLeave, setShowConfirmCancelLeave ] = useState(false)
     const [ mcFileURL, setMCFileURL ] = useState<string>("");
-    
+    const [ statusUpdate, setStatusUpdate ] = useState<string>('');
+    const [ showApprovalOReject, setShowApprovalOReject ] = useState(false)
+    const [ reasonOfReject, setReasonOfReject ] = useState<string>('')
+
     const fetchMCFilePDF = async () => {
         try {
             const fileData = await getMCFile (leave.leaveID)
@@ -88,6 +92,56 @@ const LeaveDetail = ({leave = {}, user, onUpdate, onClose}: LeaveMgtTableProps) 
         }
     }
 
+    // Bussines Owner Approve or Reject Leave Request
+    const triggerApproveOrRejectLeaveRequest = async() => {
+        try {
+            let response = await boApproveORejectLeave (leave.leaveID, statusUpdate, reasonOfReject)
+            // console.log(response)
+            if(response.message === 'Update successful') {
+                const updatedLeave = {
+                    ...leave,
+                    status: statusUpdate,
+                    reasonOfReject: reasonOfReject
+                }
+                toggleShowCancelLeave()
+
+                if(onClose)
+                    onClose({})
+
+                if(onUpdate)
+                    onUpdate(updatedLeave)
+
+                if(statusUpdate === LEAVE_STATUS[1])
+                    showAlert(
+                        'Leave Request Approved Successfully',
+                        `You have approved ${leave.fullName}'s ${leave.type} Request`,
+                        `From ${leave.leaveStart.split('T')[0]} to ${leave.leaveEnd.split('T')[0]}`,
+                        { type: 'success' }
+                    )
+                else
+                    showAlert(
+                        'Leave Request Rejected Successfully',
+                        `You have rejected ${leave.fullName}'s ${leave.type} Request`,
+                        `From ${leave.leaveStart.split('T')[0]} to ${leave.leaveEnd.split('T')[0]}`,
+                        { type: 'success' }
+                    )
+            }
+        } catch(error) {
+            showAlert(
+                'triggerCancelLeaveRequest',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+
+    function toggleShowApproval(status: string) {
+        setShowApprovalOReject(!showApprovalOReject)
+        setStatusUpdate(status)
+    }
+
+    // Employee show confirmation popup for cancel leave
     if(showConfirmCancelLeave) return (
         <div className="App-popup" onClick={toggleShowCancelLeave}>
             <div className="App-popup-prompt-content confirm-user-profile-completion" onClick={(e) => e.stopPropagation()}>
@@ -124,6 +178,71 @@ const LeaveDetail = ({leave = {}, user, onUpdate, onClose}: LeaveMgtTableProps) 
                     <SecondaryButton 
                         text="Cancel" 
                         onClick={() => toggleShowCancelLeave()}
+                    />
+                </div>
+            </div>
+        </div>
+    )
+
+    // Approval or Reject Leave Management
+    if(showApprovalOReject && statusUpdate) return (
+        <div className="App-popup" onClick={() => toggleShowApproval('')}>
+            <div className="App-popup-prompt-content confirm-user-profile-completion" onClick={(e) => e.stopPropagation()}>
+                <p className="App-prompt-confirmation-title App-header">
+                    {statusUpdate === LEAVE_STATUS[1] ? (
+                        <>Confirm to Approve the {leave.fullName}'s {leave.type} Request</>
+                    ):(
+                        <>Confirm to Reject the {leave.fullName}'s {leave.type} Request</>
+                    )}
+                </p>
+                <div className="confirmation-detail">
+                    <div className="emp-view-task-detail-start-n-end">
+                        <div className="start-date-detail">
+                            <p className="title">Start Date:</p>
+                            <div className="start-date-detail-data">
+                                <div className="event-detail-date-display">
+                                    <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
+                                    <p className="main-data">{leave.leaveStart.split('T')[0]}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="end-date-detail">
+                            <p className="title">End Date:</p>
+                            <div className="end-date-detail-data">
+                                <div className="event-detail-date-display">
+                                    <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
+                                    <p className="main-data">{leave.leaveEnd.split('T')[0]}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {statusUpdate === LEAVE_STATUS[2] && (
+                        <div className="App-filter-container uen-company-name">
+                            <input type='text' 
+                                className='reason-input'
+                                placeholder='Reason of Reject' 
+                                onChange={(e) => setReasonOfReject(e.target.value)}
+                            />
+                        </div>
+                    )}
+                </div>
+                <div className="btns-grp">
+                    {/* If BO want to approve */}
+                    {statusUpdate === LEAVE_STATUS[1] ? (
+                        <PrimaryButton 
+                            text="Confirm" 
+                            onClick={() => triggerApproveOrRejectLeaveRequest()}
+                        />
+                    ):( // If BO want to reject
+                        <PrimaryButton 
+                            text="Confirm" 
+                            disabled={!reasonOfReject}
+                            onClick={() => triggerApproveOrRejectLeaveRequest()}
+                        />
+                    )}
+                    <SecondaryButton 
+                        text="Cancel" 
+                        onClick={() => toggleShowApproval('')}
                     />
                 </div>
             </div>
@@ -201,6 +320,19 @@ const LeaveDetail = ({leave = {}, user, onUpdate, onClose}: LeaveMgtTableProps) 
                 <div className="btns-grp">
                     {user.role === USER_ROLE[1] ? (
                         <>
+                        {leave.status === LEAVE_STATUS[0] && (
+                            <>
+                            <PrimaryButton 
+                                text='Approve'
+                                onClick={() => toggleShowApproval(LEAVE_STATUS[1])}
+                            />
+                            <SecondaryButton 
+                                text='Reject'
+                                onClick={() => toggleShowApproval(LEAVE_STATUS[2])}
+                            />
+                            </>
+                        
+                        )}
                         </>
                     ):(
                         <>
