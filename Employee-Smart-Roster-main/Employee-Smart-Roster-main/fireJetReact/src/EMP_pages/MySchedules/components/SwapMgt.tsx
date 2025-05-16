@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../../AuthContext'
 import { useAlert } from '../../../components/PromptAlert/AlertContext'
 import { SWAP_REQ_STATUS, NO_DATA_MATCHED } from '../../../controller/Variables.js'
+import SwapTimeDetail from './SwapTimeDetail'
 import TimelineController from '../../../controller/TimelineController'
 
 import { FaRegListAlt } from '../../../../public/Icons'
@@ -19,6 +20,9 @@ const SwapMgt = () => {
     const [ filteredSwapRequest, setFilteredSwapRequest ] = useState<any>([])
     const [ allIncomingSwap, setAllIncomingSwap ] = useState<any>([])
     const [ filteredIncomingSwap, setFilteredIncomingSwap ] = useState<any>([])
+    const [ showSwapDetail, setShowSwapDetail ] = useState(false)
+    const [ isIncomming, setIsIncomming ] = useState(false)
+    const [ selectedSwap, setSelectedSwap ] = useState<any>({})
 
     // Get all swap request submitted
     const fetchAllSubmittedSwap = async () => {
@@ -77,12 +81,28 @@ const SwapMgt = () => {
         let filtered = allIncomingSwap
         filtered = filterStatus(filtered, filterIncommingStatus)
         setFilteredIncomingSwap(filtered)
+        // console.log(filtered)
     }
     // Auto trigger when all incoming swap request changed
     useEffect(() => { triggerFilterIncomingSwap() }, [
         allIncomingSwap,
         filterIncommingStatus
     ])
+
+    function toggleShowSwapDetail(isIncomming: boolean, swapRequest: any) {
+        setShowSwapDetail(!showSwapDetail)
+        setIsIncomming(isIncomming)
+        setSelectedSwap(swapRequest)
+    }
+
+    function onUpdateIncomingSwapRequestStatus(updatedData: any) {
+        const newData = allIncomingSwap.map((swapRequest: any) => 
+            swapRequest.senderDetails.swapReqID === updatedData.senderDetails.swapReqID
+            ? updatedData
+            : swapRequest
+        )
+        setAllIncomingSwap(newData)
+    }
 
     return(
         <div className="content swap-time-management">
@@ -106,7 +126,7 @@ const SwapMgt = () => {
                             </select>
                         </div>
                     </div>
-                    {filteredSwapRequest.length > 1 ? (
+                    {filteredSwapRequest.length > 0 ? (
                         <>
                         {filteredSwapRequest.map((swapRequest: any) => (
                             <div 
@@ -117,7 +137,7 @@ const SwapMgt = () => {
                                     <h2>{swapRequest.receiverDetails.fullName}</h2>
                                     <div
                                         className="App-mobile-table-icon"
-                                        // onClick={() => handleDetailClick(user)}
+                                        onClick={() => toggleShowSwapDetail(false, swapRequest)}
                                     >
                                         <FaRegListAlt />
                                     </div>
@@ -163,7 +183,7 @@ const SwapMgt = () => {
                         </select>
                     </div>
                 </div>
-                {filteredIncomingSwap.length > 1 ? (
+                {filteredIncomingSwap.length > 0 ? (
                     <>
                     {filteredIncomingSwap.map((swapRequest: any) => (
                         <div 
@@ -174,7 +194,7 @@ const SwapMgt = () => {
                                 <h2>{swapRequest.receiverDetails.fullName}</h2>
                                 <div
                                     className="App-mobile-table-icon"
-                                    // onClick={() => handleDetailClick(user)}
+                                    onClick={() => toggleShowSwapDetail(true, swapRequest)}
                                 >
                                     <FaRegListAlt />
                                 </div>
@@ -184,13 +204,13 @@ const SwapMgt = () => {
                                     <p className="App-mobile-responsive-table-card-data-title swap-request-task-title">
                                         From
                                     </p>
-                                    <p>{swapRequest.senderDetails.taskName}</p>
+                                    <p>{swapRequest.receiverDetails.taskName}</p>
                                 </div>
                                 <div className="App-mobile-responsive-table-card-data-detail">
                                     <p className="App-mobile-responsive-table-card-data-title swap-request-task-title">
                                         To
                                     </p>
-                                    <p>{swapRequest.receiverDetails.taskName}</p>
+                                    <p>{swapRequest.senderDetails.taskName}</p>
                                 </div>
                             </div>
                         </div>
@@ -200,6 +220,14 @@ const SwapMgt = () => {
                     <p>{NO_DATA_MATCHED}</p>
                 )}
             </div>
+            {showSwapDetail && selectedSwap && (
+                <SwapTimeDetail 
+                    swap={selectedSwap}
+                    isIncomming={isIncomming}
+                    onUpdate={onUpdateIncomingSwapRequestStatus}
+                    onClose={() => toggleShowSwapDetail(false, {})}
+                />
+            )}
         </div>
     )
 }

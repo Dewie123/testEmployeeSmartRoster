@@ -91,6 +91,22 @@
     max-width: 50px !important;
 }
 
+.swap-task-detail-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: start;
+}
+.swap-request-status {
+    color: var(--error);
+}
+.swap-request-status.pending {
+    color: var(--warning);
+}
+.swap-request-status.approved {
+    color: var(--success);
+}
+
 /* Tablet (769px-1023px) */
 @media only screen and (min-width: 769px) and (max-width: 1023px) {
     

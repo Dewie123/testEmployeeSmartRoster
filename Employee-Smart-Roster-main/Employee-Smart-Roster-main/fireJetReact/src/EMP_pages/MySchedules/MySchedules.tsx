@@ -204,7 +204,7 @@ const EmpViewSchedule = () => {
     const handleConnectGoogleCalendar = async () => {
         try {
             const { authUrl } = await googleCalendarGetAuthEmployee();
-            console.log("authURL:",authUrl);
+            // console.log("authURL:",authUrl);
             window.location.href = authUrl;
 
         } catch (error) {
@@ -223,84 +223,84 @@ const EmpViewSchedule = () => {
     }
 
     if(showPopupSwapReason) return (
-            <div className="App-popup" onClick={() => toggleShowTaskSwapReason({})}>
-                <div className="App-popup-prompt-content confirm-user-profile-completion" onClick={(e) => e.stopPropagation()}>
-                    <p className="App-prompt-confirmation-title App-header">
-                        Confirm to Swap Request 
-                    </p>
-                    <div className="confirmation-detail">
-                        <div className="swap-task-reason-popup-content">
-                            <div className="leave-info-data leave-info-data-type-header-text">
-                                <p className="title">Swapping Task</p>
-                                <p className="main-data">{taskSelectedForSwap.title}&#8594;{taskTargetedForSwapRequest.title}</p>
-                            </div>
-                            <div className="orginal-start-end-vs-swapped-start-end">
-                                <div className="swapped-start-end card">
-                                    <h4>Current Task Duration:</h4>
-                                    <div className="start-date-detail">
-                                        <p className="title">Start Date:</p>
-                                        <div className="start-date-detail-data">
-                                            <div className="event-detail-date-display">
-                                                <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
-                                                <p className="main-data">{formatDisplayDateTime(taskSelectedForSwap.startDate)}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="end-date-detail">
-                                        <p className="title">End Date:</p>
-                                        <div className="end-date-detail-data">
-                                            <div className="event-detail-date-display">
-                                                <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
-                                                <p className="main-data">{formatDisplayDateTime(taskSelectedForSwap.endDate)}</p>
-                                            </div>
+        <div className="App-popup" onClick={() => toggleShowTaskSwapReason({})}>
+            <div className="App-popup-prompt-content confirm-user-profile-completion" onClick={(e) => e.stopPropagation()}>
+                <p className="App-prompt-confirmation-title App-header">
+                    Confirm to Swap Request 
+                </p>
+                <div className="confirmation-detail">
+                    <div className="swap-task-reason-popup-content">
+                        <div className="leave-info-data leave-info-data-type-header-text">
+                            <p className="title">Swapping Task</p>
+                            <p className="main-data">{taskSelectedForSwap.title}&#8594;{taskTargetedForSwapRequest.title}</p>
+                        </div>
+                        <div className="orginal-start-end-vs-swapped-start-end">
+                            <div className="swapped-start-end card">
+                                <h4>Current Task Duration:</h4>
+                                <div className="start-date-detail">
+                                    <p className="title">Start Date:</p>
+                                    <div className="start-date-detail-data">
+                                        <div className="event-detail-date-display">
+                                            <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
+                                            <p className="main-data">{formatDisplayDateTime(taskSelectedForSwap.startDate)}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="swapped-start-end card">
-                                    <h4>Selected Swap Task Duration:</h4>
-                                    <div className="start-date-detail">
-                                        <p className="title">Start Date:</p>
-                                        <div className="start-date-detail-data">
-                                            <div className="event-detail-date-display">
-                                                <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
-                                                <p className="main-data">{formatDisplayDateTime(taskTargetedForSwapRequest.startDate)}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="end-date-detail">
-                                        <p className="title">End Date:</p>
-                                        <div className="end-date-detail-data">
-                                            <div className="event-detail-date-display">
-                                                <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
-                                                <p className="main-data">{formatDisplayDateTime(taskTargetedForSwapRequest.endDate)}</p>
-                                            </div>
+                                <div className="end-date-detail">
+                                    <p className="title">End Date:</p>
+                                    <div className="end-date-detail-data">
+                                        <div className="event-detail-date-display">
+                                            <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
+                                            <p className="main-data">{formatDisplayDateTime(taskSelectedForSwap.endDate)}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="App-filter-container uen-company-name">
-                                <input type='text' 
-                                    className='reason-input'
-                                    placeholder='Reason of Reject' 
-                                    onChange={(e) => setReasonOfSwap(e.target.value)}
-                                />
+                            <div className="swapped-start-end card">
+                                <h4>Selected Swap Task Duration:</h4>
+                                <div className="start-date-detail">
+                                    <p className="title">Start Date:</p>
+                                    <div className="start-date-detail-data">
+                                        <div className="event-detail-date-display">
+                                            <TbTarget className='App-popup-content-icon task-detail-description-icon'/>
+                                            <p className="main-data">{formatDisplayDateTime(taskTargetedForSwapRequest.startDate)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="end-date-detail">
+                                    <p className="title">End Date:</p>
+                                    <div className="end-date-detail-data">
+                                        <div className="event-detail-date-display">
+                                            <TbTargetArrow className='App-popup-content-icon task-detail-description-icon'/>
+                                            <p className="main-data">{formatDisplayDateTime(taskTargetedForSwapRequest.endDate)}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="btns-grp">
-                        <PrimaryButton 
-                            text="Confirm" 
-                            onClick={() => triggerCreateNewSwapRequest()}
-                        />
-                        <SecondaryButton 
-                            text="Cancel" 
-                            onClick={() => toggleShowTaskSwapReason({})}
-                        />
+
+                        <div className="App-filter-container uen-company-name">
+                            <input type='text' 
+                                className='reason-input'
+                                placeholder='Reason of Reject' 
+                                onChange={(e) => setReasonOfSwap(e.target.value)}
+                            />
+                        </div>
                     </div>
                 </div>
+                <div className="btns-grp">
+                    <PrimaryButton 
+                        text="Confirm" 
+                        onClick={() => triggerCreateNewSwapRequest()}
+                    />
+                    <SecondaryButton 
+                        text="Cancel" 
+                        onClick={() => toggleShowTaskSwapReason({})}
+                    />
+                </div>
             </div>
-        )
+        </div>
+    )
 
     if(showTasksForSwap) return (
         <div className="App-popup" onClick={toggleShowTaskForSwap}>
