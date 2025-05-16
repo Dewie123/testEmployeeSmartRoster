@@ -19,6 +19,7 @@ import ReportIssues from "./pages/ReportIssues/ReportIssues";
 import UserMgts from "./pages/UserManagement/UserMgts";
 import IssueDetail from './pages/ReportIssues/IssuesDetail';
 import LeaveManagement from "./pages/LeaveManagement/LeaveManagement";
+import AttendanceRecord from "./pages/AttendanceRecord/Attendance";
 
 // Pages for System Admin
 import SADash from "./SA_pages/Dashboard/SADash";
@@ -110,6 +111,16 @@ function App() {
                   <ProtectedRoute>
                     <SideMenu_t />
                     <IssueDetail />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/view-attendance-record"
+                element={
+                  <ProtectedRoute>
+                    <SideMenu_t />
+                    <AttendanceRecord />
                   </ProtectedRoute>
                 }
               />
