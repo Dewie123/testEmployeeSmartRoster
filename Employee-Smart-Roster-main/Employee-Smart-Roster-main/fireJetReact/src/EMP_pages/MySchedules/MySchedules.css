@@ -1,3 +1,19 @@
+.my-schedule-page-header {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: space-between;
+}
+.sync-google-calendar-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.google-calenar-icon {
+    font-size: 20px;
+    min-width: 20px;
+}
+
 .task-status {
     color: var(--info);
     align-self: center;
@@ -28,6 +44,53 @@
     margin-top: 10px;
 }
 
+.other-tasks-for-swap-container {
+    align-self: center;
+    max-width: 450px;
+    max-height: 430px;
+    overflow: auto;
+}
+
+.swap-task-reason-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.orginal-start-end-vs-swapped-start-end {
+    display: flex;
+    gap: 10px;
+
+    .swapped-start-end {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+.task-for-swap-allocated-to {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.swap-time-management {
+    background-color: #e7dafc;
+}
+.submitted-time-swap {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.submitted-swap-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+.swap-request-task-title {
+    min-width: 50px !important;
+    max-width: 50px !important;
+}
+
 /* Tablet (769px-1023px) */
 @media only screen and (min-width: 769px) and (max-width: 1023px) {
     
@@ -39,5 +102,11 @@
         flex-direction: column;
         justify-content: start;
         gap: 15px;
+    }
+
+    .orginal-start-end-vs-swapped-start-end {
+        flex-direction: column;
+        max-height: 300px;
+        overflow-y: auto;
     }
 }

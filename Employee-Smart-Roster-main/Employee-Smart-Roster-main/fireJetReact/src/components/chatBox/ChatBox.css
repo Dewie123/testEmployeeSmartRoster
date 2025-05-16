@@ -8,6 +8,7 @@
     box-shadow: var(--popup-background) 0px 5px 40px 0px;
     display: flex;
     fill: var(--light-color-text);
+    cursor: move;
     height: 50px;
     width: 50px;
     -moz-box-pack: center;

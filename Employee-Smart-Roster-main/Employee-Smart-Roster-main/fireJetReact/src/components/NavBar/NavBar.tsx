@@ -84,7 +84,7 @@ const Navbar = () => {
                             </Link>
                         )}
                         {user?.role === USER_ROLE[2] && (
-                            <Link to="/employee-dashboard" className="nav-link">
+                            <Link to="/my-schedule" className="nav-link">
                                 <img src={appLogo} alt="Dashboard"></img>
                             </Link>
                         )}

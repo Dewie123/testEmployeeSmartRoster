@@ -129,12 +129,12 @@ export const BO_Items = [
 ]
 
 export const EMP_Items = [
-    {
-        name: 'mySchedule',
-        label: 'MY SCHEDULES',
-        navHref: '/my-schedule',
-        src: <GrSchedules className="menu-icon"/>,
-    },
+    // {
+    //     name: 'mySchedule',
+    //     label: 'MY SCHEDULES',
+    //     navHref: '/my-schedule',
+    //     src: <GrSchedules className="menu-icon"/>,
+    // },
     {
         name: 'attendanceRecord',
         label: 'ATTENDANCE RECORD',

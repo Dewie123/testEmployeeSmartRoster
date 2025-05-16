@@ -53,7 +53,7 @@ export default function Login() {
                 navigate('/business-dashboard');
             }
             else if (data.role === "Employee") {
-              navigate('/employee-dashboard');
+              navigate('/my-schedule');
             } 
         } else {
             throw new Error('Login failed');
