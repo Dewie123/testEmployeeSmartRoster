@@ -44,7 +44,7 @@ const BOTimelinesPage = () => {
 
         if (code) {
             console.log("OAuth Code detected in URL:", code);
-
+            console.log("user uid " , user?.UID);
             const syncGoogleCalendar = async () => {
                 try {
                     const result = await googleCalendarSync({ code, business_owner_id: user?.UID });
