@@ -578,7 +578,7 @@ async function googleCalendarGetAuth(){
     }
 }
 
-async function googleCalendarSync(code,business_owner_id){
+async function googleCalendarSync({code,business_owner_id}){
     const body = {
         code,
         business_owner_id
