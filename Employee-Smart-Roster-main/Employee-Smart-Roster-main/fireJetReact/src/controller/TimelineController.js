@@ -587,6 +587,14 @@ async function updateSwapTimeStatus (uid, swapID, status, reason, taskID, target
     }
 }
 
+function filterStatus(allSwapRequest, filterStatus) {
+    const filteredData = allSwapRequest.filter((swapRequest) => {
+      return swapRequest.senderDetails.status === filterStatus;
+  })
+  return filteredData;
+}
+
+// Google Calendar Functions
 async function googleCalendarGetAuth(){
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/googlecalendar/auth-url', {
@@ -689,6 +697,7 @@ export default {
     viewAllSwapTime,
     submitSwapTime,
     updateSwapTimeStatus,
+    filterStatus,
     googleCalendarGetAuth,
     googleCalendarSync,
     googleCalendarSyncEmployee,

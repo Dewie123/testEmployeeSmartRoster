@@ -78,8 +78,7 @@
 .submitted-time-swap {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    
+    gap: 5px;
 }
 .submitted-swap-list-container {
     display: flex;
