@@ -161,7 +161,7 @@ const ReviewRating = () => {
                 {allReview.length > 0 ? (
                     <div className='bo-view-review-n-rating-container'>
                     {allReview.map((review: any) => (
-                        <div className="card review-n-rating-cards">
+                        <div className="card review-n-rating-cards" key={review.reviewID}>
                             <div className='submit-rating-star'>
                                 {[...Array(review.rating)].map((_, index) => (
                                     <FaStar 
