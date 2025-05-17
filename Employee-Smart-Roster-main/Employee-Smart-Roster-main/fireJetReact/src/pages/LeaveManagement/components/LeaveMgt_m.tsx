@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useAlert } from '../../../components/PromptAlert/AlertContext'
+import { useLocation } from "react-router-dom"
+
 import { USER_ROLE, generateSGDateTimeForDateTimeInput, formatDateTime, formatTextForDisplay } from '../../../controller/Variables'
 import LeaveDetail from './LeaveDetail'
 
@@ -14,6 +15,8 @@ interface LeaveMgtTableProps {
 }
 
 const LeaveMgt_m = ({leaves = [], user, onUpdateLeave}: LeaveMgtTableProps) => {
+    const location = useLocation()
+    const isOnBODash = location.pathname.includes('business-dashboard');
     const [ showDetail, setShowDetail ] = useState(false)
     const [ selectedLeave, setSelectedLeave ] = useState<any>({})
     
@@ -24,7 +27,7 @@ const LeaveMgt_m = ({leaves = [], user, onUpdateLeave}: LeaveMgtTableProps) => {
 
     return(
         <>
-        <div className="App-mobile-responsive-table">
+        <div className={`${isOnBODash ? 'set-visible' : 'App-mobile-responsive-table'}`}>
             {leaves.map((leave: any) => (
             <div key={leave.leaveID} className="App-mobile-responsive-table-card">
                 <div className="App-mobile-responsive-table-card-title">
