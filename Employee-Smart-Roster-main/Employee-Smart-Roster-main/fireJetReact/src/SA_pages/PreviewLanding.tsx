@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../components/PrimaryButton/PrimaryButton';
-import GuestLanding from '../pages/Landing/LandingPage';
+import GuestLanding from '../pages/LandingPage/LandingPage';
 
 import { IoArrowBack } from '../../public/Icons.js'
 import './styles.css';
@@ -22,7 +22,6 @@ function PreviewLanding(){
             <GuestLanding />
         </div>
     )
-
 }
 
 export default PreviewLanding

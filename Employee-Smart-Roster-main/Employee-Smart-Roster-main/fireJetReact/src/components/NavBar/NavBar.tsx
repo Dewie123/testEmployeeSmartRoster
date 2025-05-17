@@ -162,7 +162,8 @@ const Navbar = () => {
             )}
 
             {(isOnLogin 
-            || isOnRegister)
+            || isOnRegister
+            )
             &&(
                 <div className="navbar">
                     <div className="nav-button hamburger-menu-icon">
@@ -195,6 +196,61 @@ const Navbar = () => {
                         </button>
                         )}
                     </div>
+                    </div>
+                </div>
+            )}
+            {isOnPreviewLanding 
+            && (
+                <div className="navbar">
+                    <div className="nav-button hamburger-menu-icon">
+                        <SideMenu_m/>
+                    </div>
+                    <div className="front">
+                        <a href="#faq" className="nav-link" onClick={(e) => handleScrollToSection(e, "top")}> 
+                            <img src={appLogo} alt="Dashboard"></img>
+                        </a>
+                    </div>
+
+                    <div className="landing-navbar-navlink-group"> 
+                        <a href="#demo" 
+                            className="landing-navbar-navlink"
+                            onClick={(e) => handleScrollToSection(e, "demo")}>
+                        Demo
+                        </a>
+                        <a href="#subscription" 
+                            className="landing-navbar-navlink" 
+                            onClick={(e) => handleScrollToSection(e, "subscription")}>
+                            Subscription
+                        </a>
+                        <a href="#reviews" 
+                            className="landing-navbar-navlink" 
+                            onClick={(e) => handleScrollToSection(e, "reviews")}>
+                            Reviews
+                        </a>
+                        <a href="#faq" 
+                            className="landing-navbar-navlink"
+                            onClick={(e) => handleScrollToSection(e, "faq")}>
+                            FAQ
+                        </a>
+                    </div>
+
+                    <div className="btn-group">
+                        <div className="landing-navbar-LR">
+                            <button
+                                className="landing-navbar-button-LR"
+                                onClick={handleLoginClick}
+                                disabled={isOnPreviewLanding}
+                            >
+                                Login
+                            </button>
+                            <button
+                                className="landing-navbar-button-LR"
+                                onClick={handleRegisterClick}
+                                disabled={isOnPreviewLanding}
+                            >
+                                Register
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

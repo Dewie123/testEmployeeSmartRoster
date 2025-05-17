@@ -147,10 +147,11 @@ const Menu = ({ menuItems, responsive = 'desktop' }: MenuProps) => {
                 ))}
             </div>
         ):(
-        <div className="landing-navbar-navlink-group"> 
+            <div>
+        {/* <div className="landing-navbar-navlink-group">  */}
             {/* <a href="#subscription" className="landing-navbar-navlink"onClick={(e) => handleScrollToSection(e, "subscription")}>Plans</a> */}
-            <a href="#reviews" className="landing-navbar-navlink" onClick={(e) => handleScrollToSection(e, "reviews")}>Reviews</a>
-            <a href="#faq" className="landing-navbar-navlink"  onClick={(e) => handleScrollToSection(e, "faq")}>FAQ</a>
+            {/* <a href="#reviews" className="landing-navbar-navlink" onClick={(e) => handleScrollToSection(e, "reviews")}>Reviews</a> */}
+            {/* <a href="#faq" className="landing-navbar-navlink"  onClick={(e) => handleScrollToSection(e, "faq")}>FAQ</a> */}
         </div>    
         )}
         </>

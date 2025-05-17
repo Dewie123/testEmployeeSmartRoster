@@ -1,6 +1,6 @@
 .sa-preview-landing-content {
     display: flex;
-    flex-direction: row;
-    gap: 10px;
+    flex-direction: column;
+    gap: 5px;
     padding: 5px;
 }
