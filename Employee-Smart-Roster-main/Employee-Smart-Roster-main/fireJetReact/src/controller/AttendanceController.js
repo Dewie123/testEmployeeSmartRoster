@@ -110,24 +110,22 @@ function sortAttendanceRecords(allAttendances) {
     );
     return sortedByStartTimeDesc
 }
-// Filter by Start Time
-function handleFilterByStartTime (allAttendances, dateStart, dateEnd) {
-    if (!dateStart || !dateEnd) return records;
-    
-    const start = new Date(dateStart);
-    const end = new Date(dateEnd);
-    
-    // Set time to beginning and end of day for complete coverage
-    start.setHours(0, 0, 0, 0);
-    end.setHours(23, 59, 59, 999);
-    // console.log(start, end)
 
-    const filteredData = allAttendances.filter((attendance) => {
-        const attendanceDate = new Date(attendance.startTime);
-        return  attendanceDate >= start && attendanceDate <= end
-    })
-    // console.log(filteredData)
-    return filteredData
+// Filter by Start Time
+function handleFilterByStartTime(allAttendances, dateStart, dateEnd) {
+  if (!dateStart || !dateEnd) return allAttendances;
+
+  // Convert filter dates to UTC
+  const startUTC = new Date(dateStart);
+  startUTC.setUTCHours(0, 0, 0, 0);
+
+  const endUTC = new Date(dateEnd);
+  endUTC.setUTCHours(23, 59, 59, 999);
+
+  return allAttendances.filter((attendance) => {
+    const attendanceDate = new Date(attendance.startTime);
+    return attendanceDate >= startUTC && attendanceDate <= endUTC;
+  });
 }
 
 function handleFilterEmpName (allAttendances, filterString){
