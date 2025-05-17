@@ -4,6 +4,7 @@ import { useAlert } from '../../components/PromptAlert/AlertContext'
 import { formatDisplayDateTime, USER_ROLE } from '../../controller/Variables';
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import Attendance_t from './components/Attendance_t';
+import Attendance_m from './components/Attendance_m';
 import AttendanceController from '../../controller/AttendanceController';
 
 import { FaClock } from '../../../public/Icons.js'
@@ -11,14 +12,18 @@ import './Attendance.css'
 import '../../../public/styles/common.css'
 
 const { submitAttendance, submitCheckOut, empViewMyAttendances,
-        sortAttendanceRecords } = AttendanceController
+        sortAttendanceRecords, boViewMyEmpAttendances, handleFilterByStartTime } = AttendanceController
 
 const AttendanceRecord = () => {
     const { showAlert } = useAlert()
     const { user } = useAuth()
     const [ allAttendances, setAllAttendances ] = useState<any>([])
     const [ finalAttendance, setFinalAttendance ] = useState<any>({})
+    const [ filterStart, setFilterStart ] = useState<any>(new Date().toISOString().split('T')[0])
+    const [ filterEnd, setFilterEnd ] = useState<any>(new Date().toISOString().split('T')[0])
+    const [ filteredRecords, setFIlteredRecords ] = useState<any>([])
 
+    // EMP - Get all attendance record
     const fetchAllAttendanceRecord = async() => {
         try {
             let response = await empViewMyAttendances(user?.UID)
@@ -38,7 +43,35 @@ const AttendanceRecord = () => {
                     setAllAttendances(filteredOutIncompletedAttendance || [])
                 }
             }
-
+        } catch (error) {
+            showAlert(
+                'fetchAllAttendanceRecord',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+    // BO - Get all attendance record from my Employee
+    const fetchEmpAttendanceRecord = async() => {
+        try {
+            let response = await boViewMyEmpAttendances(user?.UID)
+            // console.log(response)
+            if(response.message === 'Employee Attendance successfully retrieved'){
+                let allSortedResponse = response.employeeAttendance || []
+                if(allSortedResponse.length > 0) {
+                    allSortedResponse = sortAttendanceRecords(allSortedResponse)
+                    // Set current registered attendance
+                    setFinalAttendance(allSortedResponse[0])
+                    
+                    // Filter to get all completed attendance (with clock in and out)
+                    const filteredOutIncompletedAttendance = allSortedResponse.filter((attendance: any) => {
+                        return attendance.endTime !== null
+                    })
+                    // console.log(filteredOutIncompletedAttendance)
+                    setAllAttendances(filteredOutIncompletedAttendance || [])
+                }
+            }
         } catch (error) {
             showAlert(
                 'fetchAllAttendanceRecord',
@@ -52,7 +85,10 @@ const AttendanceRecord = () => {
     useEffect(() => { 
         if(user?.role === USER_ROLE[2])
             fetchAllAttendanceRecord()
-    }, [user, finalAttendance])
+        
+        if(user?.role === USER_ROLE[1])
+            fetchEmpAttendanceRecord()
+    }, [user])
 
     // Employee Submit Attendance
     const checkIn = async() => {
@@ -102,6 +138,13 @@ const AttendanceRecord = () => {
             );
         }
     }
+
+    function triggerFilter() {
+        let filtered = allAttendances
+        filtered = handleFilterByStartTime(allAttendances, filterStart, filterEnd)
+        setFIlteredRecords(filtered)
+    }
+    useEffect(()=>{triggerFilter()}, [allAttendances, filterStart, filterEnd])
 
     return (
         <div className="App-content">
@@ -153,11 +196,35 @@ const AttendanceRecord = () => {
                         )}
                     </div>
                 )}
-                
-                {allAttendances.length > 0 ? (
+
+                <div className="App-filter-search-component">
+                    <div className="App-filter-container uen-company-name">
+                        <p className='App-filter-title'>Filter Start Date <br/>From</p>
+                        <input type='date' 
+                            placeholder='Start Date' 
+                            value={filterStart}
+                            onChange={(e) => setFilterStart(e.target.value)}
+                            max={filterEnd}
+                        />
+                    </div>
+                    <div className="App-filter-container uen-company-name">
+                        <p className='App-filter-title'><br/>To</p>
+                        <input type='date' 
+                            placeholder='Start Date' 
+                            value={filterEnd}
+                            onChange={(e) => setFilterEnd(e.target.value)}
+                            min={filterStart}
+                        />
+                    </div>
+                </div>
+                {filteredRecords.length > 0 ? (
                     <>
                     <Attendance_t 
-                        attendanceRecords={allAttendances}
+                        attendanceRecords={filteredRecords}
+                        user={user}
+                    />
+                    <Attendance_m 
+                        attendanceRecords={filteredRecords}
                         user={user}
                     />
                     </>
