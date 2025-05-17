@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
-import { formatDisplayDateTime, USER_ROLE } from '../../controller/Variables';
+import { formatDisplayDateTime, USER_ROLE, NO_DATA_MATCHED } from '../../controller/Variables';
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import Attendance_t from './components/Attendance_t';
 import Attendance_m from './components/Attendance_m';
@@ -12,7 +12,8 @@ import './Attendance.css'
 import '../../../public/styles/common.css'
 
 const { submitAttendance, submitCheckOut, empViewMyAttendances,
-        sortAttendanceRecords, boViewMyEmpAttendances, handleFilterByStartTime } = AttendanceController
+        sortAttendanceRecords, boViewMyEmpAttendances, handleFilterByStartTime,
+        handleFilterEmpName } = AttendanceController
 
 const AttendanceRecord = () => {
     const { showAlert } = useAlert()
@@ -21,8 +22,9 @@ const AttendanceRecord = () => {
     const [ finalAttendance, setFinalAttendance ] = useState<any>({})
     const [ filterStart, setFilterStart ] = useState<any>(new Date().toISOString().split('T')[0])
     const [ filterEnd, setFilterEnd ] = useState<any>(new Date().toISOString().split('T')[0])
+    const [ filterName, setFilterName ] = useState<string>('')
     const [ filteredRecords, setFIlteredRecords ] = useState<any>([])
-
+    
     // EMP - Get all attendance record
     const fetchAllAttendanceRecord = async() => {
         try {
@@ -57,8 +59,8 @@ const AttendanceRecord = () => {
         try {
             let response = await boViewMyEmpAttendances(user?.UID)
             // console.log(response)
-            if(response.message === 'Employee Attendance successfully retrieved'){
-                let allSortedResponse = response.employeeAttendance || []
+            if(response.responseCode === 200){
+                let allSortedResponse = response.attendanceList || []
                 if(allSortedResponse.length > 0) {
                     allSortedResponse = sortAttendanceRecords(allSortedResponse)
                     // Set current registered attendance
@@ -141,10 +143,16 @@ const AttendanceRecord = () => {
 
     function triggerFilter() {
         let filtered = allAttendances
-        filtered = handleFilterByStartTime(allAttendances, filterStart, filterEnd)
+        filtered = handleFilterByStartTime(filtered, filterStart, filterEnd)
+        filtered = handleFilterEmpName(filtered, filterName)
         setFIlteredRecords(filtered)
     }
-    useEffect(()=>{triggerFilter()}, [allAttendances, filterStart, filterEnd])
+    useEffect(()=>{triggerFilter()}, [
+        allAttendances, 
+        filterStart, 
+        filterEnd,
+        filterName
+    ])
 
     return (
         <div className="App-content">
@@ -216,6 +224,16 @@ const AttendanceRecord = () => {
                             min={filterStart}
                         />
                     </div>
+                    {user?.role === USER_ROLE[1] && (
+                        <div className="App-filter-container uen-company-name">
+                            <p className='App-filter-title'><br/>Search Employee Name</p>
+                            <input type='text' 
+                                className='search-input'
+                                placeholder='Search Name' 
+                                onChange={(e) => setFilterName(e.target.value)}
+                            />
+                        </div>
+                    )}
                 </div>
                 {filteredRecords.length > 0 ? (
                     <>
@@ -229,7 +247,7 @@ const AttendanceRecord = () => {
                     />
                     </>
                 ) : (
-                    <>No Other Attendance Record</>
+                    <>{NO_DATA_MATCHED}</>
                 )}
             </div>
         </div>

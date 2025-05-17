@@ -105,7 +105,7 @@ export const BO_Items = [
                 {
                     name: 'attendanceRecords',
                     label: 'Attendance Records',
-                    navHref: '/attendance-records-management'
+                    navHref: '/view-employee-attendance-record'
                 },
                 {
                     name: 'leaveManagement',

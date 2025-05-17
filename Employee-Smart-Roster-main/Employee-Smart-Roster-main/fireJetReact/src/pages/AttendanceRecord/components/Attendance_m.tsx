@@ -36,10 +36,26 @@ const Attendance_m = ({ attendanceRecords, user } : AttendanceRecord_TProps) => 
                         </div>
                         <div className="App-mobile-responsive-table-card-data-detail attendance-record-mobile-data-row odd-row">
                             <p className="App-mobile-responsive-table-card-data-title attendance-record-mobile-title">
-                                TOTAL WORKING HOURS
+                                Total Working Hours
                             </p>
                             <p>{attendance.hrsWorked}</p>
                         </div>
+                        {user.role === USER_ROLE[1] && (
+                        <>
+                        <div className="App-mobile-responsive-table-card-data-detail attendance-record-mobile-data-row">
+                            <p className="App-mobile-responsive-table-card-data-title attendance-record-mobile-title">
+                                MC Taken
+                            </p>
+                            <p>{String(attendance.MC_count)}</p>
+                        </div>
+                        <div className="App-mobile-responsive-table-card-data-detail attendance-record-mobile-data-row odd-row">
+                            <p className="App-mobile-responsive-table-card-data-title attendance-record-mobile-title">
+                                Leave Taken
+                            </p>
+                            <p>{String(attendance.leave_count)}</p>
+                        </div>
+                        </>
+                        )}
                     </div>
                 </div>
             ))}
