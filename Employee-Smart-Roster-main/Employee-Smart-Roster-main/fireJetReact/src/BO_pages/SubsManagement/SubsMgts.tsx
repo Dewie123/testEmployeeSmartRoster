@@ -5,7 +5,6 @@ import { SUB_STATUS } from '../../controller/Variables'
 import SubsPlan from './components/SubsPlan'
 import SubsTransactions_t from './components/SubTrans_t'
 import SubsTransactions_m from './components/SubTrans_m'
-import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
 import SubscribtionController from '../../controller/SubscribtionController'
 import CompanyController from '../../controller/CompanyController'
 

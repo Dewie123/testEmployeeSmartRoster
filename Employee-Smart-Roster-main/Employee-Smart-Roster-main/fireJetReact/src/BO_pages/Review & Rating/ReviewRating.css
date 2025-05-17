@@ -1,0 +1,33 @@
+.bo-view-review-n-rating-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 50%;
+    margin-top: 15px;
+}
+
+.review-rating-header {
+    display: flex;
+    gap: 10px;
+    justify-content: start;
+    align-items: center;
+}
+.submit-rating-star {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    gap: 5px;
+}
+.submit-rating-star-icon {
+    font-size: 15px !important;
+}
+.review-and-rating-create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px !important;
+}
+.review-n-rating-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
