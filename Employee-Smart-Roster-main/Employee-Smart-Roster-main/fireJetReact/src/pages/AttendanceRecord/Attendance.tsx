@@ -206,19 +206,21 @@ const AttendanceRecord = () => {
                 <div className="App-filter-search-component">
                     <div className="App-filter-container uen-company-name">
                         <p className='App-filter-title'>Filter Start Date <br/>From</p>
-                        <input type='date' 
+                        <input 
+                            type='date' 
                             placeholder='Start Date' 
                             value={filterStart}
-                            onChange={(e) => setFilterStart(e.target.value)}
+                            onChange={(e) => setFilterStart(e.target.value || filterEnd)}
                             max={filterEnd}
                         />
                     </div>
                     <div className="App-filter-container uen-company-name">
                         <p className='App-filter-title'><br/>To</p>
-                        <input type='date' 
+                        <input 
+                            type='date' 
                             placeholder='Start Date' 
                             value={filterEnd}
-                            onChange={(e) => setFilterEnd(e.target.value)}
+                            onChange={(e) => setFilterEnd(e.target.value || filterStart)}
                             min={filterStart}
                         />
                     </div>
