@@ -1,27 +1,95 @@
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
+import { formatDisplayDateTime, USER_ROLE } from '../../controller/Variables';
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
+import Attendance_t from './components/Attendance_t';
 import AttendanceController from '../../controller/AttendanceController';
 
+import { FaClock } from '../../../public/Icons.js'
 import './Attendance.css'
 import '../../../public/styles/common.css'
 
-const { submiAttendance, } = AttendanceController
+const { submitAttendance, submitCheckOut, empViewMyAttendances,
+        sortAttendanceRecords } = AttendanceController
 
 const AttendanceRecord = () => {
     const { showAlert } = useAlert()
     const { user } = useAuth()
+    const [ allAttendances, setAllAttendances ] = useState<any>([])
+    const [ finalAttendance, setFinalAttendance ] = useState<any>({})
 
+    const fetchAllAttendanceRecord = async() => {
+        try {
+            let response = await empViewMyAttendances(user?.UID)
+            // console.log(response)
+            if(response.message === 'Employee Attendance successfully retrieved'){
+                let allSortedResponse = response.employeeAttendance || []
+                if(allSortedResponse.length > 0) {
+                    allSortedResponse = sortAttendanceRecords(allSortedResponse)
+                    // Set current registered attendance
+                    setFinalAttendance(allSortedResponse[0])
+                    
+                    // Filter to get all completed attendance (with clock in and out)
+                    const filteredOutIncompletedAttendance = allSortedResponse.filter((attendance: any) => {
+                        return attendance.endTime !== null
+                    })
+                    // console.log(filteredOutIncompletedAttendance)
+                    setAllAttendances(filteredOutIncompletedAttendance || [])
+                }
+            }
+
+        } catch (error) {
+            showAlert(
+                'fetchAllAttendanceRecord',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+    // Auto trigger when user and final attendance changed
+    useEffect(() => { 
+        if(user?.role === USER_ROLE[2])
+            fetchAllAttendanceRecord()
+    }, [user, finalAttendance])
+
+    // Employee Submit Attendance
     const checkIn = async() => {
         try {
             // console.log(empData)
-            let response = await submiAttendance(user?.UID)
+            let response = await submitAttendance(user?.UID)
             // console.log(response)
             if(response.message === 'Attendance successfully added') {
+                location.reload()
                 showAlert(
-                    'Check In Successfully',
+                    'Clock In Successfully',
                     '',
-                    ``,
+                    `The attendance record update successfully`,
+                    { type: 'success' }
+                );
+            }
+        } catch (error) {
+            showAlert(
+                'checkIn',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+    // Employee Check Out
+    const checkOut = async() => {
+        try {
+            // console.log(empData)
+            let response = await submitCheckOut(finalAttendance.attendanceID)
+            // console.log(response)
+            if(response.message === 'Employee Successfully Clocked Out ') {
+                location.reload()
+                showAlert(
+                    'Clock Out Successfully',
+                    '',
+                    `The attendance record update successfully`,
                     { type: 'success' }
                 );
             }
@@ -40,11 +108,62 @@ const AttendanceRecord = () => {
             <div className="content">
                 <div className="attendance-record-page-header">
                     <h1>Attendance Record</h1>
-                    <PrimaryButton 
-                        text='Clock In'
-                        onClick={() => checkIn()}
-                    />
+                    {/* Display Clock in & out button for employee */}
+                    {user?.role === USER_ROLE[2] && (
+                        <>
+                        {(!finalAttendance || finalAttendance.endTime !== null) ? (
+                            <PrimaryButton 
+                                text='Clock In'
+                                onClick={() => checkIn()}
+                            />
+                        ):(
+                            <PrimaryButton 
+                                text='Clock Out'
+                                onClick={() => checkOut()}
+                            />
+                        )}
+                        </>
+                    )}
                 </div>
+                {/* Display Current Registered Attendance (the lastest) for Employee */}
+                {user?.role === USER_ROLE[2] && (
+                    <div className="current-attendance card">
+                        <h4>Last Registered Attendance</h4>
+                        {finalAttendance !== null && (
+                            <div className="current-attendance-record-content">
+                                <p className='even-row'>
+                                    <strong>Clocked In: </strong>
+                                    <div>
+                                        <FaClock className='clock-icon'/>
+                                        {formatDisplayDateTime(finalAttendance.startTime)}
+                                    </div>
+                                </p>
+                                {finalAttendance?.endTime !== null ? (
+                                    <p className='even-row'>
+                                        <strong>Clocked Out: </strong>
+                                        <div>
+                                            <FaClock className='clock-icon'/>
+                                            {formatDisplayDateTime(finalAttendance.endTime)}
+                                        </div>
+                                    </p>
+                                ):(
+                                    <></>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+                
+                {allAttendances.length > 0 ? (
+                    <>
+                    <Attendance_t 
+                        attendanceRecords={allAttendances}
+                        user={user}
+                    />
+                    </>
+                ) : (
+                    <>No Other Attendance Record</>
+                )}
             </div>
         </div>
     )

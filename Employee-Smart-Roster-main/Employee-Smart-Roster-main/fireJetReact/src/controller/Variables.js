@@ -41,6 +41,8 @@ export const MIN_YEAR8_ANNUAL = 14 // 8th and after that year annual leave
 
 // Format Local date time to display
 export function formatDisplayDateTime(isoString) {
+    if(!isoString) return null;
+
     const isoStr = new Date (isoString).toISOString()
     const dateTime = isoStr.split('T')
     // 2025-05-08T21:09:00.000Z
@@ -57,6 +59,8 @@ export function formatDisplayDateTime(isoString) {
 }
 // Format local ISO String date time to DD/MM/YYYY HH:mmtt
 export function formatDateTime (isoString){
+    if(!isoString) return null;
+    
     const date = new Date(isoString);
 
     // Set Singapore timezone
@@ -80,6 +84,8 @@ export function formatDateTime (isoString){
 
 // convert ISO String to Local datetime in YYYY-MM-DDTHH:mm
 export function generateSGDateTimeForDateTimeInput(date) {
+    if(!date) return null;
+    
     const sgDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
 
     const year = sgDate.getFullYear();
@@ -125,6 +131,8 @@ export function formatDateArrToDisplayInDateTimeInput (dateArr) {
 }
 
 export function generateSGDateTimeForPaymentRequestRef(date) {
+    if(!date) return null;
+
     const sgDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
 
     const year = sgDate.getFullYear();
@@ -138,6 +146,8 @@ export function generateSGDateTimeForPaymentRequestRef(date) {
 
 // Utility function to format date only for MySchedules
 export function formatMSDisplayDateTime(dateString) {
+    if(!dateString) return null;
+    
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = date.toLocaleString('en-US', { month: 'short' });

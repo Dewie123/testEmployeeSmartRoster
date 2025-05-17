@@ -4,3 +4,42 @@
     align-items: center;
     gap: 10px;
 }
+
+.current-attendance {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: fit-content;
+    min-width: 300px;
+}
+.current-attendance-record-content {
+    display: flex;
+    gap: 10px;
+
+    .even-row {
+        width: 100%;
+        padding-left: 8px;
+        padding-right: 8px;
+        border-radius: 8px;
+    }
+    div {
+        display: flex;
+        justify-content: start;
+        gap: 5px;
+        align-items: center;
+        min-width: 180px;
+
+        .clock-icon {
+            font-size: 14px;
+            color: var(--h2);
+            min-width: 14px;
+        }
+    }
+}
+
+/* Mobile (all screens below 768px) */
+@media only screen and (max-width: 768px) {
+    div {
+        min-width: none;
+    }
+}

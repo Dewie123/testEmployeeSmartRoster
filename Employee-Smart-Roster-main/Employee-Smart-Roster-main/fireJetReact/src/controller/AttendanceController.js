@@ -1,4 +1,5 @@
-async function submiAttendance (uid) {
+// Check in
+async function submitAttendance (uid) {
     const body = {
         employee_user_id: uid,
     };
@@ -7,6 +8,32 @@ async function submiAttendance (uid) {
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/attendance/register', {
             method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error status: ${response.status}`);
+        }
+        const data = await response.json();
+        // console.log(data);
+
+        return await data;
+    } catch(error) {
+        // console.error(`Network error for fetch task detail: \n`, error);
+        throw new Error(`Failed to update the task progress: ${error.message}`);
+    }
+}
+// Check out
+async function submitCheckOut (attendanceID) {
+    const body = {
+        attendanceID: attendanceID,
+    };
+    // console.log(body)
+
+    try{
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/attendance/clock-out', {
+            method: 'PATCH',
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' }
         });
@@ -49,8 +76,23 @@ async function empViewMyAttendances (uid) {
         throw new Error(`Failed to update the task progress: ${error.message}`);
     }
 }
+// Sort Record by Descending Order
+function sortAttendanceRecords(allAttendances) {
+    const sortedByStartTimeDesc = [...allAttendances].sort((a, b) => 
+        new Date(b.startTime) - new Date(a.startTime)
+    );
+    return sortedByStartTimeDesc
+}
+// Filter by Start Time
+function handleFilterByStartTime (allAttendances, dateStart, dateEnd) {
+    const filteredData = allAttendances.filter(() => {
+        
+    })
+}
 
 export default {
-    submiAttendance,
+    submitAttendance,
+    submitCheckOut,
     empViewMyAttendances,
+    sortAttendanceRecords,
 }

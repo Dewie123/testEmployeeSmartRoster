@@ -12,6 +12,7 @@
 
 .App-content {
   display: flex;
+  justify-content: start;
   flex-direction: row;
   flex:1;  /* Take up remaining space */
   width: 100vw;
