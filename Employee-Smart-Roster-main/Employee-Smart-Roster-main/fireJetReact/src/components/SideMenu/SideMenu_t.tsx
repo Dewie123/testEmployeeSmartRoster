@@ -58,7 +58,7 @@ export const SA_Items = [
             {
                 name: 'landingReview',
                 label: 'Reviews & Ratings',
-                navHref: '/review-rating'
+                navHref: '/view-review-n-rating'
             },
             {
                 name: 'landingFAQ',

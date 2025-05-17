@@ -215,6 +215,16 @@ function App() {
               />
 
               <Route
+                path="/view-review-n-rating"
+                element={
+                  <ProtectedRoute>
+                      <SideMenu_t />
+                      <ReviewRating />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/preview-landing-page"
                 element={
                   <ProtectedRoute>

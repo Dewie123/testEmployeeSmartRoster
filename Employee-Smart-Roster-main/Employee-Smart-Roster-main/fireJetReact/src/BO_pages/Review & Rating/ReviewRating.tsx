@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
-import { formatTextForDisplay } from '../../controller/Variables.js'
+import { formatTextForDisplay, USER_ROLE } from '../../controller/Variables.js'
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
 import SecondaryButton from '../../components/SecondaryButton/SecondaryButton'
 import ReviewRatingController from '../../controller/Review_Rating/ReviewRatingController'
@@ -11,7 +11,7 @@ import { IoClose } from '../../../public/Icons.js'
 import './ReviewRating.css'
 import '../../../public/styles/common.css'
 
-const { viewReviewRating, submitReviewRating } = ReviewRatingController
+const { viewReviewRating, submitReviewRating, saViewReviewRating } = ReviewRatingController
 
 const ReviewRating = () => {
     const { showAlert } = useAlert();
@@ -87,7 +87,27 @@ const ReviewRating = () => {
             );
         }
     }
-    useEffect(() => {fetchReview()}, [user])
+    const fetchSAReview = async() => {
+        try{
+            let response = await saViewReviewRating ()
+            // console.log(response)
+            response = response.ReviewAndRatingList || []
+            setAllReview(response)
+        } catch(error) {
+            showAlert(
+                'submitReview',
+                '',
+                error instanceof Error ? error.message : String(error),
+                { type: 'error' }
+            );
+        }
+    }
+    useEffect(() => {
+        if(user?.role === USER_ROLE[1])
+            fetchReview() // fetch bo reviews and rating
+        if(user?.role === USER_ROLE[0])
+            fetchSAReview() // fetch sa reviews and rating
+    }, [user])
 
     if(showConfirmation) return (
         <div className="App-popup" onClick={toggleShowConfirmation}>
@@ -127,11 +147,15 @@ const ReviewRating = () => {
         <div className="App-content">
             <div className="content">
                 <div className="review-rating-header">
-                    <h1>Review & Rating Management</h1>
-                    <PrimaryButton 
-                        text='Create Review & Rating'
-                        onClick={toggleShowPopupCreateForm}
-                    />
+                    {user?.role  === USER_ROLE[1] ? (
+                        <h1>Review & Rating Management</h1>
+                    ):(<h1>View All Review & Rating</h1>)}
+                    {user?.role  === USER_ROLE[1] && (
+                        <PrimaryButton 
+                            text='Create Review & Rating'
+                            onClick={toggleShowPopupCreateForm}
+                        />
+                    )}
                 </div>
 
                 {allReview.length > 0 ? (
@@ -149,6 +173,7 @@ const ReviewRating = () => {
                                 ))}
                             </div>
                             <p className="main-data" dangerouslySetInnerHTML={{ __html: formatTextForDisplay(review.review) }}/>
+                            {user?.role  === USER_ROLE[0] && (<p className="main-data">by <strong>{review.fullName}</strong></p>)}
                         </div>
                     ))}
                     </div>
