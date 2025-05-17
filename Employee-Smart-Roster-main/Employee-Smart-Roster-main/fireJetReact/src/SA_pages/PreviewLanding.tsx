@@ -6,22 +6,19 @@ import { IoArrowBack } from '../../public/Icons.js'
 import './styles.css';
 import '../../public/styles/common.css';
 
-function PreviewLanding(){
-    const navigate = useNavigate();
+function PreviewLanding() {
+  const navigate = useNavigate();
 
-    function backPrevPage() {
-        navigate(-1);
-    }
-
-    return(
-        <div className='sa-preview-landing-content'>
-            <PrimaryButton
-                text='Back'
-                onClick={backPrevPage}
-            />
+  return (
+    <div className="sa-preview-landing-content">
+        <div className="preview-back-button">
+            <PrimaryButton text="Back" onClick={() => navigate(-1)} />
+        </div>
+        <div className="preview-guest-landing">
             <GuestLanding />
         </div>
-    )
+    </div>
+  );
 }
 
 export default PreviewLanding
