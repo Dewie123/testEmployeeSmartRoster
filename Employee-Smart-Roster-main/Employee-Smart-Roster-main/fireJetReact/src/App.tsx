@@ -288,12 +288,12 @@ function App() {
                 />
                 
                 <Route
-                  path="/attendance-records-management"
+                  path="/view-employee-attendance-record"
                   element={
                     <ProtectedRoute>
                       <div className="App-content">
                         <SideMenu_t />
-                        <h1>Attendance Records Management</h1>
+                        <AttendanceRecord />
                       </div>
                     </ProtectedRoute>
                   }
