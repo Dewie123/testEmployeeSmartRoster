@@ -12,6 +12,7 @@ import "../../../public/styles/common.css"
 // Access the function from the RegisReqController default export
 const { getRegistrationRequests, 
         handleFilterRegsStatus, } = RegisReqController;
+        
 
 const RegStatus = ["Pending", "Approved", "Rejected"];
 
@@ -37,10 +38,11 @@ export default function SADash() {
             )
         }
     };
+    
     // Auto trigger when allRegisRequest length change
     useEffect(() => { 
         fetchRegisReqsData();
-    }, [allRegisRequest.length]); 
+    }, [allRegisRequest]); 
 
     const triggerFilterRegReq = async () => {
         try{
