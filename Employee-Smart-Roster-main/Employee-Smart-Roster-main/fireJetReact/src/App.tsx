@@ -41,6 +41,7 @@ import SubsMgts from "./BO_pages/SubsManagement/SubsMgts";
 import CreateOEditEmp from "./pages/UserManagement/BO_CreateOEditEmp/CreateOEdit";
 import BOTimelinesPage from "./BO_pages/ViewTimelines/TimelinesPage";
 import AllTasksInTimeline from "./BO_pages/ViewTimelines/AllTasksInTimeline";
+import ReviewRating from "./BO_pages/Review & Rating/ReviewRating";
 
 // Import for Employee Pages
 import EmpViewSchedule from "./EMP_pages/MySchedules/MySchedules";
@@ -349,10 +350,8 @@ function App() {
                   path="/review-n-rating-management"
                   element={
                     <ProtectedRoute>
-                      <div className="App-content">
                         <SideMenu_t />
-                        <h1>Review & Rating Management</h1>
-                      </div>
+                        <ReviewRating />
                     </ProtectedRoute>
                   }
                 />

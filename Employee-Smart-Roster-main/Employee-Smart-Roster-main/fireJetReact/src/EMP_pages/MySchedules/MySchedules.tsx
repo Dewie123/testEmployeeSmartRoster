@@ -284,7 +284,7 @@ const EmpViewSchedule = () => {
                         <div className="App-filter-container uen-company-name">
                             <input type='text' 
                                 className='reason-input'
-                                placeholder='Reason of Reject' 
+                                placeholder='Description' 
                                 onChange={(e) => setReasonOfSwap(e.target.value)}
                             />
                         </div>
