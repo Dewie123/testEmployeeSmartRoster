@@ -61,7 +61,7 @@ export default function Login() {
       } catch (err) {
         console.error("Error during login:", err); 
       // Handle non-Axios errors
-      alert("An unexpected error occurred. Please try again.");
+      alert("Invalid Login. Please try again.");
       }
     }
   }
