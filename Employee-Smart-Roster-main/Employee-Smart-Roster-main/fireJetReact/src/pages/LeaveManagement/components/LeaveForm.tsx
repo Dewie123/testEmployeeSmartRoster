@@ -286,7 +286,7 @@ const LeaveForm = ({
                     {/* Input Leave Description */}
                     <div className='forms-input'>
                         <strong>
-                            Task Description <span style={{ color: 'red' }}>*</span>
+                            Description <span style={{ color: 'red' }}>*</span>
                         </strong>
                         <textarea name='description'
                             maxLength={500}
