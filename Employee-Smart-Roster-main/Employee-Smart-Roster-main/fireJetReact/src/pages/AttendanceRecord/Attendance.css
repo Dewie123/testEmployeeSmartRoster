@@ -36,10 +36,30 @@
         }
     }
 }
+.attendance-record-mobile-data {
+    display: flex;
+    flex-direction: column;
+}
+.attendance-record-mobile-data-row {
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.attendance-record-mobile-title {
+    min-width: 200px !important;
+}
+.odd-row {
+    background-color: var(--table-odd-row);
+}
 
 /* Mobile (all screens below 768px) */
 @media only screen and (max-width: 768px) {
-    div {
-        min-width: none;
+    .attendance-record-mobile-data-row {
+        display: flex;
+        flex-direction: column !important;
+        gap: 5px !important;
+    }
+    .attendance-record-mobile-title {
+        min-width: none !important;
     }
 }

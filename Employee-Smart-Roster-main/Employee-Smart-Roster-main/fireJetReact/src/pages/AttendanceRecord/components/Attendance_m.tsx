@@ -16,7 +16,31 @@ const Attendance_m = ({ attendanceRecords, user } : AttendanceRecord_TProps) => 
         <div className="App-mobile-responsive-table">
             {attendanceRecords.map((attendance:any) => (
                 <div key={attendance.attendanceID} className="App-mobile-responsive-table-card">
-                    
+                    {user.role === USER_ROLE[1] && (
+                        <div className="App-mobile-responsive-table-card-title">
+                            <h2>{attendance.fullName}</h2>
+                        </div>
+                    )}
+                    <div className="App-mobile-responsive-table-card-data attendance-record-mobile-data">
+                        <div className="App-mobile-responsive-table-card-data-detail attendance-record-mobile-data-row odd-row">
+                            <p className="App-mobile-responsive-table-card-data-title attendance-record-mobile-title">
+                                Start Working Time
+                            </p>
+                            <p>{formatDisplayDateTime(attendance.startTime)}</p>
+                        </div>
+                        <div className="App-mobile-responsive-table-card-data-detail attendance-record-mobile-data-row">
+                            <p className="App-mobile-responsive-table-card-data-title attendance-record-mobile-title">
+                                End Working Time
+                            </p>
+                            <p>{formatDisplayDateTime(attendance.endTime)}</p>
+                        </div>
+                        <div className="App-mobile-responsive-table-card-data-detail attendance-record-mobile-data-row odd-row">
+                            <p className="App-mobile-responsive-table-card-data-title attendance-record-mobile-title">
+                                TOTAL WORKING HOURS
+                            </p>
+                            <p>{attendance.hrsWorked}</p>
+                        </div>
+                    </div>
                 </div>
             ))}
         </div>
