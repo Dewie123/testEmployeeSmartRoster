@@ -158,7 +158,7 @@ const AttendanceRecord = () => {
         <div className="App-content">
             <div className="content">
                 <div className="attendance-record-page-header">
-                    <h1>Attendance Record</h1>
+                    <h1>Attendance Records</h1>
                     {/* Display Clock in & out button for employee */}
                     {user?.role === USER_ROLE[2] && (
                         <>
