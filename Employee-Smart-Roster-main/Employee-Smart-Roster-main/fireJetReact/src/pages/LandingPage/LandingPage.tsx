@@ -40,8 +40,6 @@ type VideoItem = {
   video_description: string;
 };
 
-
-
 const { getAllUploadedVideos, getAllReviews, getAllFaqs, getAllsubscriptions } = LandingController;
 
 const LandingPage = () => {
@@ -53,7 +51,6 @@ const LandingPage = () => {
   const [expandedFaqs, setExpandedFaqs] = useState<Record<number, boolean>>({});
   const [error, setError] = useState<string>("");
   const [descriptionClass, setDescriptionClass] = useState<string>('visible');
-
 
   useEffect(() => {
     fetchVideos();

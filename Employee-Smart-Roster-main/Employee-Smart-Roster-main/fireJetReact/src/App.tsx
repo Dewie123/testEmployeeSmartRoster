@@ -26,6 +26,7 @@ import SADash from "./SA_pages/Dashboard/SADash";
 import RegisRequests from "./SA_pages/RegisRequest/RegisRequests";
 import SubsTransactions from "./SA_pages/SubsTrans/SubsTrans";
 import VideoMgt from "./SA_pages/VideoMgt/VideoMgt";
+import EditSubscription from "./SA_pages/EditSubscription/EditSubscription";
 import PreviewLanding from "./SA_pages/PreviewLanding";
 import ViewRating from "./SA_pages/RegisRequest/ViewRating";
 import FAQManagement from "./SA_pages/FAQ/FAQMgt";
@@ -164,6 +165,16 @@ function App() {
                   <ProtectedRoute>
                       <SideMenu_t />
                       <VideoMgt />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/edit-subscription"
+                element={
+                  <ProtectedRoute>
+                      <SideMenu_t />
+                      <EditSubscription />
                   </ProtectedRoute>
                 }
               />
