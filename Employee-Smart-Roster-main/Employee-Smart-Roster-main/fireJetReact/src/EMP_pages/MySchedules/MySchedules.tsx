@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
 import { formatDisplayDateTime, formatTextForDisplay,
-         TASK_STATUS, SWAP_REQ_STATUS } from '../../controller/Variables.js'
+         TASK_STATUS } from '../../controller/Variables.js'
 import { GrSchedules } from "react-icons/gr";
 import TaskDetail from './components/TaskDetail';
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
@@ -19,7 +19,7 @@ import '../../../public/styles/common.css'
 
 const { empGetUserProfile } = UserController
 const { empGetAllTask, viewOtherTasksToSwap, submitSwapTime, 
-        googleCalendarSyncEmployee, googleCalendarGetAuth, googleCalendarGetAuthEmployee} = TimelineController
+        googleCalendarSyncEmployee, googleCalendarGetAuthEmployee} = TimelineController
 
 const EmpViewSchedule = () => {
     const { showAlert } = useAlert()
@@ -161,6 +161,8 @@ const EmpViewSchedule = () => {
             );
         }
     }
+
+    
 
 
     //check url everytime timeline-management is loaded for code 
