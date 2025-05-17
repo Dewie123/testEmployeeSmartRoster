@@ -333,7 +333,7 @@ const LeaveForm = ({
                         {/* Input Leave End */}
                         <div className='forms-input'>
                             <strong>
-                                {values.type === LEAVE_TYPE[4] ? <>Leave</> : <>MC</>}
+                                {values.type === LEAVE_TYPE[4] ? <>MC</> : <>Leave</>}
                                 &nbsp;End <span style={{ color: 'red' }}>*</span>
                             </strong>
                             <div className="fields">
