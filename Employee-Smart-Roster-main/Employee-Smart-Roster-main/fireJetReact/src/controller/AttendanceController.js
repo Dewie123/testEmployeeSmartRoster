@@ -84,7 +84,7 @@ async function boViewMyEmpAttendances (uid) {
     // console.log(body)
 
     try{
-        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/employee/attendance/view', {
+        const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/company/employee/attendancelist/view', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' }
@@ -130,11 +130,25 @@ function handleFilterByStartTime (allAttendances, dateStart, dateEnd) {
     return filteredData
 }
 
+function handleFilterEmpName (allAttendances, filterString){
+  const filteredData = allAttendances.filter((attendance) => {
+      const search = filterString.trim().toLowerCase();
+      if (!search) return true;
+
+      const nameMatch = attendance.fullName.toLowerCase().includes(search);
+
+      return nameMatch;
+  })
+  return filteredData
+}
+
+
 export default {
     submitAttendance,
     submitCheckOut,
     empViewMyAttendances,
     boViewMyEmpAttendances,
     sortAttendanceRecords,
-    handleFilterByStartTime
+    handleFilterByStartTime,
+    handleFilterEmpName
 }
