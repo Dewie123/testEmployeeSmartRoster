@@ -33,7 +33,8 @@ import FAQManagement from "./SA_pages/FAQ/FAQMgt";
 // Pages for Busines Owner
 import RequiredCompleteProfile from "./BO_pages/FirstLogin/RequiredCompleteProfile";
 // import RoleNSkillset from "./BO_pages/Not Used/RoleNSkillsets/RoleNSkillset";
-import BODashboard from "./BO_pages/Dashboard/Dashboard";
+import BODashboard from "./BO_pages/Dashboard/BODashboard";
+// import BODashboard from "./BO_pages/Dashboard/Dashboard";
 import CreateOEditTask from "./BO_pages/ViewTimelines/components/CreateOEdit/CreateOEdit";
 import BOCompanyProfile from "./BO_pages/CompanyProfile/CompanyProfile";
 import SubsMgts from "./BO_pages/SubsManagement/SubsMgts";

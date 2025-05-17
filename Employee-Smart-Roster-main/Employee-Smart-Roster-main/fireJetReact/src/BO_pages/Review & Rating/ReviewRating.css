@@ -31,3 +31,33 @@
     flex-direction: column;
     gap: 10px;
 }
+.bo-dashboard-container {
+    display: flex;
+    gap: 20px;
+
+    .bo-dashboard-leave-management,
+    .bo-dashboard-attendance-record {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        justify-content: start;
+    }
+}
+
+/* Mobile (all screens below 768px) */
+@media only screen and (max-width: 768px) {
+    .bo-dashboard-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .bo-dashboard-leave-management,
+        .bo-dashboard-attendance-record {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: start;
+            min-width: none;
+        }
+    }
+}

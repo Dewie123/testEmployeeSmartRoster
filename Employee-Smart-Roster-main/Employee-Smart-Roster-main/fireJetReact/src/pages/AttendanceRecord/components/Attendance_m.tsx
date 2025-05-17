@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom"
 import { formatDisplayDateTime, USER_ROLE } from '../../../controller/Variables'
 
 import '../Attendance.css'
@@ -10,10 +11,12 @@ interface AttendanceRecord_TProps {
 
 const Attendance_m = ({ attendanceRecords, user } : AttendanceRecord_TProps) => {
     // console.log(attendanceRecords)
+    const location = useLocation()
+    const isOnBODash = location.pathname.includes('business-dashboard');
 
     return(
         <>
-        <div className="App-mobile-responsive-table">
+        <div className={`${isOnBODash ? 'set-visible' : 'App-mobile-responsive-table'}`}>
             {attendanceRecords.map((attendance:any) => (
                 <div key={attendance.attendanceID} className="App-mobile-responsive-table-card">
                     {user.role === USER_ROLE[1] && (

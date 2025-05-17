@@ -63,8 +63,6 @@ const AttendanceRecord = () => {
                 let allSortedResponse = response.attendanceList || []
                 if(allSortedResponse.length > 0) {
                     allSortedResponse = sortAttendanceRecords(allSortedResponse)
-                    // Set current registered attendance
-                    setFinalAttendance(allSortedResponse[0])
                     
                     // Filter to get all completed attendance (with clock in and out)
                     const filteredOutIncompletedAttendance = allSortedResponse.filter((attendance: any) => {
