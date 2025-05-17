@@ -137,7 +137,7 @@ const EditSubscription = () => {
                                 </>
                             )}
                             
-                            <ul className="features-list">
+                            <ul className="features-list1">
                                 {features.map((feature, index) => (
                                     <li key={index}>
                                         <TiTick className="feature-tick"/> 

@@ -62,14 +62,14 @@
   }
 }
 
-.features-list {
+.features-list1 {
     list-style-type: none;
     padding: 0;
     text-align: left;
     filter: blur(0.8px);
 }
 
-.features-list li {
+.features-list1 li {
     display: flex;
     flex-direction: row;
     align-items: center;
