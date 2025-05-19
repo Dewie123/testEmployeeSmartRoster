@@ -10,10 +10,9 @@ const RegisReqTitle = ({noOfPendingRequest = 0}: RegisReqTitleProps) => {
         <div className="header">
             {isOnAdminDash &&(
                 <div className="title-in-dash">
-                    <h1>NEW REGISTRATION REQUEST</h1>
+                    <h1>New Registration Request</h1>
                     <span className="totalPending">{noOfPendingRequest}</span>
                 </div>
-            
             )}
             {!isOnAdminDash && (
                 <h1>Registration Request Management</h1>

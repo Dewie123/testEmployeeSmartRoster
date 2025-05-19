@@ -37,7 +37,7 @@ const CreateEditTask = ({
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const isMobile = window.innerWidth <= 768;
-    const duplicateTaskError = 'Task title contain in a timeline must be unique.'
+    const duplicateTaskError = 'Task title contain in a timeline must be unique or not space after.'
     const duplicateRoleSkillError = 'Same role and skillset are assigned to multiple tasks.'
     const [ currentTask, setCurrentTask ] = useState(0);
     const [ error, setError ] = useState<string>('');
@@ -214,6 +214,7 @@ const CreateEditTask = ({
             findNoOfEmpAvailable(index, role[0].roleID, skillset[0].skillSetID)
         }
     }, [tasksValues.length])
+
     // Validate user input for the tasks
     const validateInput = (name: string, value: string) => {
         let isSameCreated = false
@@ -727,7 +728,7 @@ const CreateEditTask = ({
                                             placeholder='Task Description' 
                                             value={task.startDate}
                                             onChange={(e) => handleInputChange(index, e)}
-                                            min={generateSGDateTimeForDateTimeInput(new Date)}
+                                            min={generateSGDateTimeForDateTimeInput(new Date()) || ''}
                                             max={task.endDate}
                                             disabled={isTaskAssigned}
                                             required

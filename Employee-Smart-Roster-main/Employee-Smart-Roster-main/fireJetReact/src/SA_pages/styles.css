@@ -31,20 +31,19 @@
 /* Highlight containers at 1248px+ */
 @media (min-width: 1248px) {
 
-/* Remove empty div (if still present) */
-.App-content > div:empty {
-  display: none;
-}
+    /* Remove empty div (if still present) */
+    .App-content > div:empty {
+    display: none;
+    }
 
-/* Force full-width layout */
-.sa-preview-landing-content,
-.landing-container,
-.video-selector-section,
-.video-container-wrapper {
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-  /* padding: 0 !important; */
-}
-
+    /* Force full-width layout */
+    .sa-preview-landing-content,
+    .landing-container,
+    .video-selector-section,
+    .video-container-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        /* padding: 0 !important; */
+    }
 }

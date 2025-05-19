@@ -49,10 +49,16 @@ export const SA_Items = [
                 label: 'Demo Video Management',
                 navHref: '/video-management'
             },
+
+            {
+                name: 'EditSubscription',
+                label: 'Subscription Plans',
+                navHref: '/edit-subscription'
+            },
             {
                 name: 'landingReview',
                 label: 'Reviews & Ratings',
-                navHref: '/review-rating'
+                navHref: '/view-review-n-rating'
             },
             {
                 name: 'landingFAQ',
