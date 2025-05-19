@@ -41,7 +41,7 @@ export const MIN_YEAR8_ANNUAL = 14 // 8th and after that year annual leave
 
 // Format Local date time to display
 export function formatDisplayDateTime(isoString) {
-    if(!isoString) return null;
+    if(!isoString) return '';
 
     const isoStr = new Date (isoString).toISOString()
     const dateTime = isoStr.split('T')
@@ -59,7 +59,7 @@ export function formatDisplayDateTime(isoString) {
 }
 // Format local ISO String date time to DD/MM/YYYY HH:mmtt
 export function formatDateTime (isoString){
-    if(!isoString) return null;
+    if(!isoString) return '';
     
     const date = new Date(isoString);
 
@@ -84,7 +84,7 @@ export function formatDateTime (isoString){
 
 // convert ISO String to Local datetime in YYYY-MM-DDTHH:mm
 export function generateSGDateTimeForDateTimeInput(date) {
-    if(!date) return null;
+    if(!date) return '';
     
     const sgDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
 
@@ -131,7 +131,7 @@ export function formatDateArrToDisplayInDateTimeInput (dateArr) {
 }
 
 export function generateSGDateTimeForPaymentRequestRef(date) {
-    if(!date) return null;
+    if(!date) return '';
 
     const sgDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
 
@@ -146,7 +146,7 @@ export function generateSGDateTimeForPaymentRequestRef(date) {
 
 // Utility function to format date only for MySchedules
 export function formatMSDisplayDateTime(dateString) {
-    if(!dateString) return null;
+    if(!dateString) return '';
     
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');

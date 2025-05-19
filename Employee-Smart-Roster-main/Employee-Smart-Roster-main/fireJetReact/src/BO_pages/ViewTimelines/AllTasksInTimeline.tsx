@@ -47,17 +47,12 @@ const AllTasksInTimeline = () => {
     useEffect(() => { fetchTasksInTimeline() }, [state?.timeline])
 
     function triggerSelectedTask(task: any) {
-        const selected = state.allTasks.filter((item: any) => {
-            return item.taskID === task.taskID
-        })
-        if(selected.length > 0) {
-            setSelectedTask(selected[0]);
-            setShowTaskDetail(true);
-        }  
+        setSelectedTask(task);
+        setShowTaskDetail(true);
     }
 
     function triggerCloseSelectedTask() {
-        setSelectedTask([]);
+        setSelectedTask({});
         setShowTaskDetail(false);
     }
 
