@@ -404,7 +404,7 @@ const CreateEditTask = ({
 
             try {
                 const response = await editTask (tasksValues[0])
-                console.log(response)
+                // console.log(response)
                 if(response?.message === 'Task details successfully updated') {
                     showAlert(
                         "Task Update Successfully",
@@ -485,8 +485,10 @@ const CreateEditTask = ({
     }
 
     function handleTimelineValueChange (timelineValue: any) {
+        // console.log(timelineValue)
         setTimelineValues(timelineValue)
     }
+    // console.log(timelineValues)
 
     if(showConfirmation) return (
         <div className="App-popup" onClick={toggleConfirmation}>

@@ -34,27 +34,6 @@ const TimelineForm = ({
         title: '',
         timeLineDescription: '',
     })
-    useEffect(() => { 
-        timelineDefaultSetup() 
-    }, [isCreateTask, allTimelines])
-    // Set default timeline setup
-    function timelineDefaultSetup() {
-        if(isCreateTask) {
-            if(allTimelines.length > 0) {
-                const initialTimeline = allTimelines[0];
-                const value = {
-                    timeLineID: initialTimeline.timeLineID,
-                    title: initialTimeline.timelineTitle,
-                    timeLineDescription: initialTimeline.timeLineDescription,
-                };
-                setTimelineValues(value);
-                if(newTimelineValue)
-                    newTimelineValue(value)
-            }
-        } else {
-            setTimelineValues(defaultValues);
-        }
-    }
 
     const handleInputChange = (event: React.ChangeEvent<
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -68,6 +47,7 @@ const TimelineForm = ({
 
     const triggerFetchAllTimelines = async() => {
         try {
+            // console.log(defaultValues)
             let response = await getTimelines(bo_UID);
             if (response.message === 'Timeline retrieved successfully.'){
                 response = response.timeline || [];
@@ -86,7 +66,7 @@ const TimelineForm = ({
             );
         }
     }
-    useEffect(() => {triggerFetchAllTimelines()}, [defaultValues, bo_UID])
+    useEffect(() => {triggerFetchAllTimelines()}, [bo_UID])
 
     const handleSelectedTimeline = (timeLineID: any) => {
         // console.log(timeLineID)
@@ -98,6 +78,7 @@ const TimelineForm = ({
                 title: timelineMatch.timelineTitle,
                 timeLineDescription: timelineMatch.timeLineDescription,
             }
+            // console.log(value)
             setTimelineValues(value)
             if(newTimelineValue)
                 newTimelineValue(value)
@@ -118,6 +99,19 @@ const TimelineForm = ({
                         timeLineID: response.timelineID
                     }
                     // console.log(newData)
+                    const alignTimelinesValue =  {
+                        timeLineID: newData.timeLineID,
+                        business_owner_id: bo_UID,
+                        timelineTitle: newData.title,
+                        createdAt: new Date(),
+                        lastModifiedAt: null,
+                        isCompleted: 0
+                    }
+                    // console.log(alignTimelinesValue)
+                    setAllTimelines([
+                        ...allTimelines,
+                        alignTimelinesValue
+                    ])
                     if(newTimelineValue)
                         newTimelineValue(newData)
 
@@ -155,7 +149,7 @@ const TimelineForm = ({
 
     function toggleisCreateTimeline() {
         setIsCreateTimeline(!isCreateTimeline)
-        setTimelineValues({
+        setNewTimeline({
             timeLineID: '',
             title: '',
             timeLineDescription: '',

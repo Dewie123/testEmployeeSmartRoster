@@ -383,7 +383,7 @@ function getSkillNeededForTask (allSkills, skillNeededID){
 
 function isSameTimelineCreated(allTimelines, timelineName) {
     const filteredData = allTimelines.filter((timeline) => {
-        return timeline.timelineTitle.toUpperCase() === timelineName.toUpperCase().trim()
+        return timeline.timelineTitle.toUpperCase().trim() === timelineName.toUpperCase().trim()
     })
     return filteredData
 }
