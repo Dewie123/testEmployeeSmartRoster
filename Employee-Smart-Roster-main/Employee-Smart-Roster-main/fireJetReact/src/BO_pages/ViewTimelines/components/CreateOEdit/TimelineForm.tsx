@@ -99,6 +99,7 @@ const TimelineForm = ({
                         timeLineID: response.timelineID
                     }
                     // console.log(newData)
+                    // Make sure the key and value is aligned to other timeline object
                     const alignTimelinesValue =  {
                         timeLineID: newData.timeLineID,
                         business_owner_id: bo_UID,
@@ -108,6 +109,7 @@ const TimelineForm = ({
                         isCompleted: 0
                     }
                     // console.log(alignTimelinesValue)
+                    // Update all timeline value locally
                     setAllTimelines([
                         ...allTimelines,
                         alignTimelinesValue
