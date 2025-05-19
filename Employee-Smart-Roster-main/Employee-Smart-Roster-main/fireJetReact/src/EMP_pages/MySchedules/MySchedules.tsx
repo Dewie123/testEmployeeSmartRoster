@@ -352,6 +352,7 @@ const EmpViewSchedule = () => {
                                         className='emp-timeline-button-container'
                                         onClick={(e) => e.stopPropagation()}
                                     >
+                                        
                                         <button 
                                             className="primary-button"
                                             onClick={() => toggleShowTaskSwapReason(task)}
@@ -424,13 +425,15 @@ const EmpViewSchedule = () => {
                                     className='emp-timeline-button-container'
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <button 
-                                        className="primary-button"
-                                        onClick={() => triggerAvailableTasksForSwap(task)}
-                                    >
-                                        <RiSwap2Fill className='primary-button-icon'/>
-                                        Request Swap
-                                    </button>
+                                    {task.timelineID && (
+                                        <button 
+                                            className="primary-button"
+                                            onClick={() => triggerAvailableTasksForSwap(task)}
+                                        >
+                                            <RiSwap2Fill className='primary-button-icon'/>
+                                            Request Swap
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

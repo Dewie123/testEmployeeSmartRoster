@@ -25,6 +25,10 @@ const TimelineForm = ({
     const { showAlert } = useAlert()
     const [ isCreateTimeline, setIsCreateTimeline ] = useState(false)
     const [ allTimelines, setAllTimelines ] = useState<any>([])
+    const [ newTimelines, setNewTimeline ] = useState<any>({
+        title: '',
+        timeLineDescription: '',
+    })
     const [ timelineValue, setTimelineValues ] = useState({
         timeLineID: '',
         title: '',
@@ -56,7 +60,7 @@ const TimelineForm = ({
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >) => {
         const { name, value } = event.target;
-        setTimelineValues((prevData) => ({
+        setNewTimeline((prevData: any) => ({
             ...prevData,
             [name]: value,
         }));
@@ -101,16 +105,16 @@ const TimelineForm = ({
     }
 
     const triggerCreateTimeline = async() => {
-        let isCreated = isSameTimelineCreated(allTimelines, timelineValue.title)
+        let isCreated = isSameTimelineCreated(allTimelines, newTimelines.title)
         isCreated = isCreated || []
         if (isCreated.length === 0) {
             try {
-                let response = await createNewTimeline(bo_UID, timelineValue)
+                let response = await createNewTimeline(bo_UID, newTimelines)
                 // console.log(response)
                 // Return: message, timeLineID
                 if(response.message === 'Timeline created successfully') {
                     const newData = {
-                        ...timelineValue,
+                        ...newTimelines,
                         timeLineID: response.timelineID
                     }
                     // console.log(newData)
@@ -177,7 +181,7 @@ const TimelineForm = ({
                         <input type='text' 
                             name='title'
                             placeholder='Timeline Title' 
-                            value={timelineValue.title}
+                            value={newTimelines.title}
                             onChange={(e) => handleInputChange(e)}
                             required
                         />
@@ -190,7 +194,7 @@ const TimelineForm = ({
                         <textarea name='timeLineDescription'
                             rows={4}
                             placeholder='Timeline Description' 
-                            value={timelineValue.timeLineDescription}
+                            value={newTimelines.timeLineDescription}
                             onChange={(e) => handleInputChange(e)}
                             maxLength={500}
                             required
@@ -198,8 +202,8 @@ const TimelineForm = ({
                     </div>
                     <PrimaryButton 
                         text="Create Timeline"
-                        disabled={!timelineValue.title
-                                    || !timelineValue.timeLineDescription}
+                        disabled={!newTimelines.title
+                                    || !newTimelines.timeLineDescription}
                         onClick={() => triggerCreateTimeline()}
                     />
                 </div>
