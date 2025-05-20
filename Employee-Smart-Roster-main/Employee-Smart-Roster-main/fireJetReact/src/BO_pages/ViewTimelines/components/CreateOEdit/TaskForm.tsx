@@ -151,6 +151,7 @@ const CreateEditTask = ({
                 // Update the number of available employee base on 
                 // selected role and default skillset
                 findNoOfEmpAvailable(index, role[0].roleID, skillsetsForRole[0].skillSetID)
+                tasksValues[index].skillSetID = skillsetsForRole[0].skillSetName
             }
             if(name === 'skillSetID') {
                 const skillset = getSkillIdForEmp(allSkillsets, value)
