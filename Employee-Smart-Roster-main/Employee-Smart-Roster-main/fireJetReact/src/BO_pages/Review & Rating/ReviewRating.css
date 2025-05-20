@@ -2,8 +2,13 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 50%;
+    max-width: 60%;
     margin-top: 15px;
+}
+
+.rating-n-createdate {
+    display: flex;
+    justify-content: space-between;
 }
 
 .review-rating-header {
@@ -17,6 +22,12 @@
     flex-direction: row;
     justify-content: start;
     gap: 5px;
+    width: fit-content;
+    align-items: center;
+}
+.bo-sa-review-rating-create-time {
+    color: grey;
+    font-size: 14px;
 }
 .submit-rating-star-icon {
     font-size: 15px !important;
