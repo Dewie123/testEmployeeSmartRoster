@@ -56,6 +56,8 @@ const TimelineForm = ({
                 if(response.length > 0) {
                     setTimelineValues(response[0]) //Set 1st selected timeline
                 }
+                if(newTimelineValue)
+                    newTimelineValue(response[0])
             }
         } catch(error) {
             showAlert(

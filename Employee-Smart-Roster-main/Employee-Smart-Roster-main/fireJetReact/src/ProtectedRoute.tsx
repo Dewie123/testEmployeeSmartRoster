@@ -9,8 +9,8 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   const { isLoggedIn, user } = useAuth();
-  console.log("isLoggedIn,",isLoggedIn);
-  console.log("user",user);
+  // console.log("isLoggedIn,",isLoggedIn);
+  // console.log("user",user);
   // Add debug logging
   // useEffect(() => {
   //   console.log("Auth state - Logged In:", isLoggedIn);
