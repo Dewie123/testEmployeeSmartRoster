@@ -34,6 +34,11 @@ const TimelineForm = ({
         title: '',
         timeLineDescription: '',
     })
+    useEffect(() => {
+        setTimelineValues(defaultValues)
+        if(newTimelineValue)
+            newTimelineValue(defaultValues)
+    }, [defaultValues, !isCreateTask])
 
     const handleInputChange = (event: React.ChangeEvent<
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -53,8 +58,12 @@ const TimelineForm = ({
                 response = response.timeline || [];
                 // console.log(response)
                 setAllTimelines(response)
-                if(response.length > 0) {
-                    setTimelineValues(response[0]) //Set 1st selected timeline
+                if(isCreateTask){
+                    if(response.length > 0) {
+                        setTimelineValues(response[0]) //Set 1st selected timeline
+                    }
+                    if(newTimelineValue)
+                        newTimelineValue(response[0])
                 }
             }
         } catch(error) {

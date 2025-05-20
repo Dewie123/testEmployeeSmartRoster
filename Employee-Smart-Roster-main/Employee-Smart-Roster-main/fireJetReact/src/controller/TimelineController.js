@@ -168,6 +168,7 @@ async function createTask (boID, values, timelineID) {
         timelineID: timelineID,
         noOfEmp: values.noOfEmp
     };
+    // console.log(body)
 
     try{
         const response = await fetch('https://e27fn45lod.execute-api.ap-southeast-2.amazonaws.com/dev/business-owner/timeline/task/add', {
