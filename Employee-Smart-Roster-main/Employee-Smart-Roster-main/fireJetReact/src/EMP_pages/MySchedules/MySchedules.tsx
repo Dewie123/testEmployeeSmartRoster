@@ -430,7 +430,7 @@ const EmpViewSchedule = () => {
                                     className='emp-timeline-button-container'
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {task.timelineID && (
+                                    {!task.timelineID && (
                                         <button 
                                             className="primary-button"
                                             onClick={() => triggerAvailableTasksForSwap(task)}
