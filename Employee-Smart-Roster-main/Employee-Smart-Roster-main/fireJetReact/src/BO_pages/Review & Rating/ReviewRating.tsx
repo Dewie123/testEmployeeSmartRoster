@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../AuthContext'
 import { useAlert } from '../../components/PromptAlert/AlertContext'
-import { formatTextForDisplay, USER_ROLE } from '../../controller/Variables.js'
+import { formatTextForDisplay, USER_ROLE, generateSGDateTimeForDateTimeInput, formatDateTime } from '../../controller/Variables.js'
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton'
 import SecondaryButton from '../../components/SecondaryButton/SecondaryButton'
 import ReviewRatingController from '../../controller/Review_Rating/ReviewRatingController'
@@ -162,16 +162,20 @@ const ReviewRating = () => {
                     <div className='bo-view-review-n-rating-container'>
                     {allReview.map((review: any) => (
                         <div className="card review-n-rating-cards" key={review.reviewID}>
-                            <div className='submit-rating-star'>
-                                {[...Array(review.rating)].map((_, index) => (
-                                    <FaStar 
-                                        key={index}
-                                        className="submit-rating-star-icon"
-                                        size={24} 
-                                        color="#FFD700" 
-                                    />
-                                ))}
+                            <div className="rating-n-createdate">
+                                <div className='submit-rating-star'>
+                                    {[...Array(review.rating)].map((_, index) => (
+                                        <FaStar 
+                                            key={index}
+                                            className="submit-rating-star-icon"
+                                            size={24} 
+                                            color="#FFD700" 
+                                        />
+                                    ))}
+                                </div>
+                                <p className='bo-sa-review-rating-create-time'>{formatDateTime(generateSGDateTimeForDateTimeInput(review.createdOn))}</p>
                             </div>
+                            
                             <p className="main-data" dangerouslySetInnerHTML={{ __html: formatTextForDisplay(review.review) }}/>
                             {user?.role  === USER_ROLE[0] && (<p className="main-data">by <strong>{review.fullName}</strong></p>)}
                         </div>
