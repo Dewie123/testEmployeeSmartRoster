@@ -85,28 +85,30 @@ const EventDetail = ({task, allTasks, onDelete, onClose}: EventDetailProps) => {
     }, [task])
 
     const fetchAllTimelines = async() => {
-        try {
-            let response = await getTimelines(user?.UID);
-            if (response.message === 'Timeline retrieved successfully.'){
-                response = response.timeline || [];
-                // console.log(response)
-                const timeline = await getTimelineSelected(response, taskDetail.timelineID)
-                // console.log(timeline)
-                setContainedTimeline(timeline)
+        if(allTaskDetail[0]){
+            try {
+                let response = await getTimelines(user?.UID);
+                if (response.message === 'Timeline retrieved successfully.'){
+                    response = response.timeline || [];
+                    // console.log(response)
+                    const timeline = await getTimelineSelected(response, allTaskDetail[0].timelineID)
+                    // console.log(timeline)
+                    setContainedTimeline([timeline])
+                }
+            } catch(error) {
+                showAlert(
+                    "fetchAllTimelines",
+                    "Fetch data error",
+                    error instanceof Error ? error.message : String(error),
+                    { type: 'error' }
+                )
             }
-        } catch(error) {
-            showAlert(
-                "fetchAllTimelines",
-                "Fetch data error",
-                error instanceof Error ? error.message : String(error),
-                { type: 'error' }
-            )
         }
     }
     // Auto trigger if having 
     useEffect(() => {
         fetchAllTimelines()
-    }, [taskDetail, taskDetail.timelineID])
+    }, [allTaskDetail])
 
     // Close allocated staff detail when clicking outside
     useEffect(() => {
@@ -216,7 +218,7 @@ const EventDetail = ({task, allTasks, onDelete, onClose}: EventDetailProps) => {
     function redirectToTimelineTasksDetail() {
         navigate('/timeline-tasks-list', {
             state: {
-                timeline: containedTimeline, 
+                timeline: containedTimeline[0], 
                 allTasks: allTasks,
             }
         })
@@ -241,7 +243,7 @@ const EventDetail = ({task, allTasks, onDelete, onClose}: EventDetailProps) => {
                         </div>
                     </div>
 
-                    {containedTimeline && (
+                    {containedTimeline.length > 0 && (
                         <button 
                             className={`task-detail-contained-timeline
                                 ${isInTimeline ? 'disabled' : ''}
@@ -250,7 +252,7 @@ const EventDetail = ({task, allTasks, onDelete, onClose}: EventDetailProps) => {
                             disabled={isInTimeline}
                         >
                             <p className='title'>Timeline: </p>
-                            <p className='main-data'>{containedTimeline.timelineTitle}</p>
+                            <p className='main-data'>{containedTimeline[0].timelineTitle}</p>
                         </button>
                     )}
 

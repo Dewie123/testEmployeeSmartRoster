@@ -103,11 +103,16 @@ const AllTasksInTimeline = () => {
                                         />
                                         <h3 className="App-timeline-task-title">{task.title}</h3>
                                     </div>
-                                    <p className="App-timeline-time">
-                                        <FaClock/>
-                                        {formatDisplayDateTime(task.startDate)}
-                                    </p>
-
+                                    <div className="App-timeline-start-and-end">
+                                        <p className="App-timeline-time">
+                                            <strong>Start</strong><FaClock/>
+                                            {formatDisplayDateTime(task.startDate)}
+                                        </p>
+                                        <p className="App-timeline-time">
+                                            <strong>End</strong><FaClock/>
+                                            {formatDisplayDateTime(task.endDate)}
+                                        </p>
+                                    </div>
                                 </div>
                                 <hr className="App-timeline-divider" />
                                 <p

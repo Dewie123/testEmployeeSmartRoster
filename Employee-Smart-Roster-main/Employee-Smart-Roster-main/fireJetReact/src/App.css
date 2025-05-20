@@ -240,6 +240,17 @@ h4 {
   cursor: pointer;
 
 }
+.App-timeline-start-and-end {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  min-width: 200px;
+  max-width: 210px;
+
+  strong {
+    min-width: 50px;
+  }
+}
 
 .App-timeline-time {
   display: flex;
@@ -249,9 +260,9 @@ h4 {
   margin-bottom: 5px;
   margin-left: auto;
   gap: 5px;
+  width: 100%;
   align-items: center;
   color: #6c6c6c;
-  min-width: 150px;
 }
 
 .App-timeline-divider {
@@ -813,6 +824,10 @@ option:checked {
     display: flex;
   }
 
+  .App-timeline-start-and-end {
+    align-self: flex-end;
+  }
+
   .App-timeline-time {
       display: flex;
       flex-direction: row;
@@ -900,6 +915,11 @@ option:checked {
         align-items: center;
         color: #6c6c6c;
         min-width: 143px;
+    }
+
+    
+    .App-timeline-start-and-end {
+      align-self: flex-end;
     }
 
     .App-timeline-task-title-container {
