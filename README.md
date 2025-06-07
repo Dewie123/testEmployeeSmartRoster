@@ -5,11 +5,9 @@ with employee rostering.
 ## Team Information
 | Student Name | UOW ID | Email                                           |
 | ---------------- | --------- | ----------------------------------- |
-| Lim Wen Mi     | 7894363 | wmlim014@mymail.sim.edu.sg  |
 | Nicholas Takayuki Ota  | 8083125  | ota001@mymail.sim.edu.sg  |
-| Teo Hong Wei  | 8433963  | hwteo003@mymail.sim.edu.sg  |
-| Yeo Yet Han  | 8065159  | yhyeo009@mymail.sim.edu.sg  |
-| Xavier Seah  | 7761326  | xseah003@mymail.sim.edu.sg  |
+| Lim Wen Mi     | 7894363 | wmlim014@mymail.sim.edu.sg  |
+
 
 ## Other Information
 - Share Point: [Submission on Google Drive](https://drive.google.com/drive/folders/1OLnCBXUE_ySawQDxDplCjfykx3USUCOL?usp=sharing "Submission on Google Drive")
